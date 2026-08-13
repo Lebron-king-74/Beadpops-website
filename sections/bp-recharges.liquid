@@ -1,0 +1,47 @@
+<style>
+.bp-recharges{color:#F5EDE0;background:#0C0B0B;padding:48px 0 80px;font-family:Hanken Grotesk,sans-serif}
+.bp-recharges *{box-sizing:border-box}
+.bp-recharges__head{margin-bottom:36px}
+.bp-recharges__title{margin:0 0 10px;font:800 40px/1.05 Bricolage Grotesque,sans-serif}
+.bp-recharges__subtitle{margin:0;max-width:60ch;color:#C9A87C;font-size:15px;line-height:1.5}
+.bp-recharges__grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px}
+.bp-recharges__card{position:relative;display:flex;flex-direction:column;overflow:hidden;color:#F5EDE0;background:#161412;border:1px solid rgba(245,237,224,.13);text-decoration:none}
+.bp-recharges__card img{width:100%;aspect-ratio:1;object-fit:cover;background:#0C0B0B}
+.bp-recharges__card-body{padding:16px}
+.bp-recharges__card-title{margin:0 0 4px;font:800 17px/1.2 Bricolage Grotesque,sans-serif}
+.bp-recharges__card-price{margin:0;color:#C9A87C;font-size:13px}
+.bp-recharges__empty{padding:40px 0;color:#C9A87C;font-size:15px}
+</style>
+<div class="bp-recharges bp-wrap">
+  <div class="bp-recharges__head">
+    <h1 class="bp-recharges__title">Recharges de perles</h1>
+    <p class="bp-recharges__subtitle">Choisis tes couleurs parmi les 221 teintes du standard MARD, réparties en 9 séries. Chaque référence est vendue par 1000 perles.</p>
+  </div>
+  {% liquid
+    assign recharge_products = collections.all.products | where: 'type', 'Recharge perles' | sort: 'title'
+  %}
+  {% if recharge_products.size > 0 %}
+    <div class="bp-recharges__grid">
+      {% for product in recharge_products %}
+        <a class="bp-recharges__card" href="{{ product.url }}">
+          {% if product.featured_image %}
+            {{ product.featured_image | image_url: width: 500 | image_tag: loading: 'lazy', widths: '250,500', alt: product.title }}
+          {% endif %}
+          <div class="bp-recharges__card-body">
+            <p class="bp-recharges__card-title">{{ product.title }}</p>
+            <p class="bp-recharges__card-price">{{ product.price | money }}</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="bp-recharges__empty">Aucune recharge disponible pour le moment.</p>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "BeadPops Recharges",
+  "settings": []
+}
+{% endschema %}
