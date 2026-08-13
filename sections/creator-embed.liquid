@@ -17,6 +17,15 @@
     margin-left: -50vw;
     margin-right: -50vw;
   }
+  /* L'hôte du Shadow DOM (#root) n'a par défaut aucune taille propre tant que le CSS chargé de
+     façon asynchrone à l'intérieur (règle :host) n'a pas fini de s'appliquer — fenêtre où il
+     mesure 0×0 et le configurateur reste invisible même une fois monté. On lui donne une taille
+     immédiatement, depuis l'extérieur (le thème), sans dépendre de ce timing. */
+  #root {
+    display: block;
+    width: 100%;
+    min-height: 100vh;
+  }
 </style>
 <div id="beadpops-creator-wrap">
   <div id="root" data-shadow="true"></div>
