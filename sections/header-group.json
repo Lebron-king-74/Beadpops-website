@@ -37,60 +37,6 @@
     },
     "bp-shop-header": {
       "type": "bp-shop-header",
-      "blocks": {
-        "card_RmyFB8": {
-          "type": "card",
-          "settings": {
-            "label": "Kawaii",
-            "collection": "",
-            "link": "",
-            "fallback_asset": "bp-menu-kawaii.webp"
-          }
-        },
-        "anime": {
-          "type": "card",
-          "settings": {
-            "label": "Anime",
-            "collection": "",
-            "link": "",
-            "fallback_asset": "bp-menu-anime.webp"
-          }
-        },
-        "cartoons": {
-          "type": "card",
-          "settings": {
-            "label": "Cartoons",
-            "collection": "",
-            "link": "",
-            "fallback_asset": "bp-menu-cartoons.webp"
-          }
-        },
-        "starter": {
-          "type": "card",
-          "settings": {
-            "label": "Starter Kits",
-            "collection": "",
-            "link": "",
-            "fallback_asset": "bp-commerce-starter-kit.webp"
-          }
-        },
-        "accessories": {
-          "type": "card",
-          "settings": {
-            "label": "Accessoires",
-            "collection": "",
-            "link": "",
-            "fallback_asset": "bp-commerce-accessories.webp"
-          }
-        }
-      },
-      "block_order": [
-        "card_RmyFB8",
-        "anime",
-        "cartoons",
-        "starter",
-        "accessories"
-      ],
       "settings": {
         "all_collection": "",
         "starter_collection": "",

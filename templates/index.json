@@ -11,31 +11,68 @@
   "sections": {
     "hero": {
       "type": "bp-hero",
-      "settings": {}
+      "settings": {
+        "eyebrow": "Nouveau rituel créatif",
+        "title": "Ce que tu aimes. En pixel art.",
+        "title_accent": "Créé par toi.",
+        "subtitle": "Kawaii, anime, cartoons, fantasy… Choisis l'univers qui te parle, suis les étapes, et finis avec un résultat propre, joli, fièrement « fait par toi ».",
+        "meta": "Kit complet · Guide inclus · Univers au choix",
+        "cta_label": "Commencer avec le Starter Kit",
+        "cta_product": "",
+        "cta_link": "shopify://pages/creator"
+      }
     },
     "visual_loop": {
       "type": "bp-visual-loop",
-      "settings": {}
+      "settings": {
+        "aria_label": "Créations BeadPops en mouvement"
+      }
     },
     "universe": {
       "type": "bp-universe",
-      "settings": {}
+      "settings": {
+        "eyebrow": "Choisis ton univers",
+        "title": "Quel style te donne envie de",
+        "title_accent": "commencer ?",
+        "kawaii_collection": "",
+        "anime_collection": "",
+        "fantasy_collection": "",
+        "cartoons_collection": ""
+      }
     },
     "how": {
       "type": "bp-how",
-      "settings": {}
+      "settings": {
+        "eyebrow": "Comment ça marche ?",
+        "title": "Ton design prend vie en",
+        "title_accent": "trois étapes."
+      }
     },
     "modes": {
       "type": "bp-modes",
-      "settings": {}
+      "settings": {
+        "title": "Choisis ton",
+        "title_accent": "niveau de difficulté.",
+        "subtitle": "Choisis selon ton temps et le niveau de détail.",
+        "easy_collection": "",
+        "medium_collection": "",
+        "boss_collection": ""
+      }
     },
     "offer": {
       "type": "bp-offer",
-      "settings": {}
+      "settings": {
+        "eyebrow": "Dans le Starter Kit",
+        "title": "Tout ce qu'il te faut",
+        "title_accent": "pour te lancer aujourd'hui.",
+        "product": "",
+        "price": "39,99 €",
+        "cta_label": "Commencer avec le Starter Kit",
+        "cta_link": ""
+      }
     },
     "reasons": {
       "type": "bp-reasons",
-      "settings": {},
       "blocks": {
         "reason_1": {
           "type": "reason",
@@ -83,29 +120,56 @@
         "reason_2",
         "reason_3",
         "reason_4"
-      ]
+      ],
+      "settings": {
+        "eyebrow": "5 raisons d'essayer",
+        "title": "Ce qui rend le pixel art en beads aussi",
+        "title_accent": "FUN.",
+        "motion": true,
+        "step_length": 50,
+        "marquee_words": "Résultat canon, Fait par toi, Satisfaisant à faire, Anti-stress, Zéro talent requis, Pixel art en beads"
+      }
     },
     "create": {
       "type": "bp-create",
-      "settings": {}
+      "settings": {
+        "eyebrow": "Tu peux vraiment tout créer",
+        "title": "Tout ce que tu as en tête",
+        "title_accent": "en pixel art."
+      }
     },
     "reviews": {
       "type": "bp-reviews",
       "settings": {
-        "show_reviews": false
+        "show_reviews": false,
+        "eyebrow": "Vos avis",
+        "title": "Ce que la communauté",
+        "title_accent": "en dit."
       }
     },
     "forwho": {
       "type": "bp-forwho",
-      "settings": {}
+      "settings": {
+        "eyebrow": "Pour qui c'est ?",
+        "title": "Tu vas adorer BeadPops si…"
+      }
     },
     "compare": {
       "type": "bp-compare",
-      "settings": {}
+      "settings": {
+        "eyebrow": "Le match créatif",
+        "title": "BeadPops",
+        "title_accent": "vs.",
+        "title_end": "les kits créatifs classiques",
+        "subtitle": "Compare l'expérience, critère par critère."
+      }
     },
     "footer": {
       "type": "bp-footer",
-      "settings": {}
+      "settings": {
+        "tagline": "Le pixel art en beads. Choisis ton univers, suis les étapes, et repars avec un truc fait par toi.",
+        "copyright": "Fait avec des Pops."
+      }
     }
   },
   "order": [
