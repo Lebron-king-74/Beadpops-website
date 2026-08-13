@@ -1,8 +1,16 @@
 <style>
+  /* Le thème impose son propre fond clair sur <body> (gagne sur celui du configurateur selon
+     l'ordre de cascade) — on le force explicitement en sombre le temps que cette page est
+     affichée, pour ne pas perdre les textes clairs de l'app sur un fond blanc. */
+  body {
+    background: #1c1814 !important;
+  }
   /* Sort du conteneur du thème (souvent limité en largeur) pour occuper toute la largeur de
      l'écran, quel que soit le thème — technique "full-bleed" indépendante de ses styles. */
   #beadpops-creator-wrap {
     width: 100vw;
+    min-height: 100vh;
+    background: #1c1814;
     position: relative;
     left: 50%;
     right: 50%;
