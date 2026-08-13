@@ -1,0 +1,24 @@
+<style>
+  /* Sort du conteneur du thème (souvent limité en largeur) pour occuper toute la largeur de
+     l'écran, quel que soit le thème — technique "full-bleed" indépendante de ses styles. */
+  #beadpops-creator-wrap {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+  }
+</style>
+<div id="beadpops-creator-wrap">
+  <div id="root"></div>
+</div>
+<link rel="stylesheet" href="https://beadpops-configurateur.vercel.app/assets/beadpops-embed.css">
+<script type="module" src="https://beadpops-configurateur.vercel.app/assets/beadpops-embed.js"></script>
+
+{% schema %}
+{
+  "name": "BeadPops Creator",
+  "settings": []
+}
+{% endschema %}
