@@ -1,0 +1,53 @@
+<section id="bp-forwho">
+  <div class="wrap lp-wrap">
+    <div class="fw-head">
+      <p class="fw-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      <h2 class="fw-title">{{ section.settings.title | escape }}</h2>
+    </div>
+    <div class="fw-grid">
+      <div class="fw-card">
+        <div class="fw-media"><img width="640" height="800" src="{{ 'bp-forwho-moment-chill.webp' | asset_url }}" alt="Moment créatif fun et chill autour d'un design en beads" loading="lazy" decoding="async"></div>
+        <div class="fw-body"><span class="fw-check" aria-hidden="true">✓</span><p class="fw-text">Tu veux un moment fun &amp; chill rien qu'à toi</p></div>
+      </div>
+      <div class="fw-card">
+        <div class="fw-media"><img width="640" height="800" src="{{ 'bp-forwho-design-prend-vie.webp' | asset_url }}" alt="Un design en beads qui se construit petit à petit" loading="lazy" decoding="async"></div>
+        <div class="fw-body"><span class="fw-check" aria-hidden="true">✓</span><p class="fw-text">Tu adores voir un design se construire petit à petit</p></div>
+      </div>
+      <div class="fw-card">
+        <div class="fw-media"><img width="640" height="800" src="{{ 'bp-forwho-pause-ecrans.webp' | asset_url }}" alt="Une pause créative loin des écrans" loading="lazy" decoding="async"></div>
+        <div class="fw-body"><span class="fw-check" aria-hidden="true">✓</span><p class="fw-text">Le soir, tu cherches une activité qui te fait décrocher des écrans</p></div>
+      </div>
+      <div class="fw-card">
+        <div class="fw-media"><img width="640" height="800" src="{{ 'bp-forwho-univers-au-choix.webp' | asset_url }}" alt="Plusieurs univers créatifs en beads" loading="lazy" decoding="async"></div>
+        <div class="fw-body"><span class="fw-check" aria-hidden="true">✓</span><p class="fw-text">Tu aimes les univers kawaii, anime, cartoons ou fantasy</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "BeadPops Pour qui",
+  "tag": "section",
+  "class": "beadpops-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Surtitre",
+      "default": "Pour qui c'est ?"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre",
+      "default": "Tu vas adorer BeadPops si…"
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "BeadPops Pour qui"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,55 @@
+<section id="bp-create">
+  <div class="wrap lp-wrap">
+    <div class="cr-head">
+      <p class="cr-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      <h2 class="cr-title">{{ section.settings.title | escape }} <span class="os-accent">{{ section.settings.title_accent | escape }}</span></h2>
+      <p class="cr-sub">Choisis ce qui t'inspire et construis-le une Pop à la fois.</p>
+    </div>
+  </div>
+  <div class="cr-carousel-wrap">
+    <button class="cr-arrow cr-prev" type="button" aria-label="Création précédente">&lsaquo;</button>
+    <div class="cr-carousel" id="cr-carousel">
+      <a class="cr-slide" href="#"><img width="900" height="1201" src="{{ 'bp-community-pink-leopard.webp' | asset_url }}" alt="Léopard rose créé en beads et tenu à la main" loading="lazy" decoding="async"><span class="cr-cap">Une grande pièce qui claque</span></a>
+      <a class="cr-slide" href="#"><img width="620" height="827" src="{{ 'bp-community-fridge-gallery.webp' | asset_url }}" alt="Collection de créations en beads exposées sur un réfrigérateur" loading="lazy" decoding="async"><span class="cr-cap">Ta déco, à ta façon</span></a>
+      <a class="cr-slide" href="#"><img width="620" height="827" src="{{ 'bp-community-floral-animals.webp' | asset_url }}" alt="Créations animales et florales en beads" loading="lazy" decoding="async"><span class="cr-cap">À offrir, fait par toi</span></a>
+      <a class="cr-slide" href="#"><img width="620" height="827" src="{{ 'bp-community-fantasy-character.webp' | asset_url }}" alt="Personnage fantasy créé en beads et tenu à la main" loading="lazy" decoding="async"><span class="cr-cap">Ton perso préféré</span></a>
+      <a class="cr-slide" href="#"><img width="620" height="827" src="{{ 'bp-community-neon-panther.webp' | asset_url }}" alt="Panthère aux couleurs néon créée en beads" loading="lazy" decoding="async"><span class="cr-cap">Une touche pop chez toi</span></a>
+      <a class="cr-slide" href="#"><img width="620" height="827" src="{{ 'bp-community-work-in-progress.webp' | asset_url }}" alt="Création d'un personnage en beads en cours de réalisation" loading="lazy" decoding="async"><span class="cr-cap">Du modèle au résultat</span></a>
+    </div>
+    <button class="cr-arrow cr-next" type="button" aria-label="Création suivante">&rsaquo;</button>
+    <div class="cr-dots" id="cr-dots"></div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "BeadPops Inspirations",
+  "tag": "section",
+  "class": "beadpops-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Surtitre",
+      "default": "Tu peux vraiment tout créer"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre",
+      "default": "Tout ce que tu as en tête"
+    },
+    {
+      "type": "text",
+      "id": "title_accent",
+      "label": "Titre accentué",
+      "default": "en pixel art."
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "BeadPops Inspirations"
+    }
+  ]
+}
+{% endschema %}

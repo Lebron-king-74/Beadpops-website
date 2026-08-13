@@ -1,0 +1,97 @@
+{% if request.design_mode or section.settings.show_reviews %}
+<section id="bp-reviews" data-review-placeholders="true">
+  <div class="rv-head lp-wrap">
+    <div class="rv-eyebrow">{{ section.settings.eyebrow | escape }}</div>
+    <h2 class="rv-title"><span class="rv-title-main">{{ section.settings.title | escape }}</span> <span class="os-accent">{{ section.settings.title_accent | escape }}</span></h2>
+    <div class="rv-summary" aria-label="Données de démonstration locale à valider avant publication">
+      <span class="rv-summary-stars" aria-hidden="true">★★★★★</span>
+      <span class="rv-summary-label">4,9/5 · 127 avis</span>
+    </div>
+  </div>
+
+  <div class="rv-carousel" aria-roledescription="carrousel" aria-label="Aperçu du futur carrousel d'avis clients">
+    <div class="rv-viewport" id="rv-viewport">
+      <div class="rv-track" id="rv-track">
+        <article class="rv-card">
+          <div class="rv-media"><img width="620" height="827" src="{{ 'bp-reviews-kuromi-workspace.webp' | asset_url }}" alt="Grande création Kuromi en beads devant son modèle" width="620" height="827" loading="lazy" decoding="async"></div>
+          <div class="rv-copy">
+            <div class="rv-stars"><span aria-hidden="true">★★★★★</span><span class="rv-placeholder">5,0</span></div>
+            <blockquote class="rv-quote">« J'ai commencé un soir pour tester. Le lendemain, j'avais déjà envie d'en refaire un. »</blockquote>
+            <div class="rv-author"><span class="rv-name">Camille, Lyon</span><span class="rv-badge">Avis client</span></div>
+          </div>
+        </article>
+        <article class="rv-card">
+          <div class="rv-media"><img width="620" height="802" src="{{ 'bp-reviews-sailor-orange.webp' | asset_url }}" alt="Création colorée en beads tenue à la main" width="620" height="827" loading="lazy" decoding="async"></div>
+          <div class="rv-copy">
+            <div class="rv-stars"><span aria-hidden="true">★★★★★</span><span class="rv-placeholder">4,9</span></div>
+            <blockquote class="rv-quote">« Le modèle est clair et le geste devient vite automatique. Ça m'a vraiment posé le cerveau. »</blockquote>
+            <div class="rv-author"><span class="rv-name">Sarah, Lille</span><span class="rv-badge">Avis client</span></div>
+          </div>
+        </article>
+        <article class="rv-card">
+          <div class="rv-media"><img width="620" height="827" src="{{ 'bp-reviews-green-character.webp' | asset_url }}" alt="Création verte et bleue en beads devant son modèle" width="620" height="827" loading="lazy" decoding="async"></div>
+          <div class="rv-copy">
+            <div class="rv-stars"><span aria-hidden="true">★★★★★</span><span class="rv-placeholder">4,8</span></div>
+            <blockquote class="rv-quote">« Je pensais manquer de patience. Voir l'image apparaître petit à petit, c'est tout le plaisir. »</blockquote>
+            <div class="rv-author"><span class="rv-name">Inès, Bordeaux</span><span class="rv-badge">Avis client</span></div>
+          </div>
+        </article>
+        <article class="rv-card">
+          <div class="rv-media"><img width="620" height="827" src="{{ 'bp-reviews-shiba.webp' | asset_url }}" alt="Portrait de Shiba réalisé en beads devant le chien" width="620" height="827" loading="lazy" decoding="async"></div>
+          <div class="rv-copy">
+            <div class="rv-stars"><span aria-hidden="true">★★★★★</span><span class="rv-placeholder">4,9</span></div>
+            <blockquote class="rv-quote">« Le résultat était assez propre pour que je l'accroche dès que j'ai fini. »</blockquote>
+            <div class="rv-author"><span class="rv-name">Léa, Paris</span><span class="rv-badge">Avis client</span></div>
+          </div>
+        </article>
+      </div>
+    </div>
+    <div class="rv-controls lp-wrap">
+      <button class="rv-arrow rv-prev" type="button" aria-label="Avis précédent">&larr;</button>
+      <div class="rv-dots" id="rv-dots" aria-label="Choisir un avis"></div>
+      <button class="rv-arrow rv-next" type="button" aria-label="Avis suivant">&rarr;</button>
+    </div>
+  </div>
+</section>
+<div class="bp-seam bp-seam--light-pop" aria-hidden="true"></div>
+{% endif %}
+{% schema %}
+{
+  "name": "BeadPops Avis",
+  "tag": "section",
+  "class": "beadpops-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_reviews",
+      "label": "Afficher les avis sur la boutique",
+      "info": "Activer uniquement avec de vrais avis vérifiés.",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Surtitre",
+      "default": "Vos avis"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre",
+      "default": "Ce que la communauté"
+    },
+    {
+      "type": "text",
+      "id": "title_accent",
+      "label": "Titre accentué",
+      "default": "en dit."
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "BeadPops Avis"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,535 @@
+{%- comment -%}
+  BeadPops, composeur du Starter Kit, rendu DANS la colonne d'achat de bp-product.
+
+  Modele de l'offre (decision operateur 2026-08-09) :
+    - le pack fixe un nombre de dessins INCLUS dans son prix ;
+    - l'etape 2 plafonne a ce nombre, on ne peut pas en choisir plus ;
+    - l'etape 3 n'apparait qu'une fois le pack complet, et propose des dessins
+      EN PLUS, factures a l'unite. C'est l'upsell, jamais melange avec l'inclus.
+
+  Un exemplaire par dessin. Panier : un seul /cart/add.js, le kit avec ses
+  dessins en proprietes de ligne, les ajouts en lignes distinctes.
+
+  Parametre attendu : product (le Starter Kit).
+{%- endcomment -%}
+
+{%- assign designs = collections.all.products | where: 'type', 'Design' -%}
+{%- assign n_kawaii = 0 -%}{%- assign n_fantasy = 0 -%}{%- assign n_anime = 0 -%}{%- assign n_cartoons = 0 -%}
+{%- for d in designs -%}
+  {%- if d.tags contains 'univers-kawaii' -%}{%- assign n_kawaii = n_kawaii | plus: 1 -%}{%- endif -%}
+  {%- if d.tags contains 'univers-fantasy' -%}{%- assign n_fantasy = n_fantasy | plus: 1 -%}{%- endif -%}
+  {%- if d.tags contains 'univers-anime' -%}{%- assign n_anime = n_anime | plus: 1 -%}{%- endif -%}
+  {%- if d.tags contains 'univers-cartoons' -%}{%- assign n_cartoons = n_cartoons | plus: 1 -%}{%- endif -%}
+{%- endfor -%}
+
+<div class="bpkc" data-bpkc>
+
+  <section class="bpkc-block">
+    <div class="bpkc-step">
+      <span class="bpkc-step__n" aria-hidden="true">1</span>
+      <h2 class="bpkc-step__t">Choisis ton pack</h2>
+    </div>
+
+    <div class="bpkc-packs" role="radiogroup" aria-label="Choisir un pack">
+      {%- for variant in product.variants -%}
+        {%- assign quota = variant.title | split: ' ' | first | plus: 0 -%}
+        {%- assign unit = variant.price | divided_by: quota -%}
+        <button
+          class="bpkc-pack"
+          type="button"
+          role="radio"
+          aria-checked="{% if forloop.first %}true{% else %}false{% endif %}"
+          data-bpkc-pack
+          data-variant="{{ variant.id }}"
+          data-quota="{{ quota }}"
+          data-price="{{ variant.price }}"
+          {% unless variant.available %}disabled aria-disabled="true"{% endunless %}
+        >
+          {%- if forloop.last and variant.available -%}
+            <span class="bpkc-pack__tag">Meilleur rapport</span>
+          {%- endif -%}
+          <span class="bpkc-pack__n">{{ quota }}</span>
+          <span class="bpkc-pack__l">dessins inclus</span>
+          <span class="bpkc-pack__total">{{ variant.price | money }}</span>
+          <span class="bpkc-pack__unit">{{ unit | money }} le dessin</span>
+          {%- unless variant.available -%}<span class="bpkc-pack__out">Épuisé</span>{%- endunless -%}
+        </button>
+      {%- endfor -%}
+    </div>
+  </section>
+
+  {%- if designs.size > 0 -%}
+    <section class="bpkc-block">
+      <div class="bpkc-step">
+        <span class="bpkc-step__n" aria-hidden="true">2</span>
+        <h2 class="bpkc-step__t">Tes <span data-bpkc-quotanum>5</span> dessins inclus</h2>
+        <span class="bpkc-count" data-bpkc-quota aria-live="polite">0/5</span>
+      </div>
+
+      <ul class="bpkc-chips" data-bpkc-chips hidden aria-label="Tes dessins choisis"></ul>
+
+      <div class="bpkc-tabs" role="tablist" aria-label="Filtrer par univers">
+        <button class="bpkc-tab is-on" type="button" role="tab" aria-selected="true" data-bpkc-univers="">Tous <em>{{ designs.size }}</em></button>
+        {%- if n_kawaii > 0 -%}<button class="bpkc-tab" type="button" role="tab" aria-selected="false" data-bpkc-univers="univers-kawaii">Kawaii <em>{{ n_kawaii }}</em></button>{%- endif -%}
+        {%- if n_fantasy > 0 -%}<button class="bpkc-tab" type="button" role="tab" aria-selected="false" data-bpkc-univers="univers-fantasy">Fantasy <em>{{ n_fantasy }}</em></button>{%- endif -%}
+        {%- if n_anime > 0 -%}<button class="bpkc-tab" type="button" role="tab" aria-selected="false" data-bpkc-univers="univers-anime">Anime <em>{{ n_anime }}</em></button>{%- endif -%}
+        {%- if n_cartoons > 0 -%}<button class="bpkc-tab" type="button" role="tab" aria-selected="false" data-bpkc-univers="univers-cartoons">Cartoons <em>{{ n_cartoons }}</em></button>{%- endif -%}
+      </div>
+
+      <label class="bpkc-level">
+        <span>Niveau</span>
+        <select data-bpkc-niveau>
+          <option value="">Tous les niveaux</option>
+          <option value="niveau-facile">Facile</option>
+          <option value="niveau-medium">Medium</option>
+          <option value="niveau-boss">Boss</option>
+        </select>
+      </label>
+
+      <ul class="bpkc-list" data-bpkc-list>
+        {%- for design in designs -%}
+          {%- assign v = design.first_available_variant | default: design.variants.first -%}
+          {%- assign level = '' -%}
+          {%- for t in design.tags -%}
+            {%- if t contains 'niveau-' -%}{%- assign level = t | remove: 'niveau-' | capitalize -%}{%- endif -%}
+          {%- endfor -%}
+          <li
+            class="bpkc-row"
+            data-bpkc-row
+            data-handle="{{ design.handle }}"
+            data-variant="{{ v.id }}"
+            data-title="{{ design.title | escape }}"
+            data-price="{{ v.price }}"
+            data-tags="{{ design.tags | join: ' ' }}"
+          >
+            <button class="bpkc-row__btn" type="button" aria-pressed="false" data-bpkc-toggle
+              {% unless v.available %}disabled aria-disabled="true"{% endunless %}>
+              <span class="bpkc-row__media">
+                {%- if design.featured_image != blank -%}
+                  {{ design.featured_image | image_url: width: 200 | image_tag: loading: 'lazy', widths: '100,150,200', alt: design.title, class: 'bpkc-row__img' }}
+                {%- else -%}
+                  <img class="bpkc-row__img" src="{{ 'bp-commerce-product-fallback.webp' | asset_url }}" alt="" width="100" height="100" loading="lazy">
+                {%- endif -%}
+              </span>
+              <span class="bpkc-row__body">
+                <span class="bpkc-row__name">{{ design.title }}</span>
+                <span class="bpkc-row__tags">
+                  {%- if level != blank -%}<span class="bpkc-row__lvl">{{ level }}</span>{%- endif -%}
+                  <span class="bpkc-row__incl">inclus</span>
+                </span>
+              </span>
+              <span class="bpkc-row__pick" aria-hidden="true"><span class="bpkc-row__n"></span></span>
+              {%- unless v.available -%}<span class="bpkc-row__out">Épuisé</span>{%- endunless -%}
+            </button>
+          </li>
+        {%- endfor -%}
+      </ul>
+      <p class="bpkc-none" data-bpkc-none hidden>Aucun dessin avec ces filtres.</p>
+      <p class="bpkc-full" data-bpkc-full hidden>Ton pack est complet. Retire un dessin pour en changer, ou ajoutes-en à l'unité juste en dessous.</p>
+    </section>
+
+    <section class="bpkc-block bpkc-block--up" data-bpkc-upsell hidden>
+      <div class="bpkc-step">
+        <span class="bpkc-step__n bpkc-step__n--up" aria-hidden="true">3</span>
+        <h2 class="bpkc-step__t">Envie d'en ajouter&nbsp;?</h2>
+      </div>
+      <p class="bpkc-up__lead">Ton pack est complet. Tu peux emporter d'autres dessins à l'unité, chacun avec ses Pops.</p>
+      <ul class="bpkc-chips bpkc-chips--up" data-bpkc-extrachips hidden aria-label="Dessins ajoutés"></ul>
+      <ul class="bpkc-up" data-bpkc-uplist></ul>
+    </section>
+
+    <div class="bpkc-sum">
+      <p class="bpkc-sum__state" data-bpkc-state>Choisis 5 dessins</p>
+      <p class="bpkc-sum__total"><span>Total</span><strong data-bpkc-total>{{ product.variants.first.price | money }}</strong></p>
+    </div>
+
+    <button class="bpp-add bpkc-add" type="button" data-bpkc-add disabled>Ajouter au panier</button>
+    <p class="bpkc-error" data-bpkc-error role="alert" hidden></p>
+  {%- else -%}
+    <p class="bpkc-empty">Aucun dessin publié. Publie tes produits de type <strong>Design</strong> pour activer le choix des dessins.</p>
+  {%- endif -%}
+</div>
+
+<style>
+  .bpkc{--kc-void:#0C0B0B;--kc-pearl:#F5EDE0;--kc-pop:#FF5C1A;--kc-ink:#4f463e;--kc-quiet:#6c6054;
+        --kc-line:rgba(12,11,11,.16);--kc-tile:#eadbc5;--kc-soft:#FBF5EC;--kc-ease:cubic-bezier(.16,1,.3,1)}
+  .bpkc *{box-sizing:border-box}
+  .bpkc :focus-visible{outline:3px solid var(--kc-pop);outline-offset:2px}
+  .bpkc-block{padding-top:22px;border-top:1px solid var(--kc-line)}
+  .bpkc-block:first-child{padding-top:0;border-top:0}
+
+  /* --- entetes d'etape --- */
+  .bpkc-step{display:flex;align-items:center;gap:10px;margin:0 0 14px}
+  .bpkc-step__n{flex:none;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;
+    color:var(--kc-pearl);background:var(--kc-void);font:800 13px/1 'Hanken Grotesk',sans-serif}
+  .bpkc-step__n--up{color:var(--kc-void);background:var(--kc-pop)}
+  .bpkc-step__t{flex:1;margin:0;font:800 14px/1.2 'Bricolage Grotesque',sans-serif;letter-spacing:.02em;text-transform:uppercase}
+  .bpkc-count{flex:none;padding:5px 10px;color:var(--kc-void);background:var(--kc-tile);
+    font:800 13px/1 'Hanken Grotesk',sans-serif;font-variant-numeric:tabular-nums}
+  .bpkc-count.is-full{color:var(--kc-pearl);background:var(--kc-void)}
+
+  /* --- etape 1, trois packs sur une ligne (jamais deux, sinon orphelin) --- */
+  .bpkc-packs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .bpkc-pack{position:relative;display:grid;gap:1px;padding:13px 11px 12px;border:1px solid var(--kc-line);
+    background:transparent;text-align:left;cursor:pointer;
+    transition:border-color .18s var(--kc-ease),box-shadow .18s var(--kc-ease),background .18s var(--kc-ease)}
+  .bpkc-pack[aria-checked="true"]{border-color:var(--kc-pop);background:#fff;box-shadow:inset 0 0 0 1px var(--kc-pop)}
+  .bpkc-pack:disabled{opacity:.45;cursor:not-allowed}
+  .bpkc-pack__n{font:850 26px/1 'Bricolage Grotesque',sans-serif;letter-spacing:-.05em}
+  .bpkc-pack__l{color:var(--kc-quiet);font:600 11px/1.2 'Hanken Grotesk',sans-serif}
+  .bpkc-pack__total{margin-top:7px;font:800 16px/1 'Bricolage Grotesque',sans-serif;letter-spacing:-.03em}
+  .bpkc-pack__unit{color:var(--kc-quiet);font-size:11px}
+  .bpkc-pack__tag,.bpkc-pack__out{position:absolute;top:-9px;left:9px;padding:3px 7px;
+    font-family:Silkscreen,monospace;font-size:8px;letter-spacing:.06em;text-transform:uppercase}
+  .bpkc-pack__tag{color:var(--kc-pearl);background:var(--kc-void)}
+  .bpkc-pack__out{color:var(--kc-pearl);background:#8a2b12}
+
+  /* --- les dessins retenus, visibles sans scroller la liste --- */
+  .bpkc-chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px;padding:0;list-style:none}
+  .bpkc-chip{display:flex;align-items:center;gap:7px;padding:5px 7px 5px 5px;background:var(--kc-soft);
+    border:1px solid var(--kc-line)}
+  .bpkc-chip img{width:24px;height:24px;object-fit:cover;background:var(--kc-tile)}
+  .bpkc-chip span{font:700 12px/1 'Hanken Grotesk',sans-serif}
+  .bpkc-chip button{width:22px;height:22px;flex:none;border:0;border-radius:50%;background:rgba(12,11,11,.08);
+    color:var(--kc-void);font:700 13px/1 'Hanken Grotesk',sans-serif;cursor:pointer}
+  .bpkc-chips--up .bpkc-chip{background:#FFF1EA;border-color:rgba(255,92,26,.4)}
+
+  /* --- onglets et niveau --- */
+  .bpkc-tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 0 10px}
+  .bpkc-tabs::-webkit-scrollbar{display:none}
+  .bpkc-tab{flex:0 0 auto;min-height:44px;padding:0 13px;border:1px solid var(--kc-line);
+    background:transparent;color:var(--kc-void);font:700 13px/1 'Hanken Grotesk',sans-serif;cursor:pointer;
+    transition:background .16s var(--kc-ease),color .16s var(--kc-ease),border-color .16s var(--kc-ease)}
+  .bpkc-tab em{font-style:normal;opacity:.5;margin-left:4px}
+  .bpkc-tab.is-on{color:var(--kc-pearl);background:var(--kc-void);border-color:var(--kc-void)}
+  .bpkc-level{display:flex;align-items:center;gap:10px;margin:0 0 12px}
+  .bpkc-level span{color:var(--kc-quiet);font-family:Silkscreen,monospace;font-size:10px;letter-spacing:.07em;text-transform:uppercase}
+  .bpkc-level select{flex:1;min-height:44px;padding:0 10px;border:1px solid var(--kc-line);
+    background:#fff;color:var(--kc-void);font:600 14px 'Hanken Grotesk',sans-serif}
+
+  /* --- la liste des dessins inclus --- */
+  .bpkc-list{max-height:min(50vh,392px);overflow-y:auto;margin:0;padding:0;list-style:none;
+    border:1px solid var(--kc-line);background:#fff;overscroll-behavior:contain}
+  .bpkc-row + .bpkc-row{border-top:1px solid var(--kc-line)}
+  .bpkc-row[hidden]{display:none}
+  .bpkc-row__btn{position:relative;display:grid;grid-template-columns:48px 1fr auto;align-items:center;gap:12px;
+    width:100%;min-height:70px;padding:8px 12px;border:0;background:transparent;text-align:left;cursor:pointer;
+    transition:background .16s var(--kc-ease),opacity .16s var(--kc-ease)}
+  .bpkc-row__btn:disabled{opacity:.45;cursor:not-allowed}
+  .bpkc-row__btn[aria-pressed="true"]{background:#FFF4EF}
+  .bpkc-row.is-locked .bpkc-row__btn{opacity:.4;cursor:not-allowed}
+  .bpkc-row__media{display:block;width:48px;overflow:hidden;background:var(--kc-tile)}
+  .bpkc-row__img{display:block;width:100%;aspect-ratio:1;height:auto;object-fit:cover}
+  .bpkc-row__body{display:grid;gap:3px;min-width:0}
+  .bpkc-row__name{font:800 14px/1.2 'Bricolage Grotesque',sans-serif;letter-spacing:-.01em;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .bpkc-row__tags{display:flex;align-items:center;gap:7px}
+  .bpkc-row__lvl{padding:2px 7px;background:var(--kc-tile);color:var(--kc-ink);font-size:11px;font-weight:700}
+  .bpkc-row__incl{color:var(--kc-quiet);font-size:11px}
+  .bpkc-row__pick{flex:none;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;
+    border:1.5px solid var(--kc-line);background:transparent;
+    transition:background .18s var(--kc-ease),border-color .18s var(--kc-ease),transform .2s var(--kc-ease)}
+  .bpkc-row__pick::before{content:"+";color:var(--kc-quiet);font:700 17px/1 'Hanken Grotesk',sans-serif}
+  .bpkc-row__n{display:none;color:var(--kc-void);font:800 13px/1 'Hanken Grotesk',sans-serif}
+  .bpkc-row__btn[aria-pressed="true"] .bpkc-row__pick{border-color:var(--kc-pop);background:var(--kc-pop);transform:scale(1.08)}
+  .bpkc-row__btn[aria-pressed="true"] .bpkc-row__pick::before{display:none}
+  .bpkc-row__btn[aria-pressed="true"] .bpkc-row__n{display:block}
+  .bpkc-row__out{position:absolute;top:8px;right:48px;padding:2px 6px;color:var(--kc-pearl);background:#8a2b12;
+    font-family:Silkscreen,monospace;font-size:8px;letter-spacing:.06em;text-transform:uppercase}
+  .bpkc-none,.bpkc-full{margin:10px 0 0;color:var(--kc-quiet);font-size:13px;line-height:1.45}
+
+  /* --- etape 3, l'upsell, jamais melange avec l'inclus --- */
+  .bpkc-block--up{margin-top:22px;padding:20px 16px;border:1px solid rgba(255,92,26,.45);border-top:1px solid rgba(255,92,26,.45);background:#FFF8F4}
+  .bpkc-up__lead{margin:0 0 12px;color:var(--kc-ink);font-size:13px;line-height:1.5}
+  .bpkc-up{display:grid;grid-auto-flow:column;grid-auto-columns:112px;gap:10px;overflow-x:auto;
+    scrollbar-width:none;margin:0;padding:0 0 4px;list-style:none;overscroll-behavior-x:contain}
+  .bpkc-up::-webkit-scrollbar{display:none}
+  .bpkc-up__btn{display:grid;gap:6px;width:100%;padding:0;border:1px solid var(--kc-line);background:#fff;cursor:pointer;
+    transition:border-color .18s var(--kc-ease)}
+  .bpkc-up__btn img{display:block;width:100%;aspect-ratio:1;object-fit:cover;background:var(--kc-tile)}
+  .bpkc-up__name{padding:0 8px;font:800 12px/1.2 'Bricolage Grotesque',sans-serif;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .bpkc-up__add{display:block;margin:0 8px 8px;padding:6px 0;background:var(--kc-void);color:var(--kc-pearl);
+    font:800 12px/1 'Hanken Grotesk',sans-serif}
+
+  /* --- recapitulatif et action --- */
+  .bpkc-sum{display:flex;align-items:end;justify-content:space-between;gap:14px;margin:20px 0 12px}
+  .bpkc-sum__state{margin:0;max-width:26ch;color:var(--kc-ink);font:800 14px/1.3 'Bricolage Grotesque',sans-serif}
+  .bpkc-sum__total{margin:0;text-align:right}
+  .bpkc-sum__total span{display:block;color:var(--kc-quiet);font-size:11px}
+  .bpkc-sum__total strong{font:850 27px/1 'Bricolage Grotesque',sans-serif;letter-spacing:-.035em}
+  .bpkc-add:disabled{opacity:1;color:rgba(12,11,11,.42);background:var(--kc-tile);cursor:not-allowed}
+  .bpkc-error{margin:10px 0 0;color:#8a2b12;font-size:13px;line-height:1.45}
+  .bpkc-empty{margin:14px 0 0;padding:14px;border:1px solid var(--kc-line);color:var(--kc-ink);font-size:14px}
+
+  @media (pointer:coarse){
+    .bpkc-tab{min-height:48px}
+    .bpkc-row__btn{min-height:78px}
+    .bpkc-row__pick{width:34px;height:34px}
+    .bpkc-chip button{width:26px;height:26px}
+  }
+  @media (hover:hover){
+    .bpkc-pack:not([aria-checked="true"]):not(:disabled):hover{border-color:rgba(12,11,11,.42)}
+    .bpkc-tab:not(.is-on):hover{border-color:rgba(12,11,11,.45)}
+    .bpkc-row:not(.is-locked) .bpkc-row__btn:not(:disabled):not([aria-pressed="true"]):hover{background:var(--kc-soft)}
+    .bpkc-row:not(.is-locked) .bpkc-row__btn:not(:disabled):not([aria-pressed="true"]):hover .bpkc-row__pick{border-color:var(--kc-pop)}
+    .bpkc-up__btn:hover{border-color:var(--kc-pop)}
+    .bpkc-chip button:hover{background:rgba(12,11,11,.16)}
+  }
+  @media (max-width:420px){
+    .bpkc-packs{grid-template-columns:1fr}
+    .bpkc-pack{grid-template-columns:auto 1fr auto;align-items:center;gap:0 10px}
+    .bpkc-pack__n{grid-column:1;grid-row:1 / span 2;align-self:center}
+    .bpkc-pack__l{grid-column:2;grid-row:1}
+    .bpkc-pack__unit{grid-column:2;grid-row:2}
+    .bpkc-pack__total{grid-column:3;grid-row:1 / span 2;align-self:center;margin-top:0}
+    .bpkc-pack__tag,.bpkc-pack__out{position:static;grid-column:1 / -1;grid-row:3;width:fit-content;margin-top:7px}
+    .bpkc-row__name{white-space:normal}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .bpkc *{transition-duration:.001ms !important}
+    .bpkc-row__btn[aria-pressed="true"] .bpkc-row__pick{transform:none}
+  }
+</style>
+
+<script>
+(function () {
+  var root = document.querySelector('[data-bpkc]');
+  if (!root) return;
+
+  var packs = [].slice.call(root.querySelectorAll('[data-bpkc-pack]'));
+  var rows = [].slice.call(root.querySelectorAll('[data-bpkc-row]'));
+  var quotaEl = root.querySelector('[data-bpkc-quota]');
+  var quotaNum = root.querySelector('[data-bpkc-quotanum]');
+  var chipsEl = root.querySelector('[data-bpkc-chips]');
+  var extraChipsEl = root.querySelector('[data-bpkc-extrachips]');
+  var upsellEl = root.querySelector('[data-bpkc-upsell]');
+  var upListEl = root.querySelector('[data-bpkc-uplist]');
+  var stateEl = root.querySelector('[data-bpkc-state]');
+  var totalEl = root.querySelector('[data-bpkc-total]');
+  var addBtn = root.querySelector('[data-bpkc-add]');
+  var errorEl = root.querySelector('[data-bpkc-error]');
+  var noneEl = root.querySelector('[data-bpkc-none]');
+  var fullEl = root.querySelector('[data-bpkc-full]');
+  var levelSel = root.querySelector('[data-bpkc-niveau]');
+  if (!packs.length || !rows.length || !addBtn) return;
+
+  var money = {{ shop.money_format | json }};
+  var quota = parseInt(packs[0].dataset.quota, 10);
+  var packVariant = packs[0].dataset.variant;
+  var packPrice = parseInt(packs[0].dataset.price, 10);
+  var included = [];   /* handles inclus dans le pack, plafonnes a quota */
+  var extras = [];     /* handles ajoutes a l'unite */
+  var filters = { univers: '', niveau: '' };
+
+  function formatPrice(cents) {
+    var d = (cents / 100).toFixed(2);
+    return money
+      .replace(/\{\{\s*amount\s*\}\}/g, d.replace('.', ','))
+      .replace(/\{\{\s*amount_with_comma_separator\s*\}\}/g, d.replace('.', ','))
+      .replace(/\{\{\s*amount_no_decimals\s*\}\}/g, String(Math.round(cents / 100)))
+      .replace(/\{\{\s*amount_no_decimals_with_comma_separator\s*\}\}/g, String(Math.round(cents / 100)));
+  }
+  function rowOf(h) {
+    for (var i = 0; i < rows.length; i++) if (rows[i].dataset.handle === h) return rows[i];
+    return null;
+  }
+  function dataOf(h) {
+    var r = rowOf(h);
+    return r ? { title: r.dataset.title, price: parseInt(r.dataset.price, 10), variant: r.dataset.variant,
+                 img: (r.querySelector('img') || {}).currentSrc || (r.querySelector('img') || {}).src || '' } : null;
+  }
+  function clearError() { errorEl.hidden = true; errorEl.textContent = ''; }
+
+  function chip(handle, list, label) {
+    var d = dataOf(handle);
+    var li = document.createElement('li');
+    li.className = 'bpkc-chip';
+    var img = document.createElement('img');
+    img.src = d.img; img.alt = ''; img.width = 24; img.height = 24;
+    var name = document.createElement('span');
+    name.textContent = d.title;
+    var kill = document.createElement('button');
+    kill.type = 'button';
+    kill.textContent = '×';
+    kill.setAttribute('aria-label', 'Retirer ' + d.title + label);
+    kill.addEventListener('click', function () {
+      var at = list.indexOf(handle);
+      if (at > -1) list.splice(at, 1);
+      clearError();
+      render();
+    });
+    li.appendChild(img); li.appendChild(name); li.appendChild(kill);
+    return li;
+  }
+
+  function renderChips() {
+    chipsEl.innerHTML = '';
+    included.forEach(function (h) { chipsEl.appendChild(chip(h, included, ' du pack')); });
+    chipsEl.hidden = included.length === 0;
+
+    extraChipsEl.innerHTML = '';
+    extras.forEach(function (h) { extraChipsEl.appendChild(chip(h, extras, ' des ajouts')); });
+    extraChipsEl.hidden = extras.length === 0;
+  }
+
+  function renderUpsell(full) {
+    upsellEl.hidden = !full;
+    if (!full) return;
+    upListEl.innerHTML = '';
+    rows.forEach(function (row) {
+      var h = row.dataset.handle;
+      if (included.indexOf(h) > -1 || extras.indexOf(h) > -1) return;
+      if (row.querySelector('[data-bpkc-toggle]').disabled) return;
+      var d = dataOf(h);
+      var li = document.createElement('li');
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'bpkc-up__btn';
+      btn.innerHTML = '<img src="' + d.img + '" alt="" loading="lazy">'
+        + '<span class="bpkc-up__name">' + d.title + '</span>'
+        + '<span class="bpkc-up__add">+ ' + formatPrice(d.price) + '</span>';
+      btn.addEventListener('click', function () { extras.push(h); clearError(); render(); });
+      li.appendChild(btn);
+      upListEl.appendChild(li);
+    });
+  }
+
+  function render() {
+    if (included.length > quota) included = included.slice(0, quota);
+    var full = included.length >= quota;
+    var extraCost = 0;
+    extras.forEach(function (h) { extraCost += dataOf(h).price; });
+
+    quotaNum.textContent = quota;
+    quotaEl.textContent = included.length + '/' + quota;
+    quotaEl.classList.toggle('is-full', full);
+    fullEl.hidden = !full;
+
+    if (!full) {
+      var left = quota - included.length;
+      stateEl.textContent = included.length === 0
+        ? 'Choisis tes ' + quota + ' dessins inclus'
+        : 'Encore ' + left + ' dessin' + (left > 1 ? 's' : '') + ' à choisir';
+    } else {
+      stateEl.textContent = extras.length
+        ? extras.length + ' dessin' + (extras.length > 1 ? 's' : '') + ' en plus, ' + formatPrice(extraCost)
+        : 'Ton pack est complet';
+    }
+
+    totalEl.textContent = formatPrice(packPrice + extraCost);
+    addBtn.disabled = !full;
+
+    rows.forEach(function (row) {
+      var h = row.dataset.handle;
+      var at = included.indexOf(h);
+      var btn = row.querySelector('[data-bpkc-toggle]');
+      btn.setAttribute('aria-pressed', at > -1 ? 'true' : 'false');
+      var n = row.querySelector('.bpkc-row__n');
+      if (n) n.textContent = at > -1 ? String(at + 1) : '';
+      /* quand le pack est complet, les non retenus se verrouillent :
+         l'ajout payant se fait a l'etape 3, jamais ici */
+      row.classList.toggle('is-locked', full && at === -1);
+    });
+
+    renderChips();
+    renderUpsell(full);
+  }
+
+  function applyFilters() {
+    var visible = 0;
+    rows.forEach(function (row) {
+      var tags = ' ' + row.dataset.tags + ' ';
+      var ok = (!filters.univers || tags.indexOf(' ' + filters.univers + ' ') > -1)
+            && (!filters.niveau || tags.indexOf(' ' + filters.niveau + ' ') > -1);
+      row.hidden = !ok;
+      if (ok) visible++;
+    });
+    if (noneEl) noneEl.hidden = visible > 0;
+  }
+
+  packs.forEach(function (pack) {
+    pack.addEventListener('click', function () {
+      if (pack.disabled) return;
+      packs.forEach(function (p) { p.setAttribute('aria-checked', 'false'); });
+      pack.setAttribute('aria-checked', 'true');
+      quota = parseInt(pack.dataset.quota, 10);
+      packVariant = pack.dataset.variant;
+      packPrice = parseInt(pack.dataset.price, 10);
+      /* un pack plus grand libere des places : les ajouts payants deja faits
+         redeviennent des inclus, on ne fait pas payer deux fois */
+      while (included.length < quota && extras.length) included.push(extras.shift());
+      clearError();
+      render();
+    });
+  });
+
+  rows.forEach(function (row) {
+    var btn = row.querySelector('[data-bpkc-toggle]');
+    btn.addEventListener('click', function () {
+      if (btn.disabled) return;
+      var h = row.dataset.handle;
+      var at = included.indexOf(h);
+      if (at > -1) { included.splice(at, 1); }
+      else if (included.length < quota) { included.push(h); }
+      else { return; }   /* plafond atteint, l'etape 3 prend le relais */
+      clearError();
+      render();
+    });
+  });
+
+  root.querySelectorAll('[data-bpkc-univers]').forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      root.querySelectorAll('[data-bpkc-univers]').forEach(function (t) {
+        t.classList.remove('is-on'); t.setAttribute('aria-selected', 'false');
+      });
+      tab.classList.add('is-on'); tab.setAttribute('aria-selected', 'true');
+      filters.univers = tab.dataset.bpkcUnivers;
+      applyFilters();
+    });
+  });
+
+  if (levelSel) {
+    levelSel.addEventListener('change', function () {
+      filters.niveau = levelSel.value;
+      applyFilters();
+    });
+  }
+
+  addBtn.addEventListener('click', function () {
+    if (addBtn.disabled) return;
+    clearError();
+
+    var titles = included.map(function (h) { return dataOf(h).title; });
+    var items = [{ id: Number(packVariant), quantity: 1, properties: { 'Dessins inclus': titles.join(', ') } }];
+    extras.forEach(function (h) { items.push({ id: Number(dataOf(h).variant), quantity: 1 }); });
+
+    var label = addBtn.textContent;
+    addBtn.disabled = true;
+    addBtn.textContent = 'Ajout en cours';
+    var base = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || '/';
+
+    fetch(base + 'cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ items: items })
+    })
+      .then(function (r) {
+        if (r.ok) { window.location.href = base + 'cart'; return null; }
+        return r.json().catch(function () { return null; }).then(function (pl) {
+          throw new Error((pl && pl.description) || 'HTTP ' + r.status);
+        });
+      })
+      .catch(function (err) {
+        addBtn.disabled = false;
+        addBtn.textContent = label;
+        errorEl.textContent = "L'ajout au panier a échoué : " + err.message
+          + '. Vérifie que les dessins choisis sont publiés et en stock, puis réessaie.';
+        errorEl.hidden = false;
+      });
+  });
+
+  applyFilters();
+  render();
+})();
+</script>

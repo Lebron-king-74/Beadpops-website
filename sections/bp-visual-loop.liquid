@@ -1,0 +1,45 @@
+<section id="bp-visual-loop" aria-label="{{ section.settings.aria_label | escape }}">
+  <div class="vl-viewport">
+    <div class="vl-row vl-row--left">
+      <div class="vl-group">
+        <figure class="vl-card"><img width="620" height="827" src="{{ 'bp-reviews-kuromi-workspace.webp' | asset_url }}" alt="Grande création Kuromi en beads devant son modèle" loading="eager" decoding="async"></figure>
+        <figure class="vl-card"><img width="620" height="802" src="{{ 'bp-reviews-sailor-orange.webp' | asset_url }}" alt="Création colorée en beads tenue à la main" loading="eager" decoding="async"></figure>
+        <figure class="vl-card"><img width="620" height="827" src="{{ 'bp-reviews-green-character.webp' | asset_url }}" alt="Création verte et bleue en beads devant son modèle" loading="eager" decoding="async"></figure>
+        <figure class="vl-card"><img width="620" height="827" src="{{ 'bp-reviews-naruto.webp' | asset_url }}" alt="Création Naruto en beads tenue à la main" loading="eager" decoding="async"></figure>
+        <figure class="vl-card"><img width="620" height="827" src="{{ 'bp-reviews-shiba.webp' | asset_url }}" alt="Portrait de Shiba réalisé en beads devant le chien" loading="eager" decoding="async"></figure>
+        <figure class="vl-card"><img width="900" height="1201" src="{{ 'bp-community-pink-leopard.webp' | asset_url }}" alt="Création en beads représentant un léopard rose" loading="eager" decoding="async"></figure>
+        <figure class="vl-card"><img width="900" height="908" src="{{ 'bp-community-anime-portrait.webp' | asset_url }}" alt="Portrait anime réalisé en beads" loading="eager" decoding="async"></figure>
+      </div>
+      <div class="vl-group" aria-hidden="true">
+        <figure class="vl-card"><img width="620" height="827" src="{{ 'bp-reviews-kuromi-workspace.webp' | asset_url }}" alt="" loading="eager" decoding="async"></figure>
+        <figure class="vl-card"><img width="620" height="802" src="{{ 'bp-reviews-sailor-orange.webp' | asset_url }}" alt="" loading="eager" decoding="async"></figure>
+        <figure class="vl-card"><img width="620" height="827" src="{{ 'bp-reviews-green-character.webp' | asset_url }}" alt="" loading="eager" decoding="async"></figure>
+        <figure class="vl-card"><img width="620" height="827" src="{{ 'bp-reviews-naruto.webp' | asset_url }}" alt="" loading="eager" decoding="async"></figure>
+        <figure class="vl-card"><img width="620" height="827" src="{{ 'bp-reviews-shiba.webp' | asset_url }}" alt="" loading="eager" decoding="async"></figure>
+        <figure class="vl-card"><img width="900" height="1201" src="{{ 'bp-community-pink-leopard.webp' | asset_url }}" alt="" loading="eager" decoding="async"></figure>
+        <figure class="vl-card"><img width="900" height="908" src="{{ 'bp-community-anime-portrait.webp' | asset_url }}" alt="" loading="eager" decoding="async"></figure>
+      </div>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "BP Galerie",
+  "tag": "section",
+  "class": "beadpops-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Libellé accessible",
+      "default": "Créations BeadPops en mouvement"
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "BP Galerie"
+    }
+  ]
+}
+{% endschema %}

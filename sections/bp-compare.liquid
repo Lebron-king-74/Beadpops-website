@@ -1,0 +1,58 @@
+<section id="bp-compare">
+  <div class="cx-wrap">
+    <div class="cx-head"><p class="cx-eyebrow">{{ section.settings.eyebrow | escape }}</p><h2 class="cx-title">{{ section.settings.title | escape }} <span class="os-accent">{{ section.settings.title_accent | escape }}</span> {{ section.settings.title_end | escape }}</h2><p class="cx-sub">{{ section.settings.subtitle | escape }}</p></div>
+    <div class="cx-board" role="table" aria-label="Comparaison entre BeadPops et les kits créatifs classiques">
+      <div class="cx-board-head" role="row"><div class="cx-corner" role="columnheader">En un coup d'oeil</div><div class="cx-brand us" role="columnheader"><span>Bead<span class="pop">Pops</span></span><span class="cx-tag">Notre choix</span></div><div class="cx-brand them" role="columnheader">Kits classiques</div></div>
+      <div class="cx-row" role="row"><div class="cx-label" role="rowheader">Pour commencer</div><div class="cx-value us" data-brand="BeadPops" role="cell"><span class="cx-ic" aria-hidden="true">✓</span><span>Guidé pas à pas, tu sais quoi faire</span></div><div class="cx-value them" data-brand="Les autres" role="cell"><span class="cx-ic" aria-hidden="true">✕</span><span>« Débrouille-toi »</span></div></div>
+      <div class="cx-row" role="row"><div class="cx-label" role="rowheader">Premier résultat</div><div class="cx-value us" data-brand="BeadPops" role="cell"><span class="cx-ic" aria-hidden="true">✓</span><span>Rendu canon dès le premier essai</span></div><div class="cx-value them" data-brand="Les autres" role="cell"><span class="cx-ic" aria-hidden="true">✕</span><span>Résultat aléatoire ou frustrant</span></div></div>
+      <div class="cx-row" role="row"><div class="cx-label" role="rowheader">Aller au bout</div><div class="cx-value us" data-brand="BeadPops" role="cell"><span class="cx-ic" aria-hidden="true">✓</span><span>Un format pensé pour être terminé</span></div><div class="cx-value them" data-brand="Les autres" role="cell"><span class="cx-ic" aria-hidden="true">✕</span><span>Des projets qui traînent</span></div></div>
+      <div class="cx-row" role="row"><div class="cx-label" role="rowheader">Le matériel</div><div class="cx-value us" data-brand="BeadPops" role="cell"><span class="cx-ic" aria-hidden="true">✓</span><span>Tout est dans le kit</span></div><div class="cx-value them" data-brand="Les autres" role="cell"><span class="cx-ic" aria-hidden="true">✕</span><span>Il manque toujours un truc</span></div></div>
+      <div class="cx-row" role="row"><div class="cx-label" role="rowheader">Le niveau requis</div><div class="cx-value us" data-brand="BeadPops" role="cell"><span class="cx-ic" aria-hidden="true">✓</span><span>Fait pour les débutant·es, vraiment</span></div><div class="cx-value them" data-brand="Les autres" role="cell"><span class="cx-ic" aria-hidden="true">✕</span><span>Pensé pour les personnes déjà manuelles</span></div></div>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "BeadPops Comparaison",
+  "tag": "section",
+  "class": "beadpops-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Surtitre",
+      "default": "Le match créatif"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Début du titre",
+      "default": "BeadPops"
+    },
+    {
+      "type": "text",
+      "id": "title_accent",
+      "label": "Accent du titre",
+      "default": "vs."
+    },
+    {
+      "type": "text",
+      "id": "title_end",
+      "label": "Fin du titre",
+      "default": "les kits créatifs classiques"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Sous-titre",
+      "default": "Compare l'expérience, critère par critère."
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "BeadPops Comparaison"
+    }
+  ]
+}
+{% endschema %}

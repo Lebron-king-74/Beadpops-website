@@ -1,0 +1,49 @@
+<footer id="bp-footer">
+  <div class="ft-wrap lp-wrap">
+    <div class="ft-top">
+      <div class="ft-brand">
+        <span class="ft-logo">Bead<span class="pop">Pops</span></span>
+        <p class="ft-tag">{{ section.settings.tagline | escape }}</p>
+        <div class="ft-social">
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r="1.1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.5 3c.3 1.8 1.4 3.1 3.5 3.3v2.8c-1.3.1-2.5-.3-3.5-1v5.6a5.6 5.6 0 1 1-5.6-5.6c.3 0 .6 0 .9.1v2.9a2.7 2.7 0 1 0 1.9 2.6V3h2.8z"/></svg></a>
+          <a href="#" aria-label="Pinterest"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.6 19.3c-.1-.8-.1-2 .1-2.9l1-4.4s-.3-.5-.3-1.3c0-1.3.7-2.2 1.7-2.2.8 0 1.2.6 1.2 1.3 0 .8-.5 2-.8 3.1-.2.9.5 1.6 1.4 1.6 1.6 0 2.8-1.7 2.8-4.2 0-2.2-1.6-3.7-3.8-3.7a4 4 0 0 0-4.1 4c0 .8.3 1.6.7 2.1.1.1.1.2 0 .3l-.2.9c0 .2-.2.2-.4.1-1.1-.5-1.7-2-1.7-3.2 0-2.6 1.9-5 5.5-5 2.9 0 5.1 2 5.1 4.8 0 2.9-1.8 5.2-4.4 5.2-.9 0-1.7-.5-1.9-1l-.5 2c-.2.8-.7 1.7-1 2.3A10 10 0 1 0 12 2z"/></svg></a>
+        </div>
+      </div>
+      <div class="ft-col"><h4>Boutique</h4><ul><li><a href="#">Univers</a></li><li><a href="#">Niveaux</a></li><li><a href="#">Starter Kit</a></li><li><a href="#">Les créations</a></li></ul></div>
+      <div class="ft-col"><h4>Aide</h4><ul><li><a href="#">Comment ça marche</a></li><li><a href="#">FAQ</a></li><li><a href="#">Livraison &amp; retours</a></li><li><a href="#">Nous contacter</a></li></ul></div>
+      <div class="ft-col"><h4>La marque</h4><ul><li><a href="#">Notre histoire</a></li><li><a href="#">Le journal</a></li><li><a href="#">Nous suivre</a></li></ul></div>
+    </div>
+    <div class="ft-bottom">
+      <span class="ft-copy">© {{ "now" | date: "%Y" }} BeadPops. {{ section.settings.copyright | escape }}</span>
+      <div class="ft-legal"><a href="#">Mentions légales</a><a href="#">CGV</a><a href="#">Confidentialité</a></div>
+    </div>
+  </div>
+</footer>
+{% schema %}
+{
+  "name": "BeadPops Footer",
+  "tag": "section",
+  "class": "beadpops-section",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "tagline",
+      "label": "Signature",
+      "default": "Le pixel art en beads. Choisis ton univers, suis les étapes, et repars avec un truc fait par toi."
+    },
+    {
+      "type": "text",
+      "id": "copyright",
+      "label": "Texte de copyright",
+      "default": "Fait avec des Pops."
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "BeadPops Footer"
+    }
+  ]
+}
+{% endschema %}

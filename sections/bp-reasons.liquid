@@ -1,0 +1,337 @@
+{%- comment -%}
+  BeadPops, séquence des raisons.
+
+  Comportement desktop : la section est épinglée par ScrollTrigger et reste entièrement
+  visible. La plage de scroll est découpée en autant de paliers que de raisons, avec un
+  snap, donc une seule raison est ouverte à la fois et aucune ne peut être sautée.
+  Le scroll natif n'est jamais intercepté et pinSpacing crée le spacer exact, donc pas
+  de molette bloquée et pas de vide en fin de section.
+
+  Comportement mobile et prefers-reduced-motion : accordéon natif, aucun épinglage.
+
+  L'id #bp-reasons est conservé parce que tout le CSS de snippets/bp-home-assets.liquid
+  s'appuie dessus. Le JS, lui, est scopé par data-bp-reasons="{{ section.id }}" afin de
+  supporter plusieurs instances et le rechargement de section du Theme Editor.
+{%- endcomment -%}
+
+<section
+  id="bp-reasons"
+  data-bp-reasons="{{ section.id }}"
+  data-motion="{% if section.settings.motion %}true{% else %}false{% endif %}"
+  data-step="{{ section.settings.step_length }}"
+>
+  <div class="wrap lp-wrap">
+    <div class="reasons-head">
+      <p class="reasons-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      <h2 class="reasons-title">{{ section.settings.title | escape }} <span class="os-accent">{{ section.settings.title_accent | escape }}</span></h2>
+    </div>
+    <div class="reasons-main">
+      <div class="reasons-list">
+        {%- for block in section.blocks -%}
+          {%- assign video_url = block.settings.video_asset | asset_url -%}
+          <details
+            class="reason"
+            {% if forloop.first %}open{% endif %}
+            data-video="{{ video_url }}"
+            {{ block.shopify_attributes }}
+          >
+            <summary class="reason-head">
+              <div class="reason-img">
+                <svg viewBox="0 0 48 40" aria-hidden="true"><rect x="1.5" y="1.5" width="45" height="37" rx="5" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="14" cy="13" r="3.5" fill="currentColor"/><path d="M5 33 L18 20 L27 28 L35 20 L44 29" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/></svg>
+              </div>
+              <div class="reason-titles">
+                <span class="reason-badge">{{ block.settings.badge | escape }}</span>
+                <h3 class="reason-name">{{ block.settings.title | escape }}</h3>
+              </div>
+              <span class="reason-chevron" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </summary>
+            <div class="reason-body">
+              <div class="reason-body-inner">
+                <div class="reason-media">
+                  <video src="{{ video_url }}" loop muted playsinline preload="none" aria-label="{{ block.settings.video_alt | escape }}"></video>
+                </div>
+                <p>{{ block.settings.text | escape }}</p>
+              </div>
+            </div>
+          </details>
+        {%- endfor -%}
+      </div>
+      <div class="reasons-preview" aria-hidden="true">
+        <div class="rp-frame">
+          <span class="rp-ico">
+            <svg viewBox="0 0 48 40" aria-hidden="true"><rect x="1.5" y="1.5" width="45" height="37" rx="5" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="14" cy="13" r="3.5" fill="currentColor"/><path d="M5 33 L18 20 L27 28 L35 20 L44 29" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/></svg>
+          </span>
+          <span class="rp-label">{{ section.blocks.first.settings.title | escape }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="bp-marquee" aria-hidden="true">
+  <div class="bp-marquee-track">
+    {%- assign words = section.settings.marquee_words | split: ',' -%}
+    {%- for pass in (1..4) -%}
+      {%- for word in words -%}
+        <span class="mq-w">{{ word | strip | escape }}</span><span class="mq-d">&#9670;</span>
+      {%- endfor -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+<script>
+(function () {
+  var root = document.querySelector('[data-bp-reasons="{{ section.id }}"]');
+  if (!root) return;
+
+  var reasons = Array.prototype.slice.call(root.querySelectorAll('.reason'));
+  if (!reasons.length) return;
+
+  var frame = root.querySelector('.rp-frame');
+  var label = root.querySelector('.rp-label');
+  var triggerId = 'bp-reasons-{{ section.id }}';
+  var current = -1;
+  var sectionVisible = false;
+  var gsapDriven = false;
+
+  function safePlay(video) {
+    if (!video) return;
+    var played = video.play();
+    if (played && played.catch) played.catch(function () {});
+  }
+
+  function pauseInline() {
+    reasons.forEach(function (reason) {
+      reason.querySelectorAll('.reason-media video').forEach(function (video) { video.pause(); });
+    });
+  }
+
+  /* Le panneau de droite reprend le titre et la vidéo de la raison active. */
+  function syncPreview(reason) {
+    if (!frame) return;
+    var name = reason.querySelector('.reason-name');
+    if (label && name) label.textContent = name.textContent;
+    var source = reason.getAttribute('data-video');
+    var video = frame.querySelector('video');
+    if (!source) { if (video) video.pause(); return; }
+    if (!video) {
+      video = document.createElement('video');
+      video.muted = true;
+      video.loop = true;
+      video.playsInline = true;
+      video.setAttribute('muted', '');
+      video.setAttribute('playsinline', '');
+      video.setAttribute('preload', 'metadata');
+      frame.appendChild(video);
+    }
+    if (video.getAttribute('src') !== source) video.src = source;
+    if (sectionVisible) safePlay(video);
+  }
+
+  function activate(index) {
+    index = Math.max(0, Math.min(reasons.length - 1, index));
+    var reason = reasons[index];
+    if (!reason) return;
+    reasons.forEach(function (other) { if (other !== reason) other.open = false; });
+    reason.open = true;
+    current = index;
+    if (gsapDriven) {
+      pauseInline();
+      syncPreview(reason);
+    } else {
+      if (sectionVisible) safePlay(reason.querySelector('.reason-media video'));
+    }
+  }
+
+  /* Clic clavier et souris : toujours disponible, quel que soit le mode. */
+  reasons.forEach(function (reason, index) {
+    var summary = reason.querySelector('summary');
+    if (!summary) return;
+    summary.addEventListener('click', function (event) {
+      event.preventDefault();
+      if (!gsapDriven && reason.open) {
+        reason.open = false;
+        current = -1;
+        pauseInline();
+        return;
+      }
+      activate(index);
+    });
+  });
+
+  if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function (entries) {
+      sectionVisible = entries[0].isIntersecting;
+      if (!sectionVisible) {
+        pauseInline();
+        var previewVideo = frame && frame.querySelector('video');
+        if (previewVideo) previewVideo.pause();
+      } else {
+        activate(current < 0 ? 0 : current);
+      }
+    }, { rootMargin: '120px 0px' });
+    observer.observe(root);
+  }
+
+  /* ---------- ScrollTrigger ---------- */
+  function boot() {
+    if (!window.gsap || !window.ScrollTrigger) return;
+    if (root.dataset.motion !== 'true') return;
+
+    gsap.registerPlugin(ScrollTrigger);
+    var media = gsap.matchMedia();
+
+    media.add(
+      { isDesktop: '(min-width: 821px)', reduceMotion: '(prefers-reduced-motion: reduce)' },
+      function (context) {
+        if (!context.conditions.isDesktop || context.conditions.reduceMotion) return;
+
+        var steps = reasons.length;
+        if (steps < 2) return;
+
+        gsapDriven = true;
+        activate(0);
+
+        ScrollTrigger.create({
+          id: triggerId,
+          trigger: root,
+          start: 'center center',
+          end: '+=' + (steps - 1) * parseInt(root.dataset.step || 50, 10) + '%',
+          pin: true,
+          snap: { snapTo: 1 / (steps - 1), duration: 0.3, delay: 0.03, ease: 'power1.inOut' },
+          onUpdate: function (self) {
+            var index = Math.round(self.progress * (steps - 1));
+            if (index !== current) activate(index);
+          }
+        });
+
+        return function () { gsapDriven = false; };
+      }
+    );
+
+    /* Polices et visuels décalent la mise en page, il faut recalculer les positions. */
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { ScrollTrigger.refresh(); });
+    }
+
+    /* Theme Editor : à chaque rechargement de section la hauteur du document change. */
+    document.addEventListener('shopify:section:load', function () { ScrollTrigger.refresh(); });
+
+    /* Nettoyage : sans ça les triggers de l'ancien DOM survivent et s'empilent. */
+    document.addEventListener('shopify:section:unload', function (event) {
+      if (event.detail && event.detail.sectionId !== '{{ section.id }}') return;
+      var instance = ScrollTrigger.getById(triggerId);
+      if (instance) instance.kill();
+      media.revert();
+      if (typeof observer !== 'undefined' && observer) observer.disconnect();
+    });
+  }
+
+  /* GSAP est chargé en defer, il n'existe pas encore au moment du parsing du body. */
+  if (window.gsap) boot();
+  else if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
+  else window.addEventListener('load', boot, { once: true });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "BeadPops raisons",
+  "tag": "section",
+  "class": "beadpops-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "5 raisons d'essayer" },
+    { "type": "text", "id": "title", "label": "Titre", "default": "Ce qui rend le pixel art en beads aussi" },
+    { "type": "text", "id": "title_accent", "label": "Titre accentué", "default": "FUN." },
+    { "type": "header", "content": "Séquence au scroll" },
+    {
+      "type": "checkbox",
+      "id": "motion",
+      "label": "Épingler la section et dérouler les raisons au scroll",
+      "info": "Desktop uniquement. Désactivé automatiquement si le visiteur demande moins d'animations.",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "step_length",
+      "label": "Longueur de scroll par raison",
+      "unit": "%",
+      "min": 30,
+      "max": 90,
+      "step": 5,
+      "default": 50
+    },
+    { "type": "header", "content": "Bandeau défilant" },
+    {
+      "type": "text",
+      "id": "marquee_words",
+      "label": "Mots du bandeau",
+      "info": "Séparés par des virgules.",
+      "default": "Résultat canon, Fait par toi, Satisfaisant à faire, Anti-stress, Zéro talent requis, Pixel art en beads"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "reason",
+      "name": "Raison",
+      "limit": 6,
+      "settings": [
+        { "type": "text", "id": "badge", "label": "Badge", "default": "Raison 1" },
+        { "type": "text", "id": "title", "label": "Titre", "default": "C'est incroyablement satisfaisant" },
+        { "type": "textarea", "id": "text", "label": "Texte", "default": "Chaque Pop posée, c'est un mini « clic » qui fait du bien." },
+        { "type": "text", "id": "video_asset", "label": "Vidéo (nom du fichier dans les assets du thème)", "default": "bp-reason-1.mp4" },
+        { "type": "text", "id": "video_alt", "label": "Description de la vidéo", "default": "Des Pops posées une à une sur la grille" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "BeadPops raisons",
+      "blocks": [
+        {
+          "type": "reason",
+          "settings": {
+            "badge": "Raison 1",
+            "title": "C'est incroyablement satisfaisant",
+            "text": "Chaque Pop posée, c'est un mini « clic » qui fait du bien. Le visuel se construit petit à petit, et chaque étape te donne un petit « yes ».",
+            "video_asset": "bp-reason-1.mp4",
+            "video_alt": "Des Pops posées une à une sur la grille"
+          }
+        },
+        {
+          "type": "reason",
+          "settings": {
+            "badge": "Raison 2",
+            "title": "Zéro talent requis (vraiment)",
+            "text": "Tu n'as pas besoin de savoir dessiner : le modèle te guide étape par étape. Tu avances à ton rythme, et le rendu reste propre et canon.",
+            "video_asset": "bp-reason-2.mp4",
+            "video_alt": "Le modèle guide le placement des Pops, étape par étape"
+          }
+        },
+        {
+          "type": "reason",
+          "settings": {
+            "badge": "Raison 3",
+            "title": "C'est apaisant (tu rentres dans ta bulle)",
+            "text": "Choisir les couleurs, trier, placer les Pops une à une, c'est doux, répétitif, relaxant. Parfait pour décompresser.",
+            "video_asset": "bp-reason-3.mp4",
+            "video_alt": "Tri des couleurs et placement des Pops, geste répétitif et apaisant"
+          }
+        },
+        {
+          "type": "reason",
+          "settings": {
+            "badge": "Raison 4",
+            "title": "Tu es fier·e du résultat",
+            "text": "Tu vois ta création prendre forme sous tes yeux. Et à la fin, tu as un résultat joli, que tu peux garder, offrir, afficher, fait par toi.",
+            "video_asset": "bp-reason-4.mp4",
+            "video_alt": "La création terminée, prête à être gardée ou offerte"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,59 @@
+<section id="bp-modes">
+  <div class="md-wrap lp-wrap">
+    <div class="md-head"><h2 class="md-title">{{ section.settings.title | escape }} <span class="os-accent">{{ section.settings.title_accent | escape }}</span></h2></div>
+    <p class="md-swipe-hint">{{ section.settings.subtitle | escape }}</p>
+    <div class="md-grid">
+      <a class="md-card" href="{{ section.settings.easy_collection.url | default: '#bp-modes' }}"><div class="md-top"><span class="md-num">01</span></div><div class="md-media"><img width="620" height="827" src="{{ 'bp-community-floral-fox.webp' | asset_url }}" alt="Petite création florale en beads, exemple du niveau Facile" loading="lazy" decoding="async"></div><div class="md-copy"><span class="md-badge">Niveau facile</span><h3 class="md-name">Flash</h3><p class="md-desc">Un premier design rapide pour prendre le geste en main.</p></div><span class="md-cta"><span>Voir la collection Facile</span><span class="md-cta-icon" aria-hidden="true">&rarr;</span></span></a>
+      <a class="md-card" href="{{ section.settings.medium_collection.url | default: '#bp-modes' }}"><div class="md-top"><span class="md-num">02</span></div><div class="md-media"><img width="620" height="827" src="{{ 'bp-community-blue-flower-cat.webp' | asset_url }}" alt="Création florale détaillée en beads, exemple du niveau Medium" loading="lazy" decoding="async"></div><div class="md-copy"><span class="md-badge">Niveau medium</span><h3 class="md-name">Chill</h3><p class="md-desc">Plus de détails, toujours simple à suivre.</p></div><span class="md-cta"><span>Voir la collection Medium</span><span class="md-cta-icon" aria-hidden="true">&rarr;</span></span></a>
+      <a class="md-card" href="{{ section.settings.boss_collection.url | default: '#bp-modes' }}"><div class="md-top"><span class="md-num">03</span></div><div class="md-media"><img width="620" height="807" src="{{ 'bp-community-sailor-moon.webp' | asset_url }}" alt="Grande création en beads, exemple du niveau Boss Mode" loading="lazy" decoding="async"></div><div class="md-copy"><span class="md-badge">Niveau boss mode</span><h3 class="md-name">Le grand projet</h3><p class="md-desc">Une grande pièce pour prendre ton temps et aller plus loin.</p></div><span class="md-cta"><span>Voir la collection Boss Mode</span><span class="md-cta-icon" aria-hidden="true">&rarr;</span></span></a>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "BeadPops Difficulté",
+  "tag": "section",
+  "class": "beadpops-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre",
+      "default": "Choisis ton"
+    },
+    {
+      "type": "text",
+      "id": "title_accent",
+      "label": "Titre accentué",
+      "default": "niveau de difficulté."
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Sous-titre",
+      "default": "Choisis selon ton temps et le niveau de détail."
+    },
+    {
+      "type": "collection",
+      "id": "easy_collection",
+      "label": "Collection Facile"
+    },
+    {
+      "type": "collection",
+      "id": "medium_collection",
+      "label": "Collection Medium"
+    },
+    {
+      "type": "collection",
+      "id": "boss_collection",
+      "label": "Collection Boss Mode"
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "BeadPops Difficulté"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,64 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "bp-product",
+      "blocks": {
+        "step1": {
+          "type": "step",
+          "settings": {
+            "title": "Poser une couleur",
+            "text": "Commence par une teinte et une zone simple."
+          }
+        },
+        "step2": {
+          "type": "step",
+          "settings": {
+            "title": "Répéter, ça se révèle",
+            "text": "Pop après Pop, l’image apparaît sous tes yeux."
+          }
+        },
+        "step3": {
+          "type": "step",
+          "settings": {
+            "title": "Admirer le résultat",
+            "text": "Ton design est prêt à être gardé, offert ou affiché."
+          }
+        },
+        "faq1": {
+          "type": "faq",
+          "settings": {
+            "question": "Comment choisir mon niveau ?",
+            "answer": "<p>Le niveau et le temps indicatif sont affichés dès qu’ils sont renseignés sur la fiche produit.</p>"
+          }
+        },
+        "faq2": {
+          "type": "faq",
+          "settings": {
+            "question": "Le Starter Kit est-il nécessaire ?",
+            "answer": "<p>Relie ici la réponse exacte selon le contenu de ton offre Shopify.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "step1",
+        "step2",
+        "step3",
+        "faq1",
+        "faq2"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

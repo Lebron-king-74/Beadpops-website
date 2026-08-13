@@ -1,0 +1,57 @@
+<section id="bp-how" data-scroll-story>
+  <div class="hw-wrap lp-wrap">
+    <div class="hw-head"><p class="hw-eyebrow">{{ section.settings.eyebrow | escape }}</p><h2 class="hw-title">{{ section.settings.title | escape }} <span class="os-accent">{{ section.settings.title_accent | escape }}</span></h2></div>
+    <div class="hw-scroll">
+      <div class="hw-visual-wrap">
+        <div class="hw-stage" aria-label="Création BeadPops révélée au fil du défilement">
+          <div class="hw-sprite hw-sprite--process" aria-hidden="true"></div>
+          <div class="hw-sprite hw-sprite--result" aria-hidden="true"></div>
+          <div class="hw-stage-top"><span class="hw-stage-step">Étape 01</span></div>
+          <div class="hw-progress" aria-hidden="true"><span></span></div>
+        </div>
+        <div class="hw-live-caption" aria-live="polite">
+          <span class="hw-live-step">Étape 1</span>
+          <div><h3 class="hw-live-name">Poser une couleur</h3><p class="hw-live-desc">Une teinte, une zone noire.</p></div>
+        </div>
+      </div>
+      <div class="hw-story">
+        <article class="hw-step is-active" data-step="01" data-label="Poser une couleur"><div class="hw-step-inner"><span class="hw-badge">Étape 1</span><h3 class="hw-name">Poser une couleur</h3><p class="hw-desc">Une teinte, une zone noire.</p></div></article>
+        <article class="hw-step" data-step="02" data-label="Répéter, ça se révèle"><div class="hw-step-inner"><span class="hw-badge">Étape 2</span><h3 class="hw-name">Répéter, ça se révèle</h3><p class="hw-desc">Pop après Pop, l'image apparaît sous tes yeux.</p></div></article>
+        <article class="hw-step" data-step="03" data-label="Admirer le résultat final"><div class="hw-step-inner"><span class="hw-badge">Étape 3</span><h3 class="hw-name">Admirer le résultat final</h3><p class="hw-desc">Le dernier Pop est posé. Admire le résultat.</p></div></article>
+      </div>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "BP Comment ça marche",
+  "tag": "section",
+  "class": "beadpops-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Surtitre",
+      "default": "Comment ça marche ?"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre",
+      "default": "Ton design prend vie en"
+    },
+    {
+      "type": "text",
+      "id": "title_accent",
+      "label": "Titre accentué",
+      "default": "trois étapes."
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "BP Comment ça marche"
+    }
+  ]
+}
+{% endschema %}

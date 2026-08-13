@@ -1,0 +1,135 @@
+<section id="bp-universe" data-price-placeholders="true" data-time-placeholders="true">
+  <div class="uv-wrap lp-wrap">
+    <div class="uv-head"><p class="uv-eyebrow">{{ section.settings.eyebrow | escape }}</p><h2 class="uv-title">{{ section.settings.title | escape }} <span class="os-accent">{{ section.settings.title_accent | escape }}</span></h2></div>
+    <div class="uv-tabs" role="tablist" aria-label="Univers BeadPops">
+      <button class="uv-tab" role="tab" id="uvt-kawaii" aria-controls="uvp-kawaii" aria-selected="true" style="--acc:#FF6B9D"><span class="uv-tab-dot" aria-hidden="true"></span>Kawaii</button>
+      <button class="uv-tab" role="tab" id="uvt-anime" aria-controls="uvp-anime" aria-selected="false" tabindex="-1" style="--acc:#67E8F9"><span class="uv-tab-dot" aria-hidden="true"></span>Anime &amp; Manga</button>
+      <button class="uv-tab" role="tab" id="uvt-fantasy" aria-controls="uvp-fantasy" aria-selected="false" tabindex="-1" style="--acc:#C084FC"><span class="uv-tab-dot" aria-hidden="true"></span>Fantasy</button>
+      <button class="uv-tab" role="tab" id="uvt-cartoons" aria-controls="uvp-cartoons" aria-selected="false" tabindex="-1" style="--acc:#FBBF24"><span class="uv-tab-dot" aria-hidden="true"></span>Cartoons</button>
+    </div>
+    <p class="uv-swipe-hint">Glisse pour voir l'univers et ses produits</p>
+
+    <div class="uv-panels">
+      <div class="uv-panel is-active" role="tabpanel" id="uvp-kawaii" aria-labelledby="uvt-kawaii" style="--acc:#FF6B9D">
+        <div class="uv-carousel">
+          <button class="uv-arrow prev" type="button" aria-label="Voir les modèles précédents"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 8 12 15 19"/></svg></button>
+          <div class="uv-viewport">
+            <div class="uv-track">
+              <a class="uv-cover" href="{{ section.settings.kawaii_collection.url | default: '#bp-universe' }}"><img loading="lazy" decoding="async" width="720" height="960" src="{{ 'bp-univers-catalog-kawaii-cover.webp' | asset_url }}" alt="Sélection de modèles pixel art kawaii"><span class="uv-cover-lbl"><span class="uv-cover-kick">Univers</span><span class="uv-cover-name">Kawaii</span><span class="uv-cover-go">Voir la collection <span aria-hidden="true">&rarr;</span></span></span></a>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Facile</span><button class="uv-heart" type="button" aria-label="Ajouter Cœur sucré aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#" aria-label="Cœur sucré"></a></div><p class="uv-pname">Cœur sucré</p><p class="uv-price">14,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Facile</span><button class="uv-heart" type="button" aria-label="Ajouter Nuage rieur aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#" aria-label="Nuage rieur"></a></div><p class="uv-pname">Nuage rieur</p><p class="uv-price">14,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Medium</span><button class="uv-heart" type="button" aria-label="Ajouter Fraise mochi aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#" aria-label="Fraise mochi"></a></div><p class="uv-pname">Fraise mochi</p><p class="uv-price">19,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Medium</span><button class="uv-heart" type="button" aria-label="Ajouter Panda boba aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#" aria-label="Panda boba"></a></div><p class="uv-pname">Panda boba</p><p class="uv-price">19,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Boss</span><button class="uv-heart" type="button" aria-label="Ajouter Chat mochi aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#" aria-label="Chat mochi"></a></div><p class="uv-pname">Chat mochi</p><p class="uv-price">24,99 €</p></div>
+            </div>
+          </div>
+          <button class="uv-arrow next" type="button" aria-label="Voir les modèles suivants"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5 16 12 9 19"/></svg></button>
+        </div>
+      </div>
+
+      <div class="uv-panel" role="tabpanel" id="uvp-anime" aria-labelledby="uvt-anime" style="--acc:#67E8F9" hidden>
+        <div class="uv-carousel">
+          <button class="uv-arrow prev" type="button" aria-label="Voir les modèles précédents"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 8 12 15 19"/></svg></button>
+          <div class="uv-viewport">
+            <div class="uv-track">
+              <a class="uv-cover" href="{{ section.settings.anime_collection.url | default: '#bp-universe' }}"><img loading="lazy" decoding="async" width="720" height="960" src="{{ 'bp-univers-catalog-anime-cover.webp' | asset_url }}" alt="Sélection de modèles pixel art anime et manga"><span class="uv-cover-lbl"><span class="uv-cover-kick">Univers</span><span class="uv-cover-name">Anime &amp; Manga</span><span class="uv-cover-go">Voir la collection <span aria-hidden="true">&rarr;</span></span></span></a>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Facile</span><button class="uv-heart" type="button" aria-label="Ajouter Champi power-up aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#" aria-label="Champi power-up"></a></div><p class="uv-pname">Champi power-up</p><p class="uv-price">14,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Facile</span><button class="uv-heart" type="button" aria-label="Ajouter Pièce étoile aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#" aria-label="Pièce étoile"></a></div><p class="uv-pname">Pièce étoile</p><p class="uv-price">14,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Medium</span><button class="uv-heart" type="button" aria-label="Ajouter Manette 16-bit aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#" aria-label="Manette 16-bit"></a></div><p class="uv-pname">Manette 16-bit</p><p class="uv-price">19,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Facile</span><button class="uv-heart" type="button" aria-label="Ajouter Cœur de vie aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#" aria-label="Cœur de vie"></a></div><p class="uv-pname">Cœur de vie</p><p class="uv-price">14,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Boss</span><button class="uv-heart" type="button" aria-label="Ajouter Combo arcade aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#" aria-label="Combo arcade"></a></div><p class="uv-pname">Combo arcade</p><p class="uv-price">24,99 €</p></div>
+            </div>
+          </div>
+          <button class="uv-arrow next" type="button" aria-label="Voir les modèles suivants"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5 16 12 9 19"/></svg></button>
+        </div>
+      </div>
+
+      <div class="uv-panel" role="tabpanel" id="uvp-fantasy" aria-labelledby="uvt-fantasy" style="--acc:#C084FC" hidden>
+        <div class="uv-carousel">
+          <button class="uv-arrow prev" type="button" aria-label="Voir les modèles précédents"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 8 12 15 19"/></svg></button>
+          <div class="uv-viewport">
+            <div class="uv-track">
+              <a class="uv-cover" href="{{ section.settings.fantasy_collection.url | default: '#bp-universe' }}"><img loading="lazy" decoding="async" width="720" height="960" src="{{ 'bp-univers-catalog-fantasy-cover.webp' | asset_url }}" alt="Sélection de modèles pixel art fantasy"><span class="uv-cover-lbl"><span class="uv-cover-kick">Univers</span><span class="uv-cover-name">Fantasy</span><span class="uv-cover-go">Voir la collection <span aria-hidden="true">&rarr;</span></span></span></a>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Facile</span><button class="uv-heart" type="button" aria-label="Ajouter Potion de mana aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#" aria-label="Potion de mana"></a></div><p class="uv-pname">Potion de mana</p><p class="uv-price">14,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Medium</span><button class="uv-heart" type="button" aria-label="Ajouter Licorne astrale aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#" aria-label="Licorne astrale"></a></div><p class="uv-pname">Licorne astrale</p><p class="uv-price">19,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Medium</span><button class="uv-heart" type="button" aria-label="Ajouter Épée héroïque aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#" aria-label="Épée héroïque"></a></div><p class="uv-pname">Épée héroïque</p><p class="uv-price">19,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Medium</span><button class="uv-heart" type="button" aria-label="Ajouter Grimoire ancien aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#" aria-label="Grimoire ancien"></a></div><p class="uv-pname">Grimoire ancien</p><p class="uv-price">19,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Boss</span><button class="uv-heart" type="button" aria-label="Ajouter Bébé dragon aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#" aria-label="Bébé dragon"></a></div><p class="uv-pname">Bébé dragon</p><p class="uv-price">24,99 €</p></div>
+            </div>
+          </div>
+          <button class="uv-arrow next" type="button" aria-label="Voir les modèles suivants"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5 16 12 9 19"/></svg></button>
+        </div>
+      </div>
+
+      <div class="uv-panel" role="tabpanel" id="uvp-cartoons" aria-labelledby="uvt-cartoons" style="--acc:#FBBF24" hidden>
+        <div class="uv-carousel">
+          <button class="uv-arrow prev" type="button" aria-label="Voir les modèles précédents"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 8 12 15 19"/></svg></button>
+          <div class="uv-viewport">
+            <div class="uv-track">
+              <a class="uv-cover" href="{{ section.settings.cartoons_collection.url | default: '#bp-universe' }}"><img loading="lazy" decoding="async" width="720" height="960" src="{{ 'bp-univers-catalog-cartoons-cover.webp' | asset_url }}" alt="Sélection de modèles pixel art cartoons"><span class="uv-cover-lbl"><span class="uv-cover-kick">Univers</span><span class="uv-cover-name">Cartoons</span><span class="uv-cover-go">Voir la collection <span aria-hidden="true">&rarr;</span></span></span></a>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Facile</span><button class="uv-heart" type="button" aria-label="Ajouter Renard des neiges aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#" aria-label="Renard des neiges"></a></div><p class="uv-pname">Renard des neiges</p><p class="uv-price">14,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Facile</span><button class="uv-heart" type="button" aria-label="Ajouter Axolotl rose aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#" aria-label="Axolotl rose"></a></div><p class="uv-pname">Axolotl rose</p><p class="uv-price">14,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Medium</span><button class="uv-heart" type="button" aria-label="Ajouter Chouette lune aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#" aria-label="Chouette lune"></a></div><p class="uv-pname">Chouette lune</p><p class="uv-price">19,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Facile</span><button class="uv-heart" type="button" aria-label="Ajouter Grenouille menthe aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#" aria-label="Grenouille menthe"></a></div><p class="uv-pname">Grenouille menthe</p><p class="uv-price">14,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Boss</span><button class="uv-heart" type="button" aria-label="Ajouter Shiba roux aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#" aria-label="Shiba roux"></a></div><p class="uv-pname">Shiba roux</p><p class="uv-price">24,99 €</p></div>
+            </div>
+          </div>
+          <button class="uv-arrow next" type="button" aria-label="Voir les modèles suivants"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5 16 12 9 19"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "BeadPops Univers",
+  "tag": "section",
+  "class": "beadpops-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Surtitre",
+      "default": "Choisis ton univers"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre",
+      "default": "Quel style te donne envie de"
+    },
+    {
+      "type": "text",
+      "id": "title_accent",
+      "label": "Titre accentué",
+      "default": "commencer ?"
+    },
+    {
+      "type": "collection",
+      "id": "kawaii_collection",
+      "label": "Collection kawaii"
+    },
+    {
+      "type": "collection",
+      "id": "anime_collection",
+      "label": "Collection anime"
+    },
+    {
+      "type": "collection",
+      "id": "fantasy_collection",
+      "label": "Collection fantasy"
+    },
+    {
+      "type": "collection",
+      "id": "cartoons_collection",
+      "label": "Collection cartoons"
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "BeadPops Univers"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,105 @@
+<section id="bp-offer">
+  <div class="wrap lp-wrap">
+    <div class="offer-head">
+      <p class="offer-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      <h2 class="offer-title">{{ section.settings.title | escape }} <span class="os-accent">{{ section.settings.title_accent | escape }}</span></h2>
+    </div>
+    <div class="kit-explorer">
+      <div class="kit-overview wf">
+        <img width="1448" height="1086" src="{{ 'bp-offer-starter-kit-flatlay-v5.webp' | asset_url }}" alt="Starter Kit BeadPops annoté avec deux plaques, une pelle ramasse-beads, une pince, deux plateaux, deux feuilles et un ruban" width="1448" height="1086" loading="lazy" decoding="async">
+      </div>
+      <div class="kit-right">
+        <div class="kit-viewer">
+          <button class="kit-arrow kit-prev" type="button" aria-label="Élément précédent">&larr;</button>
+          <div class="kit-detail" id="kit-detail">
+            <div class="kit-detail-media"><img width="480" height="480" src="{{ 'bp-offer-tools-kit-picker-cutout.webp' | asset_url }}" alt="1 pelle ramasse-beads" width="480" height="480" loading="lazy" decoding="async"></div>
+            <div class="kit-detail-body">
+              <span class="kit-badge"></span>
+              <h3 class="kit-name">1 pelle ramasse-beads</h3>
+              <p class="kit-desc">Pour placer vite, propre, et sans t'énerver.</p>
+            </div>
+          </div>
+          <button class="kit-arrow kit-next" type="button" aria-label="Élément suivant">&rarr;</button>
+        </div>
+        <p class="offer-hint">Clique sur un élément pour voir à quoi il sert.</p>
+        <div class="kit-btns" role="tablist" aria-label="Éléments du Starter Kit">
+          <button class="kit-btn is-active" type="button" aria-selected="true" aria-label="1 pelle ramasse-beads"><span class="ic"><img width="480" height="480" src="{{ 'bp-offer-tools-kit-picker-cutout.webp' | asset_url }}" alt="" width="480" height="480" loading="lazy" decoding="async"></span><span class="lbl">1 pelle ramasse-beads</span></button>
+          <button class="kit-btn" type="button" aria-selected="false" aria-label="1 pince de précision"><span class="ic"><img width="480" height="480" src="{{ 'bp-offer-tools-kit-tweezer-cutout.webp' | asset_url }}" alt="" width="480" height="480" loading="lazy" decoding="async"></span><span class="lbl">1 pince de précision</span></button>
+          <button class="kit-btn" type="button" aria-selected="false" aria-label="2 plateaux à beads"><span class="ic"><img width="480" height="480" src="{{ 'bp-offer-tools-kit-trays-cutout.webp' | asset_url }}" alt="" width="480" height="480" loading="lazy" decoding="async"></span><span class="lbl">2 plateaux à beads</span></button>
+          <button class="kit-btn" type="button" aria-selected="false" aria-label="2 plaques connectables"><span class="ic"><img width="480" height="480" src="{{ 'bp-offer-tools-kit-pegboards-cutout.webp' | asset_url }}" alt="" width="480" height="480" loading="lazy" decoding="async"></span><span class="lbl">2 plaques connectables</span></button>
+          <button class="kit-btn" type="button" aria-selected="false" aria-label="2 feuilles de repassage"><span class="ic"><img width="480" height="480" src="{{ 'bp-offer-tools-kit-ironing-sheets-cutout.webp' | asset_url }}" alt="" width="480" height="480" loading="lazy" decoding="async"></span><span class="lbl">2 feuilles de repassage</span></button>
+          <button class="kit-btn" type="button" aria-selected="false" aria-label="1 ruban adhésif 50 mm"><span class="ic"><img width="480" height="480" src="{{ 'bp-offer-tools-kit-tape-cutout.webp' | asset_url }}" alt="" width="480" height="480" loading="lazy" decoding="async"></span><span class="lbl">1 ruban adhésif 50 mm</span></button>
+        </div>
+      </div>
+
+    </div>
+    <div class="offer-checkout">
+      <div class="offer-price">
+        <span class="amount">{{ section.settings.price | escape }}</span>
+        <span class="note">Le Starter Kit complet, prêt à créer.</span>
+      </div>
+      <a class="offer-cta" href="{{ section.settings.product.url | default: section.settings.cta_link | default: routes.all_products_collection_url }}">{{ section.settings.cta_label | escape }} <span class="arr" aria-hidden="true">&rarr;</span></a>
+    </div>
+  </div>
+</section>
+<div class="bp-seam bp-seam--light-dark" aria-hidden="true"></div>
+<a class="sticky-cta" href="{{ section.settings.product.url | default: section.settings.cta_link | default: routes.all_products_collection_url }}" aria-label="Commencer avec le Starter Kit, 39,99 euros">
+  <span class="sc-price"><span class="sc-amount">{{ section.settings.price | escape }}</span><span class="sc-note">Starter Kit complet</span></span>
+  <span class="sc-btn">Commencer <span class="arr" aria-hidden="true">&rarr;</span></span>
+</a>
+{% schema %}
+{
+  "name": "BeadPops Starter Kit",
+  "tag": "section",
+  "class": "beadpops-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Surtitre",
+      "default": "Dans le Starter Kit"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre",
+      "default": "Tout ce qu'il te faut"
+    },
+    {
+      "type": "text",
+      "id": "title_accent",
+      "label": "Titre accentué",
+      "default": "pour te lancer aujourd'hui."
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Starter Kit"
+    },
+    {
+      "type": "text",
+      "id": "price",
+      "label": "Prix provisoire",
+      "info": "À valider avant publication.",
+      "default": "39,99 €"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Texte du CTA",
+      "default": "Commencer avec le Starter Kit"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Lien de secours"
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "BeadPops Starter Kit"
+    }
+  ]
+}
+{% endschema %}

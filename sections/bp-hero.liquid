@@ -1,0 +1,95 @@
+<section id="os-hero">
+  <div class="os-hero-grid lp-wrap">
+    <div class="os-hero-head">
+      <p class="os-hero-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      <h1 class="os-hero-title">{{ section.settings.title | escape }} <span class="os-accent">{{ section.settings.title_accent | escape }}</span></h1>
+      <p class="os-hero-sub">{{ section.settings.subtitle | escape }}</p>
+    </div>
+
+    <div class="os-hero-visual is-tf">
+      <div class="os-tf" role="img" aria-label="DE ÇA, AVEC ÇA, À ÇA">
+        <span class="os-tf-lbl os-tf-lbl-before">DE ÇA</span>
+        <span class="os-tf-lbl os-tf-lbl-after">À ÇA</span>
+        <div class="os-tf-card os-tf-before"><video src="{{ 'bp-hero-before.mp4' | asset_url }}" autoplay loop muted playsinline preload="auto" aria-label="Création en beads en cours"></video></div>
+        <div class="os-tf-card os-tf-after"><video src="{{ 'bp-hero-after.mp4' | asset_url }}" autoplay loop muted playsinline preload="auto" aria-label="Création en beads terminée"></video></div>
+        <div class="os-tf-arrow os-tf-arrow-1"><svg viewBox="0 0 58 78" aria-hidden="true"><path class="sh" d="M6 8 C34 6 50 24 43 56" fill="none"/><path class="hd" d="M33 49 L44 63 L53 47 Z"/></svg></div>
+        <div class="os-tf-arrow os-tf-arrow-2"><svg viewBox="0 0 58 78" aria-hidden="true"><path class="sh" d="M6 8 C34 6 50 24 43 56" fill="none"/><path class="hd" d="M33 49 L44 63 L53 47 Z"/></svg></div>
+      </div>
+    </div>
+
+    <div class="os-hero-body">
+
+      <ul class="os-hero-checks">
+        <li><span class="os-check" aria-hidden="true">✓</span> Aucun talent requis</li>
+        <li><span class="os-check" aria-hidden="true">✓</span> Vraiment satisfaisant</li>
+        <li><span class="os-check" aria-hidden="true">✓</span> Idéal pour se vider la tête</li>
+        <li><span class="os-check" aria-hidden="true">✓</span> Facile à terminer</li>
+      </ul>
+
+      <a class="os-hero-cta" href="{{ section.settings.cta_product.url | default: section.settings.cta_link | default: '#bp-offer' }}">{{ section.settings.cta_label | escape }} <span class="arr" aria-hidden="true">&rarr;</span></a>
+      <div class="os-hero-meta"><span>{{ section.settings.meta | escape }}</span></div>
+    </div>
+  </div>
+</section>
+<div class="bp-seam bp-seam--dark-light" aria-hidden="true"></div>
+{% schema %}
+{
+  "name": "BeadPops Hero",
+  "tag": "section",
+  "class": "beadpops-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Surtitre",
+      "default": "Nouveau rituel créatif"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre",
+      "default": "Ce que tu aimes. En pixel art."
+    },
+    {
+      "type": "text",
+      "id": "title_accent",
+      "label": "Titre accentué",
+      "default": "Créé par toi."
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Sous-titre",
+      "default": "Kawaii, anime, cartoons, fantasy… Choisis l'univers qui te parle, suis les étapes, et finis avec un résultat propre, joli, fièrement « fait par toi »."
+    },
+    {
+      "type": "text",
+      "id": "meta",
+      "label": "Réassurance",
+      "default": "Kit complet · Guide inclus · Univers au choix"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Texte du CTA",
+      "default": "Commencer avec le Starter Kit"
+    },
+    {
+      "type": "product",
+      "id": "cta_product",
+      "label": "Produit du CTA"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Lien de secours"
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "BeadPops Hero"
+    }
+  ]
+}
+{% endschema %}

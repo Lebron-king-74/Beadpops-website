@@ -1,0 +1,125 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "bp-hero",
+      "settings": {}
+    },
+    "visual_loop": {
+      "type": "bp-visual-loop",
+      "settings": {}
+    },
+    "universe": {
+      "type": "bp-universe",
+      "settings": {}
+    },
+    "how": {
+      "type": "bp-how",
+      "settings": {}
+    },
+    "modes": {
+      "type": "bp-modes",
+      "settings": {}
+    },
+    "offer": {
+      "type": "bp-offer",
+      "settings": {}
+    },
+    "reasons": {
+      "type": "bp-reasons",
+      "settings": {},
+      "blocks": {
+        "reason_1": {
+          "type": "reason",
+          "settings": {
+            "badge": "Raison 1",
+            "title": "C'est incroyablement satisfaisant",
+            "text": "Chaque Pop posée, c'est un mini « clic » qui fait du bien. Le visuel se construit petit à petit, et chaque étape te donne un petit « yes ».",
+            "video_asset": "bp-reason-1.mp4",
+            "video_alt": "Des Pops posées une à une sur la grille"
+          }
+        },
+        "reason_2": {
+          "type": "reason",
+          "settings": {
+            "badge": "Raison 2",
+            "title": "Zéro talent requis (vraiment)",
+            "text": "Tu n'as pas besoin de savoir dessiner : le modèle te guide étape par étape. Tu avances à ton rythme, et le rendu reste propre et canon.",
+            "video_asset": "bp-reason-2.mp4",
+            "video_alt": "Le modèle guide le placement des Pops, étape par étape"
+          }
+        },
+        "reason_3": {
+          "type": "reason",
+          "settings": {
+            "badge": "Raison 3",
+            "title": "C'est apaisant (tu rentres dans ta bulle)",
+            "text": "Choisir les couleurs, trier, placer les Pops une à une, c'est doux, répétitif, relaxant. Parfait pour décompresser.",
+            "video_asset": "bp-reason-3.mp4",
+            "video_alt": "Tri des couleurs et placement des Pops, geste répétitif et apaisant"
+          }
+        },
+        "reason_4": {
+          "type": "reason",
+          "settings": {
+            "badge": "Raison 4",
+            "title": "Tu es fier·e du résultat",
+            "text": "Tu vois ta création prendre forme sous tes yeux. Et à la fin, tu as un résultat joli, que tu peux garder, offrir, afficher, fait par toi.",
+            "video_asset": "bp-reason-4.mp4",
+            "video_alt": "La création terminée, prête à être gardée ou offerte"
+          }
+        }
+      },
+      "block_order": [
+        "reason_1",
+        "reason_2",
+        "reason_3",
+        "reason_4"
+      ]
+    },
+    "create": {
+      "type": "bp-create",
+      "settings": {}
+    },
+    "reviews": {
+      "type": "bp-reviews",
+      "settings": {
+        "show_reviews": false
+      }
+    },
+    "forwho": {
+      "type": "bp-forwho",
+      "settings": {}
+    },
+    "compare": {
+      "type": "bp-compare",
+      "settings": {}
+    },
+    "footer": {
+      "type": "bp-footer",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero",
+    "visual_loop",
+    "universe",
+    "how",
+    "modes",
+    "offer",
+    "reasons",
+    "create",
+    "reviews",
+    "forwho",
+    "compare",
+    "footer"
+  ]
+}

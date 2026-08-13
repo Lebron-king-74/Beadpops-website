@@ -1,0 +1,1839 @@
+{% liquid
+  assign primary_cta_url = section.settings.starter_product.url | default: '#bp-offer'
+  assign easy_collection_url = section.settings.easy_collection.url | default: '#bp-modes'
+  assign medium_collection_url = section.settings.medium_collection.url | default: '#bp-modes'
+  assign boss_collection_url = section.settings.boss_collection.url | default: '#bp-modes'
+  assign kawaii_collection_url = section.settings.kawaii_collection.url | default: '#bp-universe'
+  assign gaming_collection_url = section.settings.gaming_collection.url | default: '#bp-universe'
+  assign fantasy_collection_url = section.settings.fantasy_collection.url | default: '#bp-universe'
+  assign animals_collection_url = section.settings.animals_collection.url | default: '#bp-universe'
+%}
+
+<style>
+@font-face{font-family:'Silkscreen';src:url({{ 'bp-silkscreen-400.woff2' | asset_url }}) format('woff2');font-style:normal;font-weight:400;font-display:swap}
+@font-face{font-family:'Silkscreen';src:url({{ 'bp-silkscreen-700.woff2' | asset_url }}) format('woff2');font-style:normal;font-weight:700;font-display:swap}
+@font-face{font-family:'Bricolage Grotesque';src:url({{ 'bp-bricolage-grotesque.woff2' | asset_url }}) format('woff2');font-style:normal;font-weight:100 900;font-display:swap}
+@font-face{font-family:'Hanken Grotesk';src:url({{ 'bp-hanken-grotesk.woff2' | asset_url }}) format('woff2');font-style:normal;font-weight:100 900;font-display:swap}
+
+  #beadpops-home-{{ section.id }}{
+    --brand-bg:#0C0B0B; --brand-surface:#161412; --brand-accent:#FF5C1A;
+    --brand-text:#F5EDE0; --brand-text-muted:#C9A87C;
+    --brand-font-display:'Silkscreen',monospace;
+    --brand-font-title:'Bricolage Grotesque',sans-serif;
+    --brand-font-body:'Hanken Grotesk',system-ui,sans-serif;
+    --lp-content-max:1480px;
+    --lp-gutter:20px;
+  }
+  #beadpops-home-{{ section.id }},#beadpops-home-{{ section.id }} *,#beadpops-home-{{ section.id }} *::before,#beadpops-home-{{ section.id }} *::after{box-sizing:border-box;}
+
+  #beadpops-home-{{ section.id }}{margin:0;padding:0;overflow-x:clip;background:var(--brand-bg);color:var(--brand-text);font-family:var(--brand-font-body);}
+  #beadpops-home-{{ section.id }} img{max-width:100%;}
+  #beadpops-home-{{ section.id }} .lp-wrap{width:min(calc(100% - (2 * var(--lp-gutter))),var(--lp-content-max));margin-inline:auto;}
+  @media (min-width:768px){#beadpops-home-{{ section.id }}{--lp-gutter:24px;}}
+  @media (min-width:1024px){#beadpops-home-{{ section.id }}{--lp-gutter:32px;}}
+  /* Repli global : respecte prefers-reduced-motion (anime seulement en enhance) */
+  @media (prefers-reduced-motion:reduce){
+    #beadpops-home-{{ section.id }},#beadpops-home-{{ section.id }} *,#beadpops-home-{{ section.id }} *::before,#beadpops-home-{{ section.id }} *::after{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important; }
+  }
+
+  /* Mouvement de page : entrée cadrée, contenu visible sans JavaScript */
+  .bp-motion{ opacity:1; transform:none; clip-path:inset(0); }
+  html.motion-ready .bp-motion:not(.is-visible){ opacity:.001; transform:translateY(14px); clip-path:inset(0 0 10% 0); filter:blur(3px); }
+  html.motion-ready .bp-motion.is-visible{ filter:none; transition:opacity .48s cubic-bezier(.16,1,.3,1),transform .56s cubic-bezier(.16,1,.3,1),clip-path .62s cubic-bezier(.16,1,.3,1),filter .42s cubic-bezier(.16,1,.3,1); transition-delay:var(--motion-delay,0ms); }
+  html.motion-ready #bp-modes .md-card.bp-motion:not(.is-visible),html.motion-ready #bp-compare .cx-row.bp-motion:not(.is-visible){ transform:translateY(10px); clip-path:inset(0 0 18% 0); }
+  html.motion-ready #bp-how .hw-step.bp-motion:not(.is-visible){ transform:translateY(20px); clip-path:inset(0 0 22% 0); }
+  #bp-how .hw-media::after{ content:""; position:absolute; z-index:3; left:0; right:0; bottom:0; height:4px; background:var(--brand-accent); transform:scaleX(0); transform-origin:left; opacity:0; pointer-events:none; }
+  #bp-how .hw-step.bp-motion.is-visible .hw-media::after{ animation:bp-pop-line .62s cubic-bezier(.16,1,.3,1) var(--motion-delay,0ms) both; }
+  @keyframes bp-pop-line{ 0%{transform:scaleX(0);opacity:0;} 18%{opacity:1;} 72%{transform:scaleX(1);opacity:1;} 100%{transform:scaleX(1);opacity:0;} }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto;}
+    .bp-motion,html.motion-ready .bp-motion:not(.is-visible){ opacity:1; transform:none; clip-path:none; filter:none; }
+    #bp-how .hw-step.bp-motion.is-visible .hw-media::after{ animation:none; }
+  }
+
+  /* ===== HERO ===== */
+  #os-hero{ background:radial-gradient(circle at 78% 42%,color-mix(in srgb,var(--brand-accent) 14%,transparent) 0%,transparent 36%),var(--brand-bg); color:var(--brand-text); padding:clamp(38px,4.5vw,68px) 0; overflow-x:hidden; }
+  #os-hero .os-hero-grid{
+    display:grid;
+    grid-template-columns:minmax(0,0.95fr) minmax(0,1.15fr);
+    grid-template-areas:"head visual" "body visual";
+    column-gap:clamp(32px,5vw,72px);
+    row-gap:clamp(22px,2.6vw,34px);          /* FIX 3 : air entre sous-titre (head) et bullets (body) */
+    align-content:center;
+  }
+  #os-hero .os-hero-head{ grid-area:head; }
+  #os-hero .os-hero-body{ grid-area:body; }
+  #os-hero .os-hero-visual{ grid-area:visual; align-self:center; }
+
+  @keyframes os-hero-in{ from{opacity:0;transform:translateY(14px);} to{opacity:1;transform:none;} }
+  #os-hero .os-hero-head, #os-hero .os-hero-visual, #os-hero .os-hero-body{ animation:os-hero-in .55s cubic-bezier(.22,.61,.36,1) both; }
+  #os-hero .os-hero-visual{ animation-delay:.08s; }
+  #os-hero .os-hero-body{ animation-delay:.14s; }
+  @media (prefers-reduced-motion:reduce){ #os-hero .os-hero-head,#os-hero .os-hero-visual,#os-hero .os-hero-body{ animation:none; } }
+
+  #os-hero .os-hero-eyebrow{ font-family:var(--brand-font-display); color:var(--brand-accent); font-size:12px; letter-spacing:.08em; text-transform:uppercase; margin:0 0 20px; }
+  #os-hero .os-hero-title{ font-family:var(--brand-font-title); font-weight:800; color:var(--brand-text); font-size:clamp(30px,4.6vw,64px); line-height:1.04; letter-spacing:-.02em; margin:0; text-wrap:balance; }
+  #os-hero .os-accent{ color:var(--brand-accent); }
+  /* FIX 1 : sous-titre en blanc (Pearl), plus en beige */
+  #os-hero .os-hero-sub{ font-family:var(--brand-font-body); color:var(--brand-text); font-size:clamp(16px,1.4vw,19px); line-height:1.5; max-width:52ch; margin:20px 0 0; overflow-wrap:break-word; }
+
+  /* Bullets = chips 2x2 avec badge rond */
+  #os-hero .os-hero-checks{ list-style:none; padding:0; margin:0; display:grid; grid-template-columns:1fr 1fr; gap:12px; max-width:480px; align-items:stretch; }
+  #os-hero .os-hero-checks li{ display:flex; align-items:center; gap:10px; background:var(--brand-surface); border:0; border-radius:8px; padding:11px 14px; color:var(--brand-text); font-weight:600; font-size:14px; line-height:1.2; }
+  #os-hero .os-check{ flex:none; width:22px; height:22px; border-radius:50%; background:var(--brand-accent); color:var(--brand-bg); display:inline-flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; }
+
+  /* FIX 2 : texte du CTA en blanc, plus en noir */
+  #os-hero .os-hero-cta{ display:inline-block; margin:26px 0 0; background:var(--brand-accent); color:var(--brand-text); font-family:var(--brand-font-title); font-weight:800; font-size:17px; padding:16px 30px; border-radius:8px; text-decoration:none; box-shadow:0 4px 0 rgba(0,0,0,.35); }
+  #os-hero .os-hero-cta:focus-visible{ outline:3px solid var(--brand-text); outline-offset:3px; }
+  #os-hero .os-hero-meta{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin:14px 0 0; color:var(--brand-text-muted); font-size:13px; }
+
+  /* ===== Compo transformation : DE ÇA / AVEC ÇA / À ÇA ===== */
+  /* FIX 5 : visuel plus grand */
+  #os-hero .os-hero-visual.is-tf{ overflow:visible; }
+  #os-hero .os-tf{ position:relative; width:100%; max-width:620px; margin:0 auto; aspect-ratio:1/1; }
+  #os-hero .os-tf-card{ position:absolute; border-radius:8px; overflow:hidden; background:color-mix(in srgb, var(--brand-surface) 84%, var(--brand-text) 16%); box-shadow:0 16px 36px -18px rgba(0,0,0,.8); }
+  #os-hero .os-tf-card img, #os-hero .os-tf-card video{ width:100%; height:100%; object-fit:cover; display:block; }
+  #os-hero .os-tf-ph{ width:100%; height:100%; display:flex; align-items:center; justify-content:center; border:2px dashed color-mix(in srgb, var(--brand-accent) 50%, transparent); border-radius:8px; font-family:var(--brand-font-display); font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:var(--brand-text-muted); }
+  #os-hero .os-tf-before{ width:54%; aspect-ratio:3/4; left:0; bottom:0; transform:rotate(-6deg); z-index:1; }
+  #os-hero .os-tf-after { width:54%; aspect-ratio:3/4; right:0; bottom:0; transform:rotate(6deg); z-index:2; }
+  #os-hero .os-tf-lbl{ position:absolute; z-index:5; font-family:var(--brand-font-display); font-size:clamp(10px,.82vw,12px); line-height:1; letter-spacing:.04em; text-transform:uppercase; color:#0C0B0B; background:var(--brand-accent); border:1px solid color-mix(in srgb,#F5EDE0 28%,transparent); border-radius:3px; padding:7px 10px; box-shadow:0 4px 0 #0C0B0B,0 10px 24px -12px rgba(12,11,11,.45); }
+  #os-hero .os-tf-lbl-before{ top:4%; left:2%; }
+  #os-hero .os-tf-lbl-after{ top:4%; right:2%; text-align:right; }
+  #os-hero .os-tf-arrow{ position:absolute; z-index:4; pointer-events:none; overflow:visible; }
+  #os-hero .os-tf-arrow .sh{ stroke:var(--brand-accent); stroke-width:5; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+  #os-hero .os-tf-arrow .hd{ fill:var(--brand-accent); }
+  #os-hero .os-tf-arrow svg{ filter:drop-shadow(0 3px 0 #0C0B0B) drop-shadow(0 6px 10px color-mix(in srgb,var(--brand-accent) 34%,transparent)); }
+  #os-hero .os-tf-arrow-1{ top:12%; left:6%; width:60px; height:80px; }
+  #os-hero .os-tf-arrow-2{ top:12%; right:6%; width:60px; height:80px; transform:scaleX(-1); }
+  #os-hero .os-tf-lbl,#os-hero .os-tf-arrow{ animation:os-signal-in .64s cubic-bezier(.16,1,.3,1) both; }
+  #os-hero .os-tf-lbl-before{ animation-delay:.22s; }
+  #os-hero .os-tf-lbl-after{ animation-delay:.34s; }
+  #os-hero .os-tf-arrow-1{ animation-delay:.32s; }
+  #os-hero .os-tf-arrow-2{ animation-delay:.44s; }
+  @keyframes os-signal-in{ from{ opacity:0; clip-path:inset(0 0 100% 0); filter:blur(3px); } to{ opacity:1; clip-path:inset(0); filter:none; } }
+
+  /* ===== Mobile : empilé + tout centré (FIX 4) ===== */
+  @media (max-width:960px){
+    #os-hero .os-hero-grid{ grid-template-columns:minmax(0,1fr); grid-template-areas:"head" "visual" "body"; row-gap:30px; }
+    #os-hero .os-hero-head, #os-hero .os-hero-body{ text-align:center; }
+    #os-hero .os-hero-sub{ margin-inline:auto; }
+    #os-hero .os-hero-checks{ margin-inline:auto; }
+    #os-hero .os-hero-checks li{ justify-content:center; text-align:center; }
+    #os-hero .os-hero-meta{ justify-content:center; }
+    #os-hero .os-tf{ max-width:460px; }
+    #os-hero .os-tf-before, #os-hero .os-tf-after{ width:56%; }
+  }
+
+  /* ===== GALERIE CINETIQUE ===== */
+  #bp-visual-loop{
+    --vl-gap:clamp(12px,1.25vw,20px);
+    position:relative;
+    isolation:isolate;
+    overflow:hidden;
+    padding:clamp(16px,1.8vw,26px) 0 clamp(24px,2.8vw,40px);
+    background:linear-gradient(160deg,#F5EDE0 0%,#EFE3D2 52%,#F5EDE0 100%);
+  }
+  #bp-visual-loop::before{
+    content:"";
+    position:absolute;
+    z-index:0;
+    inset:0;
+    background:linear-gradient(90deg,color-mix(in srgb,var(--brand-accent) 7%,transparent),transparent 18% 82%,color-mix(in srgb,var(--brand-accent) 5%,transparent));
+    pointer-events:none;
+  }
+  #bp-visual-loop .vl-viewport{
+    position:relative;
+    z-index:1;
+    overflow:hidden;
+    -webkit-mask-image:linear-gradient(90deg,transparent 0,#0C0B0B 4%,#0C0B0B 96%,transparent 100%);
+    mask-image:linear-gradient(90deg,transparent 0,#0C0B0B 4%,#0C0B0B 96%,transparent 100%);
+  }
+  #bp-visual-loop .vl-row{
+    display:flex;
+    width:max-content;
+    transform:translate3d(0,0,0);
+    animation:vl-left 38s linear infinite;
+    animation-play-state:paused;
+    will-change:transform;
+  }
+  #bp-visual-loop.is-running .vl-row{ animation-play-state:running; }
+  #bp-visual-loop:hover .vl-row{ animation-play-state:paused; }
+  #bp-visual-loop .vl-group{
+    display:flex;
+    flex:none;
+    gap:var(--vl-gap);
+    padding-right:var(--vl-gap);
+  }
+  #bp-visual-loop .vl-card{
+    position:relative;
+    flex:none;
+    margin:0;
+    width:clamp(150px,12vw,192px);
+    aspect-ratio:3/4;
+    overflow:hidden;
+    border:1px solid color-mix(in srgb,#0C0B0B 14%,transparent);
+    border-radius:4px;
+    background:#EFE3D2;
+  }
+  #bp-visual-loop .vl-card img,
+  #bp-visual-loop .vl-card video{
+    display:block;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    background:#161412;
+  }
+  @keyframes vl-left{ from{ transform:translate3d(0,0,0); } to{ transform:translate3d(-50%,0,0); } }
+  @media (max-width:700px){
+    #bp-visual-loop{ --vl-gap:10px; padding:12px 0 24px; }
+    #bp-visual-loop .vl-card{ width:clamp(132px,40vw,158px); }
+    #bp-visual-loop .vl-row{ animation-duration:29s; }
+    #bp-visual-loop .vl-viewport{
+      -webkit-mask-image:linear-gradient(90deg,transparent 0,#0C0B0B 5%,#0C0B0B 95%,transparent 100%);
+      mask-image:linear-gradient(90deg,transparent 0,#0C0B0B 5%,#0C0B0B 95%,transparent 100%);
+    }
+  }
+  @media (prefers-reduced-motion:reduce){
+    #bp-visual-loop .vl-viewport{ overflow-x:auto; scrollbar-width:none; -webkit-mask-image:none; mask-image:none; }
+    #bp-visual-loop .vl-viewport::-webkit-scrollbar{ display:none; }
+    #bp-visual-loop .vl-row{ animation:none; transform:none; will-change:auto; }
+    #bp-visual-loop .vl-group[aria-hidden="true"]{ display:none; }
+  }
+
+  /* ===== SECTION 2 - UNIVERS (fond clair) ===== */
+  #bp-universe{ background:linear-gradient(145deg,#F5EDE0 0%,color-mix(in srgb,var(--brand-accent) 5%,#F5EDE0) 58%,#F5EDE0 100%); color:#0C0B0B; padding:clamp(38px,4.5vw,68px) 0; }
+  #bp-universe .uv-head{ text-align:center; max-width:640px; margin:0 auto clamp(20px,2.6vw,30px); }
+  #bp-universe .uv-eyebrow{ font-family:var(--brand-font-display); font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:#0C0B0B; margin:0 0 12px; }
+  #bp-universe .uv-title{ font-family:var(--brand-font-title); font-weight:800; color:#0C0B0B; font-size:clamp(26px,3.2vw,42px); line-height:1.07; letter-spacing:-.02em; margin:0; text-wrap:balance; }
+  #bp-universe .uv-title .os-accent{ color:var(--brand-accent); }
+
+  /* Onglets univers (barre de tabs texte soulignée) */
+  #bp-universe .uv-tabs{ display:flex; gap:clamp(18px,2.4vw,34px); justify-content:center; border-bottom:1.5px solid rgba(12,11,11,.13); margin:0 0 clamp(22px,2.6vw,32px); overflow-x:auto; scrollbar-width:none; }
+  #bp-universe .uv-tabs::-webkit-scrollbar{ display:none; }
+  #bp-universe .uv-tab{ position:relative; flex:0 0 auto; min-height:44px; display:inline-flex; align-items:center; gap:8px; padding:2px 2px 14px; border:none; background:none; cursor:pointer; font-family:var(--brand-font-title); font-weight:700; font-size:clamp(15px,1.7vw,17px); color:rgba(12,11,11,.5); transition:color .2s ease; }
+  #bp-universe .uv-tab:hover{ color:#0C0B0B; }
+  #bp-universe .uv-tab:focus-visible{ outline:3px solid var(--brand-accent); outline-offset:3px; border-radius:6px; }
+  #bp-universe .uv-tab .uv-tab-dot{ width:9px; height:9px; border-radius:2px; background:var(--brand-accent); opacity:.38; transition:opacity .2s ease; }
+  #bp-universe .uv-tab::after{ content:""; position:absolute; left:0; right:0; bottom:-1.5px; height:3px; border-radius:3px 3px 0 0; background:var(--brand-accent); transform:scaleX(0); transition:transform .28s cubic-bezier(.22,1,.36,1); }
+  #bp-universe .uv-tab[aria-selected="true"]{ color:#0C0B0B; }
+  #bp-universe .uv-tab[aria-selected="true"] .uv-tab-dot{ opacity:1; }
+  #bp-universe .uv-tab[aria-selected="true"]::after{ transform:scaleX(1); }
+
+  /* Panneau = carousel produits */
+  #bp-universe .uv-panel[hidden]{ display:none; }
+  #bp-universe .uv-panel.is-active{ animation:uvIn .34s cubic-bezier(.22,1,.36,1); }
+  @keyframes uvIn{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+  #bp-universe .uv-carousel{ position:relative; }
+  #bp-universe .uv-viewport{ overflow-x:auto; scroll-snap-type:x mandatory; scroll-behavior:smooth; scrollbar-width:none; margin:0 -4px; padding:4px; }
+  #bp-universe .uv-viewport::-webkit-scrollbar{ display:none; }
+  #bp-universe .uv-track{ display:flex; gap:16px; }
+  #bp-universe .uv-card, #bp-universe .uv-cover{ flex:0 0 calc((100% - 48px)/4); scroll-snap-align:start; }
+
+  /* Carte "cover" d'univers : le visuel généré représente l'univers (PAS un produit, pas de prix) */
+  #bp-universe .uv-cover{ position:relative; display:block; border-radius:10px; overflow:hidden; aspect-ratio:3/4; text-decoration:none; background:color-mix(in srgb, var(--acc) 22%, #F5EDE0); box-shadow:0 16px 32px -22px rgba(12,11,11,.5); transition:transform .22s ease; }
+  #bp-universe .uv-cover:hover{ transform:translateY(-4px); }
+  #bp-universe .uv-cover:focus-visible{ outline:3px solid var(--acc); outline-offset:3px; }
+  #bp-universe .uv-cover img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  #bp-universe .uv-cover-lbl{ position:absolute; inset:0; z-index:2; display:flex; flex-direction:column; justify-content:flex-end; gap:3px; padding:16px; background:linear-gradient(to top, rgba(12,11,11,.82) 0%, rgba(12,11,11,.22) 50%, rgba(12,11,11,.12) 100%); }
+  #bp-universe .uv-cover-kick{ font-family:var(--brand-font-display); font-size:10px; letter-spacing:.05em; text-transform:uppercase; color:var(--acc); }
+  #bp-universe .uv-cover-name{ font-family:var(--brand-font-title); font-weight:800; font-size:clamp(18px,2vw,22px); color:#F5EDE0; line-height:1.05; }
+  #bp-universe .uv-cover-go{ margin-top:5px; font-family:var(--brand-font-body); font-weight:700; font-size:13px; color:#F5EDE0; display:inline-flex; align-items:center; gap:6px; }
+  #bp-universe .uv-cover-go span{ transition:transform .2s ease; }
+  #bp-universe .uv-cover:hover .uv-cover-go span{ transform:translateX(4px); }
+
+  /* Carte produit */
+  #bp-universe .uv-card{ display:flex; flex-direction:column; }
+  #bp-universe .uv-media{ position:relative; border-radius:10px; overflow:hidden; aspect-ratio:3/4; background-color:color-mix(in srgb, var(--acc) 13%, #F5EDE0); background-image:radial-gradient(circle, color-mix(in srgb, var(--acc) 55%, transparent) 29%, transparent 32%); background-size:16px 16px; background-position:center; border:0; transition:transform .22s ease, box-shadow .22s ease; }
+  #bp-universe .uv-card:hover .uv-media{ transform:translateY(-4px); box-shadow:0 16px 30px -20px rgba(12,11,11,.5); }
+  #bp-universe .uv-media-link{ position:absolute; inset:0; z-index:1; }
+  #bp-universe .uv-media-link:focus-visible{ outline:3px solid var(--brand-accent); outline-offset:3px; border-radius:10px; }
+  #bp-universe .uv-badge{ position:absolute; top:10px; left:10px; z-index:2; font-family:var(--brand-font-display); font-size:9px; letter-spacing:.02em; text-transform:uppercase; color:#0C0B0B; background:#FFFDF8; padding:5px 8px; border-radius:999px; box-shadow:0 2px 6px rgba(12,11,11,.16); }
+  #bp-universe .uv-heart{ position:absolute; top:8px; right:8px; z-index:2; width:30px; height:30px; padding:0; border:none; border-radius:50%; background:rgba(255,253,248,.92); color:#0C0B0B; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:color .2s ease, transform .15s ease; }
+  #bp-universe .uv-heart:hover{ transform:scale(1.1); }
+  #bp-universe .uv-heart:focus-visible{ outline:3px solid var(--brand-accent); outline-offset:2px; }
+  #bp-universe .uv-heart svg{ width:15px; height:15px; fill:none; stroke:currentColor; stroke-width:2; }
+  #bp-universe .uv-heart.is-liked{ color:var(--brand-accent); }
+  #bp-universe .uv-heart.is-liked svg{ fill:var(--brand-accent); stroke:var(--brand-accent); }
+  #bp-universe .uv-pname{ font-family:var(--brand-font-title); font-weight:700; font-size:15px; color:#0C0B0B; line-height:1.15; margin:12px 2px 3px; }
+  #bp-universe .uv-price{ font-family:var(--brand-font-body); font-weight:800; font-size:14px; color:#0C0B0B; margin:0 2px; }
+  #bp-universe .uv-swipe-hint{ display:none; }
+
+  /* Flèches carousel */
+  #bp-universe .uv-arrow{ position:absolute; top:38%; transform:translateY(-50%); z-index:5; width:44px; height:44px; border-radius:50%; border:1.5px solid rgba(12,11,11,.14); background:#FFFDF8; color:#0C0B0B; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 20px -10px rgba(12,11,11,.45); transition:transform .18s ease, border-color .2s ease; }
+  #bp-universe .uv-arrow:hover{ border-color:var(--brand-accent); transform:translateY(-50%) scale(1.07); }
+  #bp-universe .uv-arrow:focus-visible{ outline:3px solid var(--brand-accent); outline-offset:2px; }
+  #bp-universe .uv-arrow svg{ width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; }
+  #bp-universe .uv-arrow.prev{ left:-14px; }
+  #bp-universe .uv-arrow.next{ right:-14px; }
+
+  @media (prefers-reduced-motion:reduce){
+    #bp-universe .uv-panel.is-active{ animation:none; }
+    #bp-universe .uv-viewport{ scroll-behavior:auto; }
+    #bp-universe .uv-cover:hover, #bp-universe .uv-card:hover .uv-media, #bp-universe .uv-heart:hover{ transform:none; }
+    #bp-universe .uv-arrow:hover{ transform:translateY(-50%); }
+    #bp-universe .uv-tab::after{ transition:none; }
+  }
+  @media (max-width:960px){
+    #bp-universe .uv-card, #bp-universe .uv-cover{ flex-basis:calc((100% - 32px)/3); }
+    #bp-universe .uv-arrow{ display:none; }
+  }
+  @media (max-width:680px){
+    #bp-universe .uv-tabs{ justify-content:flex-start; gap:18px; margin-bottom:10px; scroll-padding-inline:var(--lp-gutter); }
+    #bp-universe .uv-swipe-hint{ display:flex; align-items:center; gap:8px; margin:0 0 16px; font-family:var(--brand-font-body); font-size:13px; font-weight:650; color:#6B5E4E; }
+    #bp-universe .uv-swipe-hint::before{ content:"→"; color:var(--brand-accent); font-weight:800; }
+    #bp-universe .uv-track{ gap:12px; }
+    #bp-universe .uv-cover{ flex-basis:min(62vw,240px); border-radius:0 10px 10px 0; }
+    #bp-universe .uv-card{ flex-basis:min(50vw,194px); }
+    #bp-universe .uv-heart{ width:44px; height:44px; top:4px; right:4px; }
+    #bp-universe .uv-viewport{ margin-left:calc(var(--lp-gutter) * -1); margin-right:calc(var(--lp-gutter) * -1); padding-left:0; padding-right:var(--lp-gutter); }
+  }
+
+  /* ===== SECTION 3 - MODES (sélecteur éditorial par difficulté) ===== */
+  #bp-modes{ background:linear-gradient(180deg,#0C0B0B 0%,color-mix(in srgb,var(--brand-accent) 4%,#0C0B0B) 48%,#0C0B0B 100%); color:#F5EDE0; padding:clamp(38px,4.5vw,72px) 0; }
+  #bp-modes .md-head{ text-align:center; max-width:820px; margin:0 auto clamp(26px,3vw,40px); }
+  #bp-modes .md-title{ font-family:var(--brand-font-title); font-weight:800; color:#F5EDE0; font-size:clamp(28px,3.6vw,48px); line-height:1.05; letter-spacing:-.02em; margin:0; text-wrap:balance; }
+  #bp-modes .md-title .os-accent{ color:var(--brand-accent); }
+  #bp-modes .md-grid{ display:flex; flex-direction:column; border-top:1px solid color-mix(in srgb,#F5EDE0 20%, transparent); }
+  #bp-modes .md-card{ position:relative; display:grid; grid-template-columns:64px clamp(150px,12vw,188px) minmax(300px,1fr) auto; grid-template-areas:"num media copy cta"; align-items:center; gap:clamp(20px,3vw,48px); color:#F5EDE0; border-bottom:1px solid color-mix(in srgb,#F5EDE0 20%, transparent); padding:clamp(22px,2.4vw,34px) clamp(12px,1.4vw,22px); text-decoration:none; transition:background .22s ease; }
+  #bp-modes .md-card::before{ content:""; position:absolute; inset:0 auto 0 0; width:4px; background:var(--brand-accent); transform:scaleY(0); transform-origin:bottom; transition:transform .28s cubic-bezier(.16,1,.3,1); }
+  #bp-modes .md-card:focus-visible{ outline:2px solid var(--brand-accent); outline-offset:6px; }
+  #bp-modes .md-top{ grid-area:num; align-self:center; }
+  #bp-modes .md-num{ font-family:var(--brand-font-display); font-size:clamp(22px,2.2vw,30px); color:var(--brand-accent); line-height:1; }
+  #bp-modes .md-media{ grid-area:media; position:relative; width:100%; aspect-ratio:3/4; overflow:hidden; display:flex; align-items:flex-end; background:var(--brand-surface); border:1px solid color-mix(in srgb,#F5EDE0 18%, transparent); border-radius:4px; padding:12px; }
+  #bp-modes .md-media::before{ content:""; position:absolute; width:38%; aspect-ratio:1/1; left:50%; top:50%; transform:translate(-50%,-58%); border:1px solid color-mix(in srgb,var(--brand-accent) 48%,transparent); }
+  #bp-modes .md-media::after{ content:""; position:absolute; width:9%; aspect-ratio:1/1; left:50%; top:50%; transform:translate(-50%,-58%); background:var(--brand-accent); }
+  #bp-modes .md-media img, #bp-modes .md-media video{ position:absolute; z-index:2; inset:0; width:100%; height:100%; object-fit:cover; display:block; background:var(--brand-surface); }
+  #bp-modes .md-media:has(img) .md-media-label, #bp-modes .md-media:has(video) .md-media-label{ display:none; }
+  #bp-modes .md-media-label{ position:relative; z-index:1; font-family:var(--brand-font-display); font-size:9px; line-height:1.35; letter-spacing:.06em; text-transform:uppercase; color:color-mix(in srgb,#F5EDE0 62%,transparent); }
+  #bp-modes .md-copy{ grid-area:copy; min-width:0; }
+  #bp-modes .md-badge{ display:block; font-family:var(--brand-font-display); font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--brand-accent); margin:0 0 10px; }
+  #bp-modes .md-name{ font-family:var(--brand-font-title); font-weight:800; font-size:clamp(22px,2.1vw,30px); line-height:1.08; letter-spacing:-.015em; margin:0 0 7px; color:#F5EDE0; transition:color .2s ease; }
+  #bp-modes .md-desc{ font-family:var(--brand-font-body); font-size:clamp(15px,1.25vw,17px); line-height:1.55; margin:0; max-width:58ch; color:color-mix(in srgb,#F5EDE0 76%, transparent); }
+  #bp-modes .md-cta{ grid-area:cta; justify-self:end; min-height:50px; display:inline-flex; align-items:center; gap:12px; padding:8px 9px 8px 17px; background:#F5EDE0; color:#0C0B0B; box-shadow:0 4px 0 #C23D08; clip-path:polygon(0 0,calc(100% - 10px) 0,calc(100% - 10px) 5px,100% 5px,100% 100%,10px 100%,10px calc(100% - 5px),0 calc(100% - 5px)); font-family:var(--brand-font-title); font-weight:800; font-size:15px; white-space:nowrap; transition:background .18s ease,box-shadow .18s ease,transform .18s ease; }
+  #bp-modes .md-cta-icon{ flex:none; width:32px; height:32px; display:grid; place-items:center; border-radius:3px; background:var(--brand-accent); color:#0C0B0B; font-family:var(--brand-font-display); font-size:12px; transition:background .18s ease,color .18s ease,transform .18s ease; }
+  @media (hover:hover) and (pointer:fine){
+    #bp-modes .md-card:hover{ background:#161412; }
+    #bp-modes .md-card:hover::before{ transform:scaleY(1); }
+    #bp-modes .md-card:hover .md-name{ color:var(--brand-accent); }
+    #bp-modes .md-card:hover .md-cta{ background:var(--brand-accent); box-shadow:0 6px 0 #7A2A0A; transform:translateY(-2px); }
+    #bp-modes .md-card:hover .md-cta-icon{ background:#0C0B0B; color:#F5EDE0; transform:translateX(2px); }
+  }
+  @media (max-width:960px){
+    #bp-modes .md-card{ grid-template-columns:56px minmax(130px,180px) 1fr; grid-template-areas:"num media copy" "num media cta"; gap:10px 20px; }
+    #bp-modes .md-cta{ justify-self:start; align-self:start; margin-top:4px; }
+  }
+  @media (max-width:640px){
+    #bp-modes .md-card{ grid-template-columns:42px 1fr; grid-template-areas:"num copy" "media media" "cta cta"; column-gap:14px; row-gap:16px; padding:24px 10px 30px; }
+    #bp-modes .md-top{ align-self:start; padding-top:2px; }
+    #bp-modes .md-media{ width:min(100%,360px); justify-self:start; }
+    #bp-modes .md-cta{ justify-self:stretch; justify-content:space-between; margin-top:2px; }
+    #bp-modes .md-desc{ max-width:34ch; }
+  }
+
+  /* ===== SECTION 4 : COMMENT CA MARCHE (video pilotee par le scroll) ===== */
+  #bp-how{ position:relative; isolation:isolate; overflow:visible; background:linear-gradient(180deg,#F5EDE0 0%,#EFE4D4 100%); color:#0C0B0B; padding:clamp(42px,5vw,78px) 0 clamp(54px,6vw,96px); }
+  #bp-how::before{ content:""; position:absolute; z-index:0; right:-22px; bottom:8%; width:48px; aspect-ratio:1/1; background:color-mix(in srgb,var(--brand-accent) 10%,transparent); box-shadow:-58px -52px 0 color-mix(in srgb,var(--brand-accent) 7%,transparent),-116px -104px 0 color-mix(in srgb,var(--brand-accent) 4%,transparent); pointer-events:none; }
+  #bp-how .hw-wrap{ position:relative; z-index:1; }
+  #bp-how .hw-head{ text-align:center; max-width:760px; margin:0 auto clamp(28px,4vw,56px); }
+  #bp-how .hw-eyebrow{ display:inline-flex; align-items:center; gap:9px; font-family:var(--brand-font-display); color:var(--brand-accent); font-size:12px; letter-spacing:.08em; text-transform:uppercase; margin:0 0 14px; }
+  #bp-how .hw-eyebrow::before{ content:""; width:9px; height:9px; border-radius:2px; background:var(--brand-accent); }
+  #bp-how .hw-title{ font-family:var(--brand-font-title); font-weight:800; color:#0C0B0B; font-size:clamp(30px,4vw,54px); line-height:1.04; letter-spacing:-.025em; margin:0; text-wrap:balance; }
+  #bp-how .hw-title .os-accent{ color:var(--brand-accent); }
+  #bp-how .hw-scroll{ display:grid; grid-template-columns:minmax(0,1.08fr) minmax(360px,.72fr); gap:clamp(42px,7vw,112px); align-items:start; }
+  #bp-how .hw-visual-wrap{ position:sticky; top:clamp(76px,9vh,116px); }
+  #bp-how .hw-stage{ position:relative; isolation:isolate; width:min(100%,600px); aspect-ratio:3/4; margin-inline:auto; overflow:hidden; border-radius:8px; background:#161412; box-shadow:0 24px 52px -34px rgba(12,11,11,.72); }
+  #bp-how .hw-sprite{ position:absolute; inset:0; width:100%; height:100%; display:block; background-color:#161412; background-repeat:no-repeat; pointer-events:none; }
+  #bp-how .hw-sprite--process{ z-index:1; background-image:url('{{ 'bp-how-process-sprite.webp' | asset_url }}'); background-size:600% 500%; background-position:0 0; }
+  #bp-how .hw-sprite--result{ z-index:2; opacity:0; background-image:url('{{ 'bp-how-result-sprite.webp' | asset_url }}'); background-size:400% 200%; background-position:0 0; transition:opacity .14s linear; }
+  #bp-how .hw-stage::after{ content:""; position:absolute; z-index:3; inset:0; background:linear-gradient(180deg,rgba(12,11,11,.38) 0%,transparent 18%,transparent 72%,rgba(12,11,11,.64) 100%); pointer-events:none; }
+  #bp-how .hw-stage-top{ position:absolute; z-index:4; top:16px; left:16px; display:flex; align-items:center; color:#F5EDE0; }
+  #bp-how .hw-stage-step{ font-family:var(--brand-font-display); font-size:10px; letter-spacing:.07em; text-transform:uppercase; background:#0C0B0B; padding:7px 9px; border-radius:3px; }
+  #bp-how .hw-progress{ position:absolute; z-index:4; left:16px; right:16px; bottom:16px; height:5px; background:color-mix(in srgb,#F5EDE0 28%,transparent); overflow:hidden; }
+  #bp-how .hw-progress span{ display:block; width:100%; height:100%; background:var(--brand-accent); transform:scaleX(var(--hw-progress,0)); transform-origin:left; will-change:transform; }
+  #bp-how .hw-story{ position:relative; padding-left:34px; }
+  #bp-how .hw-story::before{ content:""; position:absolute; top:10%; bottom:10%; left:7px; width:1px; background:color-mix(in srgb,#0C0B0B 16%,transparent); }
+  #bp-how .hw-step{ position:relative; min-height:58vh; display:flex; align-items:center; opacity:.38; transition:opacity .24s ease; }
+  #bp-how .hw-step::before{ content:""; position:absolute; left:-34px; top:50%; width:15px; height:15px; transform:translateY(-50%); background:#F5EDE0; border:2px solid color-mix(in srgb,#0C0B0B 24%,transparent); transition:background .18s ease,border-color .18s ease,transform .22s cubic-bezier(.16,1,.3,1); }
+  #bp-how .hw-step.is-active{ opacity:1; }
+  #bp-how .hw-step.is-active::before{ background:var(--brand-accent); border-color:var(--brand-accent); transform:translateY(-50%) scale(1.16); }
+  #bp-how .hw-step-inner{ padding:32px 0; max-width:460px; }
+  #bp-how .hw-badge{ display:inline-flex; width:fit-content; font-family:var(--brand-font-display); font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:#F5EDE0; background:#0C0B0B; border-radius:3px; padding:7px 9px; margin:0 0 16px; }
+  #bp-how .hw-name{ font-family:var(--brand-font-title); font-weight:800; font-size:clamp(28px,3vw,42px); line-height:1.04; letter-spacing:-.025em; margin:0 0 12px; color:#0C0B0B; text-wrap:balance; }
+  #bp-how .hw-desc{ font-family:var(--brand-font-body); font-size:clamp(16px,1.4vw,19px); line-height:1.55; margin:0; color:#463D33; max-width:42ch; }
+  @media (max-width:820px){
+    #bp-how{ padding-bottom:44px; }
+    #bp-how .hw-head{ position:relative; z-index:6; margin-bottom:24px; }
+    #bp-how .hw-scroll{ display:block; }
+    #bp-how .hw-visual-wrap{ position:sticky; z-index:3; top:70px; }
+    #bp-how .hw-visual-wrap::before{ content:""; position:absolute; z-index:5; left:calc(-1 * var(--lp-gutter)); right:calc(-1 * var(--lp-gutter)); bottom:100%; height:70px; background:#F5EDE0; pointer-events:none; }
+    #bp-how .hw-stage{ width:min(100%,420px); max-height:58vh; }
+    #bp-how .hw-stage-top{ top:12px; left:12px; }
+    #bp-how .hw-progress{ left:12px; right:12px; bottom:12px; }
+    #bp-how .hw-story{ position:relative; z-index:2; padding:0; margin-top:-9vh; }
+    #bp-how .hw-story::before{ display:none; }
+    #bp-how .hw-step{ min-height:68vh; align-items:flex-end; opacity:1; padding-bottom:18px; }
+    #bp-how .hw-step::before{ display:none; }
+    #bp-how .hw-step-inner{ width:100%; max-width:none; padding:20px; background:#F5EDE0; border-radius:6px; box-shadow:0 18px 38px -28px rgba(12,11,11,.78); }
+    #bp-how .hw-step:not(.is-active) .hw-step-inner{ background:#EFE4D4; }
+    #bp-how .hw-name{ font-size:clamp(24px,7vw,31px); }
+    #bp-how .hw-desc{ font-size:15px; }
+  }
+  @media (prefers-reduced-motion:reduce){
+    #bp-how .hw-visual-wrap{ position:relative; top:auto; }
+    #bp-how .hw-story{ margin-top:22px; display:grid; gap:22px; }
+    #bp-how .hw-step{ min-height:0; opacity:1; padding:0; }
+    #bp-how .hw-step-inner{ background:#F5EDE0; }
+    #bp-how .hw-progress{ display:none; }
+  }
+
+  /* ===== SECTION 5 : STARTER KIT (explorateur interactif, fond sable) ===== */
+  #bp-offer{ background:linear-gradient(125deg,#F5EDE0 0%,#F5EDE0 42%,color-mix(in srgb,var(--brand-accent) 7%,#F5EDE0) 100%); color:#0C0B0B; padding:clamp(38px,4.5vw,72px) 0; }
+  #bp-offer .offer-head{ max-width:720px; margin:0 auto clamp(22px,2.8vw,34px); text-align:center; }
+  #bp-offer .offer-eyebrow{ display:inline-flex; align-items:center; gap:9px; font-family:var(--brand-font-display); color:var(--brand-accent); font-size:12px; letter-spacing:.08em; text-transform:uppercase; margin:0 0 16px; }
+  #bp-offer .offer-eyebrow::before{ content:""; width:9px; height:9px; border-radius:2px; background:var(--brand-accent); }
+  #bp-offer .offer-title{ font-family:var(--brand-font-title); font-weight:800; color:#0C0B0B; font-size:clamp(26px,3.2vw,44px); line-height:1.07; letter-spacing:-.02em; margin:0; text-wrap:balance; }
+  #bp-offer .offer-title .os-accent{ color:var(--brand-accent); }
+  #bp-offer .offer-hint{ font-family:var(--brand-font-body); color:#6B5E4E; font-size:14px; margin:0; display:inline-flex; align-items:center; gap:8px; align-self:center; text-align:center; }
+  #bp-offer .offer-hint::before{ content:none; }
+
+  #bp-offer .kit-explorer{ display:grid; grid-template-columns:minmax(320px,.72fr) minmax(560px,1.28fr); gap:clamp(22px,2.4vw,34px); align-items:stretch; max-width:1280px; margin-inline:auto; }
+  /* Placeholder wireframe reutilisable (images reelles a venir) */
+  #bp-offer .wf{ position:relative; background:color-mix(in srgb, #0C0B0B 4%, #F5EDE0); border:1.6px dashed color-mix(in srgb, #0C0B0B 22%, transparent); color:color-mix(in srgb, #0C0B0B 34%, transparent); display:flex; align-items:center; justify-content:center; }
+  #bp-offer .wf-ic{ width:38%; max-width:120px; height:auto; }
+  #bp-offer .kit-overview{ position:relative; border-radius:5px; overflow:hidden; min-height:100%; background:#E7D6BF; border:1px solid color-mix(in srgb,#0C0B0B 14%,transparent); }
+  #bp-offer .kit-overview .wf-ic{ width:22%; color:color-mix(in srgb,#0C0B0B 38%,transparent); }
+  #bp-offer .kit-overview:has(img) .wf-ic{ display:none; }
+  #bp-offer .kit-overview img{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; display:block; background:#EFE3D2; }
+  #bp-offer .kit-right{ display:flex; flex-direction:column; gap:20px; justify-content:space-between; padding:clamp(20px,2.4vw,30px); background:#E7D6BF; border:1px solid color-mix(in srgb,#0C0B0B 14%,transparent); border-radius:6px; }
+  #bp-offer .kit-viewer{ display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:stretch; gap:10px; }
+  #bp-offer .kit-arrow{ flex:0 0 auto; align-self:center; width:42px; height:42px; border-radius:50%; background:var(--brand-surface); border:1.5px solid color-mix(in srgb, var(--brand-accent) 32%, transparent); color:var(--brand-text); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:18px; line-height:1; padding:0; transition:background .2s ease, color .2s ease, border-color .2s ease, transform .2s ease; }
+  #bp-offer .kit-arrow:hover{ background:var(--brand-accent); color:var(--brand-bg); border-color:var(--brand-accent); transform:scale(1.07); }
+  #bp-offer .kit-arrow:focus-visible{ outline:3px solid var(--brand-accent); outline-offset:3px; }
+  #bp-offer .kit-detail{ position:relative; display:grid; grid-template-columns:34% 1fr; align-items:stretch; background:#F5EDE0; border:1px solid color-mix(in srgb,#0C0B0B 14%,transparent); border-radius:5px; padding:0; min-height:190px; overflow:hidden; box-shadow:none; }
+  #bp-offer .kit-detail-media{ position:relative; width:100%; height:100%; background:#DDC8AA; color:color-mix(in srgb, #0C0B0B 38%, transparent); border-right:1px solid color-mix(in srgb,#0C0B0B 12%,transparent); display:flex; align-items:center; justify-content:center; }
+  #bp-offer .kit-detail-media .wf-ic{ width:34%; max-width:64px; }
+  #bp-offer .kit-detail-media img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+  #bp-offer .kit-detail-body{ min-width:0; padding:18px 20px; align-self:center; }
+  #bp-offer .kit-badge{ display:inline-block; font-family:var(--brand-font-display); font-size:9px; letter-spacing:.05em; text-transform:uppercase; color:#0C0B0B; background:var(--brand-accent); border-radius:3px; padding:5px 8px; margin:0 0 10px; }
+  #bp-offer .kit-name{ font-family:var(--brand-font-title); font-weight:800; font-size:clamp(17px,1.7vw,21px); line-height:1.14; letter-spacing:-.01em; color:#0C0B0B; margin:0; text-wrap:balance; }
+  #bp-offer .kit-desc{ font-family:var(--brand-font-body); color:#5B5043; font-size:15px; line-height:1.5; margin:7px 0 0; }
+
+  #bp-offer .kit-btns{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px 6px; }
+  #bp-offer .kit-btn{ display:flex; flex-direction:column; align-items:center; gap:8px; background:none; border:none; padding:6px 2px; cursor:pointer; border-radius:4px; transition:opacity .2s ease, filter .2s ease, transform .2s ease; }
+  #bp-offer .kit-btn .ic{ width:100%; max-width:72px; aspect-ratio:1/1; border-radius:4px; background:#F5EDE0; border:1px solid color-mix(in srgb, #0C0B0B 14%, transparent); color:color-mix(in srgb, #0C0B0B 38%, transparent); display:flex; align-items:center; justify-content:center; transition:border-color .2s ease, background .2s ease, color .2s ease; }
+  #bp-offer .kit-btn .ic .wf-ic{ width:44%; transition:transform .2s ease; }
+  #bp-offer .kit-btn .lbl{ font-family:var(--brand-font-body); font-size:11.5px; font-weight:600; line-height:1.15; text-align:center; color:#403930; }
+  #bp-offer .kit-btn:not(.is-active){ opacity:1; }
+  #bp-offer .kit-btn:not(.is-active):hover{ transform:translateY(-2px); }
+  #bp-offer .kit-btn:not(.is-active):hover .ic{ border-color:color-mix(in srgb, var(--brand-accent) 55%, transparent); }
+  #bp-offer .kit-btn.is-active .ic{ border-color:var(--brand-accent); background:color-mix(in srgb,var(--brand-accent) 10%,#F5EDE0); color:var(--brand-accent); box-shadow:none; }
+  #bp-offer .kit-btn.is-active .ic .wf-ic{ transform:scale(1.08); }
+  #bp-offer .kit-btn.is-active .lbl{ color:#0C0B0B; font-weight:800; }
+  #bp-offer .kit-right .offer-hint{ color:#5B5043; }
+  #bp-offer .kit-btn:focus-visible{ outline:3px solid var(--brand-accent); outline-offset:3px; }
+
+  #bp-offer .offer-checkout{ max-width:1160px; margin:clamp(26px,3vw,36px) auto 0; padding-top:clamp(20px,2.4vw,28px); border-top:1.5px solid color-mix(in srgb, #0C0B0B 12%, transparent); display:flex; align-items:center; gap:20px 28px; flex-wrap:wrap; }
+  #bp-offer .offer-price{ display:flex; flex-direction:column; gap:5px; }
+  #bp-offer .offer-price .amount{ font-family:var(--brand-font-title); font-weight:800; font-size:clamp(30px,3.4vw,40px); color:#0C0B0B; line-height:1; letter-spacing:-.01em; }
+  #bp-offer .offer-price .note{ font-family:var(--brand-font-body); font-size:13px; color:#6B5E4E; }
+  #bp-offer .offer-cta{ margin-left:auto; display:inline-flex; align-items:center; gap:9px; background:var(--brand-accent); color:#F5EDE0; font-family:var(--brand-font-title); font-weight:800; font-size:16px; padding:15px 28px; border-radius:8px; text-decoration:none; box-shadow:0 4px 0 rgba(0,0,0,.3); transition:transform .15s ease, box-shadow .15s ease; }
+  #bp-offer .offer-cta:hover{ transform:translateY(-2px); box-shadow:0 6px 0 rgba(0,0,0,.3); }
+  #bp-offer .offer-cta .arr{ display:inline-block; transition:transform .2s ease; }
+  #bp-offer .offer-cta:hover .arr{ transform:translateX(4px); }
+  #bp-offer .offer-cta:focus-visible{ outline:3px solid var(--brand-text); outline-offset:3px; }
+  #bp-offer .offer-reassure{ display:flex; gap:18px; flex-wrap:wrap; margin:14px 0 0; color:var(--brand-text-muted); font-size:12.5px; }
+  #bp-offer .offer-reassure span{ display:inline-flex; align-items:center; gap:6px; }
+  #bp-offer .offer-reassure b{ color:var(--brand-accent); }
+
+  @media (max-width:820px){
+    #bp-offer .kit-explorer{ width:100%; grid-template-columns:1fr; gap:16px; }
+    #bp-offer .kit-overview{ min-height:0; aspect-ratio:4/3; max-width:400px; width:100%; margin-inline:auto; }
+    #bp-offer .kit-viewer{ grid-template-columns:1fr 1fr; grid-template-areas:"card card" "prev next"; align-items:start; gap:14px 0; }
+    #bp-offer .kit-detail{ grid-area:card; }
+    #bp-offer .kit-prev{ grid-area:prev; justify-self:end; margin-right:9px; }
+    #bp-offer .kit-next{ grid-area:next; justify-self:start; margin-left:9px; }
+    #bp-offer .kit-arrow{ width:44px; height:44px; font-size:16px; }
+    #bp-offer .kit-right{ padding:16px; gap:18px; }
+    #bp-offer .kit-detail{ min-height:150px; }
+    #bp-offer .kit-btns{ gap:12px 4px; }
+    #bp-offer .kit-btn .ic{ max-width:58px; }
+    #bp-offer .kit-btn .lbl{ font-size:10.5px; }
+    #bp-offer .offer-checkout{ flex-direction:column; align-items:stretch; gap:14px; }
+    #bp-offer .offer-cta{ margin-left:0; justify-content:center; white-space:nowrap; font-size:clamp(13px,3.6vw,16px); padding:15px 14px; }
+  }
+
+  /* ===== SECTION 6 : RAISONS (accordeon, fond sombre, volet ouvert en clair) ===== */
+  #bp-reasons{ background:var(--brand-bg); color:var(--brand-text); padding:clamp(38px,4.5vw,72px) 0; background-image:radial-gradient(color-mix(in srgb, var(--brand-text) 5%, transparent) 1px, transparent 1.5px); background-size:22px 22px; }
+  #bp-reasons .reasons-head{ text-align:center; width:min(100%,1200px); margin:0 auto clamp(26px,3.2vw,42px); }
+  #bp-reasons .reasons-title{ max-width:760px; margin-inline:auto; }
+  #bp-reasons .reasons-eyebrow{ display:inline-flex; align-items:center; gap:9px; font-family:var(--brand-font-display); color:var(--brand-accent); font-size:12px; letter-spacing:.08em; text-transform:uppercase; margin:0 0 14px; }
+  #bp-reasons .reasons-eyebrow::before{ content:""; width:9px; height:9px; border-radius:2px; background:var(--brand-accent); }
+  #bp-reasons .reasons-title{ font-family:var(--brand-font-title); font-weight:800; color:var(--brand-text); font-size:clamp(26px,3.4vw,44px); line-height:1.08; letter-spacing:-.02em; margin:0 auto; text-wrap:balance; }
+  #bp-reasons .reasons-title .os-accent{ color:var(--brand-accent); }
+  #bp-reasons .reasons-list{ display:flex; flex-direction:column; gap:14px; max-width:820px; margin:0 auto; }
+  #bp-reasons .reasons-preview{ display:none; }
+  #bp-reasons .reason{ background:var(--brand-surface); border:0; border-radius:8px; overflow:hidden; transition:background .2s ease; }
+  #bp-reasons .reason[open]{ background:#F5EDE0; border-color:transparent; }
+  #bp-reasons .reason-head{ list-style:none; cursor:pointer; display:flex; align-items:center; gap:clamp(14px,2vw,20px); padding:clamp(13px,1.6vw,16px); }
+  #bp-reasons .reason-head::-webkit-details-marker{ display:none; }
+  #bp-reasons .reason-head:focus-visible{ outline:3px solid var(--brand-accent); outline-offset:-3px; border-radius:8px; }
+  #bp-reasons .reason-img{ display:none; }
+  #bp-reasons .reason-media{ position:relative; width:100%; aspect-ratio:1/1; border-radius:8px; overflow:hidden; background:color-mix(in srgb, var(--brand-text) 6%, transparent); border:0; display:flex; align-items:center; justify-content:center; color:color-mix(in srgb, #0C0B0B 26%, transparent); margin:0 0 14px; }
+  #bp-reasons .reason-media svg{ width:44px; height:37px; }
+  #bp-reasons .reason-media img,
+  #bp-reasons .reason-media video{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+  #bp-reasons .reason-titles{ flex:1; min-width:0; }
+  #bp-reasons .reason-badge{ display:inline-block; font-family:var(--brand-font-display); font-size:10px; letter-spacing:.05em; text-transform:uppercase; color:var(--brand-bg); background:var(--brand-accent); border-radius:999px; padding:4px 10px; margin:0 0 9px; }
+  #bp-reasons .reason-name{ font-family:var(--brand-font-title); font-weight:800; font-size:clamp(16px,1.7vw,20px); line-height:1.15; letter-spacing:-.01em; color:var(--brand-text); margin:0; text-wrap:balance; }
+  #bp-reasons .reason[open] .reason-name{ color:#0C0B0B; }
+  #bp-reasons .reason-chevron{ flex:none; width:34px; height:34px; border-radius:50%; border:1.5px solid color-mix(in srgb, var(--brand-text) 18%, transparent); display:flex; align-items:center; justify-content:center; color:var(--brand-text-muted); transition:transform .25s ease, border-color .2s ease, color .2s ease; }
+  #bp-reasons .reason[open] .reason-chevron{ transform:rotate(180deg); border-color:color-mix(in srgb, #0C0B0B 18%, transparent); color:#0C0B0B; }
+  #bp-reasons .reason-chevron svg{ width:15px; height:15px; }
+  #bp-reasons .reason-body{ padding:2px clamp(14px,1.8vw,18px) clamp(16px,2vw,20px); }
+  #bp-reasons .reason-body p{ font-family:var(--brand-font-body); color:#463d33; font-size:clamp(15px,1.2vw,16px); line-height:1.6; margin:0; max-width:66ch; }
+
+  /* -- DESKTOP : liste cliquable a gauche + image de l'element actif a droite -- */
+  @media (min-width:961px){
+    #bp-reasons .reasons-main{ display:grid; grid-template-columns:repeat(2,minmax(0,560px)); justify-content:space-between; gap:clamp(28px,4vw,64px); align-items:stretch; width:min(100%,1200px); margin-inline:auto; }
+    #bp-reasons .reasons-list{ max-width:none; height:100%; margin:0; gap:10px; }
+    #bp-reasons .reason{ flex:1; min-height:0; display:flex; flex-direction:column; justify-content:center; }
+    #bp-reasons .reason[open]{ flex:1.65; justify-content:flex-start; }
+    #bp-reasons .reason-img{ display:none; }
+    #bp-reasons .reason-media{ display:none; }
+    #bp-reasons .reason-chevron{ display:none; }
+    #bp-reasons .reason-head{ width:100%; padding:15px 18px; gap:12px; }
+    #bp-reasons .reason:not([open]) .reason-head{ flex:1; }
+    #bp-reasons .reason-badge{ margin-bottom:8px; }
+    #bp-reasons .reason-name{ color:color-mix(in srgb, var(--brand-text) 58%, transparent); transition:color .2s ease; }
+    #bp-reasons .reason[open]{ background:#F5EDE0; border-color:transparent; }
+    #bp-reasons .reason[open] .reason-name{ color:#0C0B0B; }
+    #bp-reasons .reason-body{ padding:0 18px 16px 18px; }
+    #bp-reasons .reason-body p{ color:#463d33; max-width:none; font-size:14px; line-height:1.55; text-wrap:pretty; }
+    #bp-reasons .reasons-preview{ display:block; width:100%; max-width:560px; justify-self:end; }
+    #bp-reasons .rp-frame{ position:relative; width:100%; aspect-ratio:1/1; border-radius:10px; overflow:hidden; background:color-mix(in srgb, var(--brand-accent) 10%, var(--brand-surface)); border:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; text-align:center; padding:24px; }
+    #bp-reasons .rp-frame img,
+    #bp-reasons .rp-frame video{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+    #bp-reasons .rp-ico{ color:color-mix(in srgb, var(--brand-accent) 60%, transparent); }
+    #bp-reasons .rp-ico svg{ width:66px; height:56px; }
+    #bp-reasons .rp-label{ font-family:var(--brand-font-display); font-size:12px; letter-spacing:.04em; text-transform:uppercase; color:var(--brand-accent); }
+  }
+
+  /* ===== BANDEAU DEFILANT (marquee orange, boucle) ===== */
+  .bp-marquee{ background:var(--brand-accent); overflow:hidden; }
+  .bp-marquee-track{ display:flex; align-items:center; width:max-content; padding:12px 0; transform:translateX(-12%); }
+  .bp-marquee.is-running .bp-marquee-track{ animation:bp-marquee-flow 24s linear infinite; }
+  @keyframes bp-marquee-flow{ from{ transform:translateX(-12%); } to{ transform:translateX(-37%); } }
+  .bp-marquee .mq-w{ font-family:var(--brand-font-display); font-size:13px; letter-spacing:.05em; text-transform:uppercase; color:var(--brand-bg); padding:0 18px; white-space:nowrap; }
+  .bp-marquee .mq-d{ font-family:sans-serif; color:color-mix(in srgb, var(--brand-bg) 55%, transparent); font-size:11px; }
+
+  /* ===== SECTION 7 : CE QUE TU PEUX CREER (galerie bento, fond sombre) ===== */
+  #bp-create{ background-color:#0C0B0B; background-image:linear-gradient(rgba(12,11,11,.22),rgba(12,11,11,.38)),url('{{ 'bp-bg-dark-desktop.webp' | asset_url }}'); background-size:cover; background-position:center; color:var(--brand-text); padding:clamp(38px,4.5vw,72px) 0; }
+  #bp-create .cr-head{ max-width:720px; margin:0 auto clamp(26px,3.2vw,40px); text-align:center; }
+  #bp-create .cr-eyebrow{ display:inline-flex; align-items:center; gap:9px; font-family:var(--brand-font-display); color:var(--brand-accent); font-size:12px; letter-spacing:.08em; text-transform:uppercase; margin:0 0 16px; }
+  #bp-create .cr-eyebrow::before{ content:""; width:9px; height:9px; border-radius:2px; background:var(--brand-accent); }
+  #bp-create .cr-title{ font-family:var(--brand-font-title); font-weight:800; color:var(--brand-text); font-size:clamp(28px,3.6vw,50px); line-height:1.05; letter-spacing:-.02em; margin:0; text-wrap:balance; }
+  #bp-create .cr-title .os-accent{ color:var(--brand-accent); }
+  #bp-create .cr-sub{ font-family:var(--brand-font-body); color:color-mix(in srgb, #F5EDE0 82%, transparent); font-size:clamp(15px,1.3vw,17px); line-height:1.55; margin:16px auto 0; max-width:52ch; }
+
+  #bp-create .cr-carousel-wrap{ position:relative; left:50%; transform:translateX(-50%); width:100vw; margin-top:clamp(22px,2.6vw,34px); }
+  #bp-create .cr-carousel{ display:flex; gap:clamp(12px,1.5vw,18px); overflow-x:auto; scroll-snap-type:x mandatory; scroll-behavior:smooth; padding:6px clamp(20px,10vw,200px); scrollbar-width:none; -ms-overflow-style:none; }
+  #bp-create .cr-carousel::-webkit-scrollbar{ display:none; }
+  #bp-create .cr-slide{ position:relative; flex:0 0 clamp(220px,25vw,360px); scroll-snap-align:center; aspect-ratio:3/4; border-radius:6px; overflow:hidden; background:color-mix(in srgb, var(--brand-accent) 8%, var(--brand-surface)); border:0; display:flex; align-items:center; justify-content:center; text-decoration:none; }
+  #bp-create .cr-slide img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+  #bp-create .cr-ph{ color:color-mix(in srgb, var(--brand-accent) 50%, transparent); }
+  #bp-create .cr-ph svg{ width:46px; height:39px; }
+  #bp-create .cr-cap{ position:absolute; left:14px; bottom:14px; z-index:2; display:inline-flex; align-items:center; gap:8px; font-family:var(--brand-font-title); font-weight:700; font-size:13.5px; color:#0C0B0B; background:#F5EDE0; border-radius:999px; padding:7px 14px; box-shadow:0 5px 16px -5px rgba(0,0,0,.45); }
+  #bp-create .cr-cap::before{ content:""; flex:none; width:8px; height:8px; border-radius:50%; background:var(--brand-accent); }
+  #bp-create .cr-arrow{ position:absolute; top:calc(50% - 14px); transform:translateY(-50%); z-index:5; width:46px; height:46px; border-radius:50%; background:#F5EDE0; color:#0C0B0B; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:24px; line-height:1; box-shadow:0 8px 24px -8px rgba(0,0,0,.6); }
+  #bp-create .cr-prev{ left:clamp(10px,3vw,44px); }
+  #bp-create .cr-next{ right:clamp(10px,3vw,44px); }
+  #bp-create .cr-arrow:focus-visible{ outline:3px solid var(--brand-accent); outline-offset:2px; }
+  #bp-create .cr-dots{ display:flex; justify-content:center; gap:2px; margin-top:16px; }
+  #bp-create .cr-dot{ width:44px; height:44px; border:none; background:transparent; cursor:pointer; padding:0; display:inline-flex; align-items:center; justify-content:center; }
+  #bp-create .cr-dot::before{ content:""; width:9px; height:9px; border-radius:50%; background:color-mix(in srgb, var(--brand-text) 22%, transparent); transition:background .2s ease, transform .2s ease; }
+  #bp-create .cr-dot.is-active::before{ background:var(--brand-accent); transform:scale(1.25); }
+  #bp-create .cr-dot:focus-visible{ outline:3px solid var(--brand-accent); outline-offset:1px; border-radius:50%; }
+
+  @media (max-width:700px){
+    #bp-create .cr-carousel{ padding:6px clamp(16px,12vw,60px); }
+    #bp-create .cr-slide{ flex:0 0 78vw; }
+    #bp-create .cr-arrow{ width:44px; height:44px; font-size:21px; }
+    #bp-create .cr-dots{ gap:0; margin-top:8px; }
+    #bp-create .cr-sub{ max-width:none; font-size:clamp(10.5px,2.9vw,12px); line-height:1.4; letter-spacing:-.012em; white-space:nowrap; }
+  }
+
+  /* ===== SECTION 8 : AVIS CLIENTS (slider d'avis + grille photos, fond sable) ===== */
+  #bp-reviews{ background:radial-gradient(ellipse at 10% 100%,color-mix(in srgb,var(--brand-accent) 7%,transparent) 0%,transparent 38%),#F5EDE0; color:#0C0B0B; padding:clamp(38px,4.5vw,72px) 0; }
+  #bp-reviews .rv-head{ max-width:760px; margin:0 auto clamp(26px,3.2vw,40px); text-align:center; }
+  #bp-reviews .rv-eyebrow{ display:inline-flex; align-items:center; gap:9px; font-family:var(--brand-font-display); color:var(--brand-accent); font-size:12px; letter-spacing:.08em; text-transform:uppercase; margin:0 0 16px; }
+  #bp-reviews .rv-eyebrow::before{ content:""; width:9px; height:9px; border-radius:2px; background:var(--brand-accent); }
+  #bp-reviews .rv-title{ font-family:var(--brand-font-title); font-weight:800; color:#0C0B0B; font-size:clamp(26px,3.4vw,46px); line-height:1.06; letter-spacing:-.02em; margin:0; text-wrap:balance; }
+  #bp-reviews .rv-title .os-accent{ color:var(--brand-accent); }
+
+  #bp-reviews .rv-main{ display:grid; grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr); gap:clamp(20px,2.6vw,36px); align-items:stretch; max-width:1160px; margin-inline:auto; }
+
+  #bp-reviews .rv-slider{ display:flex; flex-direction:column; min-width:0; position:relative; }
+  #bp-reviews .rv-stage{ position:relative; min-width:0; flex:1; }
+  #bp-reviews .rv-left{ display:contents; }
+  #bp-reviews .rv-media{ display:none; }
+  #bp-reviews .rv-ratingbar{ display:none; }
+  #bp-reviews .rv-viewport{ height:100%; overflow:hidden; border-radius:10px; }
+  #bp-reviews .rv-track{ display:flex; height:100%; transition:transform .45s cubic-bezier(.22,1,.36,1); }
+  #bp-reviews .rv-card{ flex:0 0 100%; min-width:0; height:100%; box-sizing:border-box; background:#FEFCF8; border:1px solid color-mix(in srgb,#0C0B0B 12%,transparent); border-radius:5px; padding:clamp(22px,2.4vw,30px); box-shadow:none; display:flex; flex-direction:column; }
+  #bp-reviews .rv-stars{ color:var(--brand-accent); font-size:16px; letter-spacing:2px; line-height:1; margin:0 0 13px; }
+  #bp-reviews .rv-quote{ font-family:var(--brand-font-title); font-weight:800; color:#0C0B0B; font-size:clamp(18px,1.9vw,23px); line-height:1.2; letter-spacing:-.01em; margin:0; text-wrap:balance; }
+  #bp-reviews .rv-author{ display:flex; align-items:center; gap:11px; flex-wrap:wrap; margin:14px 0 18px; }
+  #bp-reviews .rv-name{ font-family:var(--brand-font-body); font-weight:700; color:#0C0B0B; font-size:14.5px; }
+  #bp-reviews .rv-badge{ display:inline-flex; align-items:center; gap:6px; font-family:var(--brand-font-body); font-weight:600; font-size:12px; color:#0C0B0B; background:color-mix(in srgb, var(--brand-accent) 16%, #F5EDE0); border-radius:999px; padding:5px 11px; }
+  #bp-reviews .rv-badge::before{ content:"✓"; color:var(--brand-accent); font-weight:800; }
+  #bp-reviews .rv-ba{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:auto; border-top:1px solid color-mix(in srgb,#0C0B0B 10%, transparent); padding-top:16px; }
+  #bp-reviews .rv-col{ min-width:0; padding:13px 14px; border-radius:4px; }
+  #bp-reviews .rv-before{ background:color-mix(in srgb,#0C0B0B 5%,transparent); }
+  #bp-reviews .rv-after{ background:color-mix(in srgb,var(--brand-accent) 11%,transparent); }
+  #bp-reviews .rv-col-h{ display:block; font-family:var(--brand-font-display); font-size:10px; letter-spacing:.06em; text-transform:uppercase; margin:0 0 9px; }
+  #bp-reviews .rv-before .rv-col-h{ color:#9a8b78; }
+  #bp-reviews .rv-after .rv-col-h{ color:var(--brand-accent); }
+  #bp-reviews .rv-ba ul{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:7px; }
+  #bp-reviews .rv-ba li{ font-family:var(--brand-font-body); font-size:12.5px; line-height:1.3; display:flex; gap:7px; }
+  #bp-reviews .rv-ba li::before{ flex:none; font-weight:800; }
+  #bp-reviews .rv-before li{ color:#6B5E4E; }
+  #bp-reviews .rv-before li::before{ content:"✗"; color:#B9A88E; }
+  #bp-reviews .rv-after li{ color:#3a3128; }
+  #bp-reviews .rv-after li::before{ content:"✓"; color:var(--brand-accent); }
+
+  #bp-reviews .rv-arrow{ position:absolute; top:50%; transform:translateY(-50%); z-index:4; width:42px; height:42px; border-radius:50%; background:#FEFCF8; color:#0C0B0B; border:1px solid color-mix(in srgb,#0C0B0B 12%, transparent); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:22px; line-height:1; padding:0; box-shadow:0 8px 22px -8px rgba(12,11,11,.45); transition:background .2s ease, color .2s ease, transform .2s ease; }
+  #bp-reviews .rv-arrow:hover{ background:var(--brand-accent); color:#F5EDE0; transform:translateY(-50%) scale(1.06); }
+  #bp-reviews .rv-prev{ left:-14px; }
+  #bp-reviews .rv-next{ right:-14px; }
+  #bp-reviews .rv-arrow:focus-visible{ outline:3px solid var(--brand-accent); outline-offset:2px; }
+  #bp-reviews .rv-dots{ display:flex; justify-content:center; gap:2px; min-height:44px; margin-top:10px; }
+  #bp-reviews .rv-dot{ width:44px; height:44px; border:none; background:transparent; cursor:pointer; padding:0; display:inline-flex; align-items:center; justify-content:center; }
+  #bp-reviews .rv-dot::before{ content:""; width:9px; height:9px; border-radius:999px; background:color-mix(in srgb,#0C0B0B 20%, transparent); transition:background .2s ease; }
+  #bp-reviews .rv-dot.is-active::before{ background:var(--brand-accent); width:22px; }
+  #bp-reviews .rv-dot:focus-visible{ outline:3px solid var(--brand-accent); outline-offset:1px; border-radius:999px; }
+
+  #bp-reviews .rv-grid{ display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:1fr 1fr; gap:clamp(8px,1vw,12px); margin-bottom:54px; }
+  #bp-reviews .rv-grid .rv-ph:nth-child(n+7){ display:none; }
+  #bp-reviews .rv-ph{ min-height:0; height:100%; border-radius:8px; background:color-mix(in srgb, #0C0B0B 4%, #F5EDE0); border:1.4px dashed color-mix(in srgb,#0C0B0B 20%, transparent); color:color-mix(in srgb,#0C0B0B 30%, transparent); display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  #bp-reviews .rv-ph .wf-ic{ width:36%; max-width:38px; }
+  #bp-reviews .rv-ph img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+  #bp-reviews .rv-cta-wrap{ display:flex; justify-content:center; margin-top:clamp(24px,2.8vw,34px); }
+  #bp-reviews .rv-cta{ display:inline-flex; align-items:center; gap:9px; font-family:var(--brand-font-title); font-weight:800; font-size:15.5px; color:#0C0B0B; background:#F5EDE0; border:1.5px solid var(--brand-accent); border-radius:8px; padding:14px 30px; text-decoration:none; box-shadow:0 12px 26px -18px rgba(12,11,11,.55); transition:background .2s ease, color .2s ease, transform .15s ease; }
+  #bp-reviews .rv-cta:hover{ background:var(--brand-accent); color:#F5EDE0; transform:translateY(-2px); }
+  #bp-reviews .rv-cta .arr{ transition:transform .2s ease; }
+  #bp-reviews .rv-cta:hover .arr{ transform:translateX(4px); }
+  #bp-reviews .rv-cta:focus-visible{ outline:3px solid var(--brand-accent); outline-offset:3px; }
+
+  @media (max-width:820px){
+    #bp-reviews .rv-main{ grid-template-columns:minmax(0,1fr); gap:26px; }
+    #bp-reviews .rv-eyebrow{ display:none; }
+    #bp-reviews .rv-ratingbar{ display:inline-flex; align-items:center; gap:9px; margin:0 0 15px; padding:7px 15px; border-radius:999px; background:#FEFCF8; border:1px solid color-mix(in srgb,#0C0B0B 8%, transparent); box-shadow:0 6px 18px -10px rgba(12,11,11,.35); }
+    #bp-reviews .rv-rb-stars{ color:var(--brand-accent); font-size:13px; letter-spacing:1.5px; line-height:1; }
+    #bp-reviews .rv-rb-label{ font-family:var(--brand-font-title); font-weight:800; font-size:12.5px; color:#0C0B0B; }
+    #bp-reviews .rv-card{ display:grid; height:auto; grid-template-columns:minmax(112px,38%) minmax(0,1fr); grid-template-areas:"media quote" "media author" "ba ba"; gap:10px 14px; align-items:stretch; padding:14px; }
+    #bp-reviews .rv-viewport, #bp-reviews .rv-track{ height:auto; }
+    #bp-reviews .rv-left{ display:contents; }
+    #bp-reviews .rv-stars{ display:none; }
+    #bp-reviews .rv-media{ grid-area:media; display:flex; min-height:180px; height:100%; border-radius:4px; background:color-mix(in srgb,#0C0B0B 4%,#F5EDE0); border:1px solid color-mix(in srgb,#0C0B0B 16%,transparent); color:color-mix(in srgb,#0C0B0B 30%,transparent); align-items:center; justify-content:center; overflow:hidden; }
+    #bp-reviews .rv-media .wf-ic{ width:40%; max-width:40px; }
+    #bp-reviews .rv-media img{ width:100%; height:100%; object-fit:cover; display:block; }
+    #bp-reviews .rv-quote{ grid-area:quote; align-self:end; font-size:14px; line-height:1.42; font-weight:700; color:#0C0B0B; text-wrap:pretty; margin:0; }
+    #bp-reviews .rv-author{ grid-area:author; display:flex; flex-direction:row; align-items:flex-start; align-content:flex-start; flex-wrap:wrap; gap:7px 8px; margin:0; padding-top:11px; border-top:1px solid color-mix(in srgb,#0C0B0B 8%, transparent); }
+    #bp-reviews .rv-badge{ order:-1; flex:none; white-space:nowrap; font-size:10.5px; padding:4px 10px; }
+    #bp-reviews .rv-name{ white-space:nowrap; font-size:13.5px; }
+    #bp-reviews .rv-ba{ grid-area:ba; align-self:start; grid-template-columns:1fr 1fr; gap:8px; margin-top:4px; border-top:1px solid color-mix(in srgb,#0C0B0B 8%, transparent); padding-top:12px; }
+    #bp-reviews .rv-col-h{ font-family:var(--brand-font-title); font-style:italic; font-weight:800; font-size:13.5px; letter-spacing:0; text-transform:none; margin:0 0 9px; }
+    #bp-reviews .rv-before .rv-col-h{ color:#0C0B0B; }
+    #bp-reviews .rv-after .rv-col-h{ color:var(--brand-accent); }
+    #bp-reviews .rv-ba ul{ gap:6px; }
+    #bp-reviews .rv-col{ padding:9px; }
+    #bp-reviews .rv-ba li{ align-items:flex-start; gap:7px; padding:0; border-radius:0; font-size:11.5px; font-weight:600; line-height:1.28; }
+    #bp-reviews .rv-ba li::before{ font-size:12px; }
+    #bp-reviews .rv-before li{ background:none; color:#5b5145; }
+    #bp-reviews .rv-after li{ background:none; color:#2f2820; }
+    #bp-reviews .rv-grid{ display:none; }
+    /* Fleches + puces en une rangee sous la carte */
+    #bp-reviews .rv-stage{ position:static; }
+    #bp-reviews .rv-arrow{ top:auto; bottom:0; transform:none; width:44px; height:44px; font-size:18px; }
+    #bp-reviews .rv-arrow:hover{ transform:scale(1.06); }
+    #bp-reviews .rv-prev{ left:calc(50% - 150px); right:auto; }
+    #bp-reviews .rv-next{ right:calc(50% - 150px); left:auto; }
+    #bp-reviews .rv-dots{ margin-top:14px; min-height:44px; align-items:center; gap:0; }
+  }
+
+  /* ===== SECTION 9 : POUR QUI (composition éditoriale avec visuels, fond orange) ===== */
+  #bp-forwho{ position:relative; isolation:isolate; overflow:hidden; background:var(--brand-accent); color:#0C0B0B; padding:clamp(38px,4.5vw,72px) 0; }
+  #bp-forwho::before{ content:""; position:absolute; z-index:0; top:-72px; right:-72px; width:190px; aspect-ratio:1/1; border:28px solid color-mix(in srgb,#0C0B0B 6%,transparent); box-shadow:-250px 430px 0 -34px color-mix(in srgb,#0C0B0B 5%,transparent); pointer-events:none; }
+  #bp-forwho > .wrap{ position:relative; z-index:1; }
+  #bp-forwho .fw-head{ max-width:820px; margin:0 auto clamp(26px,3.2vw,40px); text-align:center; }
+  #bp-forwho .fw-eyebrow{ display:inline-flex; align-items:center; gap:9px; font-family:var(--brand-font-display); color:#0C0B0B; font-size:12px; letter-spacing:.08em; text-transform:uppercase; margin:0 0 15px; }
+  #bp-forwho .fw-eyebrow::before{ content:""; width:9px; height:9px; border-radius:2px; background:#0C0B0B; }
+  #bp-forwho .fw-title{ font-family:var(--brand-font-title); font-weight:800; color:#F5EDE0; font-size:clamp(27px,3.5vw,48px); line-height:1.05; letter-spacing:-.02em; margin:0; text-wrap:balance; }
+  #bp-forwho .fw-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); column-gap:clamp(28px,4vw,64px); }
+  #bp-forwho .fw-card{ display:grid; grid-template-columns:clamp(120px,12vw,168px) 1fr; align-items:center; gap:clamp(16px,2vw,26px); padding:clamp(18px,2vw,26px) 0; border-top:1px solid color-mix(in srgb,#0C0B0B 30%,transparent); }
+  #bp-forwho .fw-card:nth-last-child(-n+2){ border-bottom:1px solid color-mix(in srgb,#0C0B0B 30%,transparent); }
+  #bp-forwho .fw-media{ aspect-ratio:4/5; background:#F5EDE0; border:1px solid color-mix(in srgb,#0C0B0B 18%,transparent); border-radius:4px; color:color-mix(in srgb,#0C0B0B 30%,transparent); display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  #bp-forwho .fw-media .wf-ic{ width:24%; max-width:46px; }
+  #bp-forwho .fw-media img{ width:100%; height:100%; object-fit:cover; display:block; }
+  #bp-forwho .fw-body{ display:flex; align-items:flex-start; gap:10px; padding:0; }
+  #bp-forwho .fw-check{ flex:none; width:22px; height:22px; border-radius:50%; background:#0C0B0B; color:#F5EDE0; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; line-height:1; margin-top:1px; }
+  #bp-forwho .fw-text{ font-family:var(--brand-font-title); font-weight:750; font-size:clamp(17px,1.6vw,21px); line-height:1.25; color:#0C0B0B; margin:0; text-wrap:pretty; }
+
+  @media (max-width:820px){
+    #bp-forwho .fw-grid{ grid-template-columns:1fr; }
+    #bp-forwho .fw-card{ grid-template-columns:132px 1fr; }
+    #bp-forwho .fw-card:nth-last-child(2){ border-bottom:0; }
+    #bp-forwho .fw-text{ font-size:17px; }
+  }
+  @media (max-width:520px){
+    #bp-forwho .fw-card{ grid-template-columns:92px 1fr; gap:14px; }
+  }
+
+  /* ===== SECTION 10 : TABLEAU DE COMPARAISON (BeadPops vs les autres) ===== */
+  #bp-compare{ background-color:#F5EDE0; background-image:linear-gradient(rgba(245,237,224,.82),rgba(245,237,224,.88)),url('{{ 'bp-bg-light-desktop.webp' | asset_url }}'); background-size:cover; background-position:center; color:#0C0B0B; padding:clamp(38px,4.5vw,72px) 0; }
+  #bp-compare .cx-wrap{ width:min(calc(100% - (2 * var(--lp-gutter))),var(--lp-content-max)); margin-inline:auto; }
+  #bp-compare .cx-head{ text-align:center; max-width:720px; margin:0 auto clamp(24px,3vw,38px); }
+  #bp-compare .cx-title{ font-family:var(--brand-font-title); font-weight:800; color:#0C0B0B; font-size:clamp(24px,3.1vw,40px); line-height:1.08; letter-spacing:-.02em; margin:0; text-wrap:balance; }
+  #bp-compare .cx-title .os-accent{ color:var(--brand-accent); }
+  #bp-compare .cx-sub{ font-family:var(--brand-font-body); color:#6B5E4E; font-size:clamp(14px,1.2vw,16px); line-height:1.5; margin:12px 0 0; }
+  #bp-compare .cx-board{ max-width:1240px; margin-inline:auto; border:1px solid rgba(12,11,11,.14); border-radius:8px; overflow:hidden; box-shadow:0 26px 54px -38px rgba(12,11,11,.55); }
+  #bp-compare .cx-board-head,#bp-compare .cx-row{ display:grid; grid-template-columns:minmax(150px,.58fr) minmax(0,1fr) minmax(0,1fr); }
+  #bp-compare .cx-board-head{ min-height:78px; }
+  #bp-compare .cx-corner,#bp-compare .cx-brand,#bp-compare .cx-label,#bp-compare .cx-value{ display:flex; align-items:center; }
+  #bp-compare .cx-corner{ padding:18px 20px; background:#E9E3D6; color:#776A59; font-family:var(--brand-font-display); font-size:10px; line-height:1.25; letter-spacing:.08em; text-transform:uppercase; }
+  #bp-compare .cx-brand{ padding:18px 22px; font-family:var(--brand-font-title); font-size:clamp(19px,1.8vw,25px); font-weight:800; }
+  #bp-compare .cx-brand.us{ justify-content:space-between; gap:16px; background:#161412; color:#F5EDE0; }
+  #bp-compare .cx-brand.us .pop{ color:var(--brand-accent); }
+  #bp-compare .cx-brand.them{ background:#DED5C7; color:#51483E; }
+  #bp-compare .cx-tag{ flex:none; background:var(--brand-accent); color:#0C0B0B; font-family:var(--brand-font-display); font-size:9px; letter-spacing:.05em; text-transform:uppercase; padding:5px 9px; border-radius:3px; }
+  #bp-compare .cx-row{ border-top:1px solid rgba(12,11,11,.12); }
+  #bp-compare .cx-label{ padding:17px 20px; background:#F5EDE0; color:#0C0B0B; font-family:var(--brand-font-title); font-size:14px; font-weight:800; line-height:1.25; }
+  #bp-compare .cx-value{ gap:11px; padding:17px 22px; font-family:var(--brand-font-body); font-size:14.5px; line-height:1.35; }
+  #bp-compare .cx-value.us{ background:#161412; color:#F5EDE0; }
+  #bp-compare .cx-value.them{ background:#EEE7DB; color:#655A4D; }
+  #bp-compare .cx-ic{ flex:none; width:22px; height:22px; border-radius:4px; display:inline-flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; }
+  #bp-compare .cx-value.us .cx-ic{ background:var(--brand-accent); color:#0C0B0B; }
+  #bp-compare .cx-value.them .cx-ic{ border:1px solid rgba(12,11,11,.16); color:#827564; }
+
+  @media (max-width:700px){
+    #bp-compare .cx-head{ margin-bottom:24px; }
+    #bp-compare .cx-board{ border:0; border-radius:0; overflow:visible; box-shadow:none; }
+    #bp-compare .cx-board-head{ display:none; }
+    #bp-compare .cx-row{ display:grid; grid-template-columns:1fr; margin-bottom:12px; border:1px solid rgba(12,11,11,.14); border-radius:6px; overflow:hidden; }
+    #bp-compare .cx-row:last-child{ margin-bottom:0; }
+    #bp-compare .cx-label{ padding:11px 14px; background:#DED5C7; }
+    #bp-compare .cx-value{ position:relative; padding:35px 14px 13px; min-height:76px; }
+    #bp-compare .cx-value::before{ content:attr(data-brand); position:absolute; top:10px; left:14px; font-family:var(--brand-font-display); font-size:9px; line-height:1; letter-spacing:.06em; text-transform:uppercase; }
+    #bp-compare .cx-value.us::before{ color:var(--brand-accent); }
+    #bp-compare .cx-value.them::before{ color:#776A59; }
+  }
+
+  @media (max-width:820px){
+    #bp-create{ background-image:linear-gradient(180deg,#0C0B0B 0%,rgba(12,11,11,.97) 28%,rgba(12,11,11,.86) 58%,rgba(12,11,11,.78) 100%),url('{{ 'bp-bg-dark-mobile.webp' | asset_url }}'); background-size:cover; background-position:center; }
+    #bp-compare{ background-image:linear-gradient(180deg,rgba(245,237,224,.97) 0%,rgba(245,237,224,.93) 32%,rgba(245,237,224,.90) 100%),url('{{ 'bp-bg-light-mobile.webp' | asset_url }}'); background-size:100% auto; background-position:center top; background-repeat:no-repeat; }
+  }
+
+  /* ===== SECTION 12 : LA CREATION (mur d'inspiration, visuels de creations, fond sombre) ===== */
+  #bp-gallery{ background:radial-gradient(ellipse at 50% 0%,color-mix(in srgb,var(--brand-accent) 9%,transparent) 0%,transparent 34%),linear-gradient(180deg,#0C0B0B 0%,#12100F 100%); color:var(--brand-text); padding:clamp(38px,4.5vw,72px) 0; }
+  #bp-gallery .gal-head{ text-align:center; max-width:640px; margin:0 auto clamp(26px,3.2vw,42px); }
+  #bp-gallery .gal-title{ font-family:var(--brand-font-title); font-weight:800; color:#F5EDE0; font-size:clamp(28px,3.6vw,50px); line-height:1.04; letter-spacing:-.02em; margin:0; text-wrap:balance; }
+  #bp-gallery .gal-title .os-accent{ color:var(--brand-accent); }
+  #bp-gallery .gal-sub{ font-family:var(--brand-font-body); color:color-mix(in srgb, var(--brand-text) 80%, transparent); font-size:clamp(14px,1.3vw,17px); line-height:1.55; margin:14px auto 0; max-width:50ch; }
+  #bp-gallery .gal-grid{ columns:4; column-gap:14px; }
+  #bp-gallery .gal-item{ break-inside:avoid; margin:0 0 14px; border-radius:8px; overflow:hidden; position:relative; display:flex; align-items:center; justify-content:center; background:color-mix(in srgb, var(--brand-accent) 8%, var(--brand-surface)); border:0; color:color-mix(in srgb, var(--brand-text) 28%, transparent); transition:transform .25s ease; }
+  #bp-gallery .gal-item:hover{ transform:translateY(-4px); border-color:color-mix(in srgb, var(--brand-accent) 55%, transparent); }
+  #bp-gallery .gal-item svg{ width:38px; height:32px; }
+  #bp-gallery .gal-item img{ width:100%; height:100%; object-fit:cover; display:block; }
+  #bp-gallery .gal-item.t1{ aspect-ratio:4/5; } #bp-gallery .gal-item.t2{ aspect-ratio:1/1; } #bp-gallery .gal-item.t3{ aspect-ratio:3/4; } #bp-gallery .gal-item.t4{ aspect-ratio:5/4; }
+  @media (min-width:1280px){ #bp-gallery .gal-grid{ columns:5; column-gap:12px; } #bp-gallery .gal-item{ margin-bottom:12px; } }
+  @media (max-width:900px){ #bp-gallery .gal-grid{ columns:3; } }
+  @media (max-width:600px){ #bp-gallery .gal-grid{ columns:2; column-gap:10px; } #bp-gallery .gal-item{ margin-bottom:10px; } }
+
+  /* ===== FOOTER ===== */
+  #bp-footer{ background:linear-gradient(180deg,#0C0B0B 0%,#12100F 100%); color:var(--brand-text); padding:clamp(44px,5vw,72px) 0 clamp(24px,3vw,30px); border-top:1px solid color-mix(in srgb, var(--brand-text) 10%, transparent); }
+  #bp-footer .ft-top{ display:grid; grid-template-columns:1.5fr 1fr 1fr 1fr; gap:clamp(24px,3vw,44px); }
+  #bp-footer .ft-logo{ font-family:var(--brand-font-display); font-size:20px; letter-spacing:.02em; color:var(--brand-text); }
+  #bp-footer .ft-logo .pop{ color:var(--brand-accent); }
+  #bp-footer .ft-tag{ font-family:var(--brand-font-body); color:color-mix(in srgb, var(--brand-text) 68%, transparent); font-size:14px; line-height:1.55; margin:14px 0 18px; max-width:34ch; }
+  #bp-footer .ft-social{ display:flex; gap:10px; }
+  #bp-footer .ft-social a{ width:44px; height:44px; border-radius:8px; border:1px solid color-mix(in srgb, var(--brand-text) 14%, transparent); display:flex; align-items:center; justify-content:center; color:var(--brand-text); text-decoration:none; transition:background .2s ease, color .2s ease, border-color .2s ease; }
+  #bp-footer .ft-social a:hover{ background:var(--brand-accent); color:var(--brand-bg); border-color:var(--brand-accent); }
+  #bp-footer .ft-social a:focus-visible{ outline:3px solid var(--brand-accent); outline-offset:2px; }
+  #bp-footer .ft-social svg{ width:18px; height:18px; }
+  #bp-footer .ft-col h4{ font-family:var(--brand-font-title); font-weight:800; font-size:12.5px; letter-spacing:.03em; text-transform:uppercase; color:var(--brand-text); margin:0 0 14px; }
+  #bp-footer .ft-col ul{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px; }
+  #bp-footer .ft-col a{ font-family:var(--brand-font-body); font-size:14px; color:color-mix(in srgb, var(--brand-text) 70%, transparent); text-decoration:none; transition:color .2s ease; }
+  #bp-footer .ft-col a:hover{ color:var(--brand-accent); }
+  #bp-footer .ft-bottom{ display:flex; align-items:center; justify-content:space-between; gap:14px 18px; flex-wrap:wrap; margin-top:clamp(30px,3.6vw,44px); padding-top:20px; border-top:1px solid color-mix(in srgb, var(--brand-text) 10%, transparent); }
+  #bp-footer .ft-copy{ font-family:var(--brand-font-body); font-size:12.5px; color:var(--brand-text-muted); }
+  #bp-footer .ft-legal{ display:flex; gap:16px; flex-wrap:wrap; }
+  #bp-footer .ft-legal a{ font-family:var(--brand-font-body); font-size:12.5px; color:var(--brand-text-muted); text-decoration:none; transition:color .2s ease; }
+  #bp-footer .ft-legal a:hover{ color:var(--brand-text); }
+  @media (max-width:820px){ #bp-footer .ft-top{ grid-template-columns:1fr 1fr; gap:28px 24px; } #bp-footer .ft-brand{ grid-column:1 / -1; } }
+  @media (max-width:520px){ #bp-footer .ft-top{ grid-template-columns:1fr; } #bp-footer .ft-col a{ display:flex; align-items:center; min-height:44px; } #bp-footer .ft-col ul{ gap:0; } #bp-footer .ft-bottom{ flex-direction:column; align-items:flex-start; } }
+
+  /* ===== COMPOSITIONS DE FOND : un rythme propre a chaque section ===== */
+  #os-hero,#bp-universe,#bp-modes,#bp-offer,#bp-reasons,#bp-create,#bp-reviews,#bp-compare,#bp-gallery,#bp-footer{ position:relative; isolation:isolate; overflow:hidden; }
+  #os-hero > .lp-wrap,#bp-universe > .lp-wrap,#bp-modes > .lp-wrap,#bp-offer > .lp-wrap,#bp-reasons > .lp-wrap,#bp-create > .lp-wrap,#bp-reviews > .lp-wrap,#bp-compare > .cx-wrap,#bp-gallery > .lp-wrap,#bp-footer > #beadpops-home-{{ section.id }} .lp-wrap{ position:relative; z-index:1; }
+
+  /* Hero : cadre pixel croppe autour de la transformation */
+  #os-hero{ background:linear-gradient(112deg,#0C0B0B 0%,#0C0B0B 52%,#161412 100%); }
+  #os-hero::before{ content:""; position:absolute; z-index:0; width:clamp(250px,29vw,470px); aspect-ratio:1/1; right:-7%; top:11%; border:clamp(12px,1.4vw,22px) solid color-mix(in srgb,var(--brand-accent) 10%,transparent); transform:rotate(8deg); pointer-events:none; }
+  #os-hero::after{ display:none; }
+
+  /* Univers : matrice de beads qui se densifie vers les produits */
+  #bp-universe{ background:linear-gradient(155deg,#F5EDE0 0%,#F5EDE0 52%,#EDE1D0 100%); }
+  #bp-universe::before{ content:""; position:absolute; z-index:0; inset:48% 0 0; background-image:radial-gradient(circle,color-mix(in srgb,var(--brand-accent) 13%,transparent) 0 2px,transparent 2.4px); background-size:26px 26px; -webkit-mask-image:linear-gradient(90deg,rgba(12,11,11,.56),transparent 24%,transparent 76%,rgba(12,11,11,.5)); mask-image:linear-gradient(90deg,rgba(12,11,11,.56),transparent 24%,transparent 76%,rgba(12,11,11,.5)); pointer-events:none; }
+  #bp-universe::after{ display:none; }
+
+  /* Niveaux : trois barres qui montent comme la difficulte */
+  #bp-modes{ background:linear-gradient(180deg,#0C0B0B 0%,#161412 100%); }
+  #bp-modes::before{ content:""; position:absolute; z-index:0; right:-22px; bottom:10%; width:30px; height:68px; background:color-mix(in srgb,var(--brand-accent) 13%,transparent); box-shadow:-48px -38px 0 color-mix(in srgb,var(--brand-accent) 8%,transparent),-96px -82px 0 color-mix(in srgb,var(--brand-accent) 5%,transparent); pointer-events:none; }
+  #bp-modes::after{ display:none; }
+  #bp-modes > #beadpops-home-{{ section.id }} .lp-wrap{ position:relative; z-index:1; }
+
+  /* Etapes : chemin d'assemblage et trois points de progression */
+  #bp-how{ overflow-x:clip; background:linear-gradient(180deg,#F5EDE0 0%,#EFE4D4 100%); }
+  #bp-how::before{ right:2.5%; bottom:8%; width:52px; border:1px solid color-mix(in srgb,var(--brand-accent) 16%,transparent); box-shadow:-62px -50px 0 -1px color-mix(in srgb,var(--brand-accent) 10%,transparent),-124px -100px 0 -1px color-mix(in srgb,var(--brand-accent) 6%,transparent); }
+  #bp-how::after{ display:none; }
+
+  /* Starter Kit : surface calme pour lire le contenu */
+  #bp-offer{ background:linear-gradient(128deg,#F5EDE0 0%,#F5EDE0 68%,#EEE3D3 100%); }
+  #bp-offer::before,#bp-offer::after{ display:none; }
+
+  /* Raisons : pegboard sombre et grand signe Pop en bordure */
+  #bp-reasons{ background-color:#0C0B0B; background-image:radial-gradient(color-mix(in srgb,var(--brand-text) 6%,transparent) 1.1px,transparent 1.6px); background-size:24px 24px; }
+  #bp-reasons::before,#bp-reasons::after{ display:none; }
+
+  /* Avis : guillemet monumental et ponctuation graphique */
+  #bp-reviews{ background:linear-gradient(180deg,#F5EDE0 0%,#EEE3D3 100%); }
+  #bp-reviews::before{ content:"\201C"; position:absolute; z-index:0; left:-18px; top:5%; font-family:var(--brand-font-title); font-size:clamp(180px,20vw,320px); font-weight:800; line-height:1; color:color-mix(in srgb,var(--brand-accent) 6%,transparent); pointer-events:none; }
+  #bp-reviews::after{ display:none; }
+
+  /* Pour qui : fenetres pixel qui cadrent la composition orange */
+  #bp-forwho{ background:var(--brand-accent); }
+  #bp-forwho::before{ top:-84px; right:-72px; width:200px; border:28px solid color-mix(in srgb,#0C0B0B 6%,transparent); box-shadow:none; transform:rotate(7deg); }
+  #bp-forwho::after{ display:none; }
+
+  /* Galerie : mosaique pixel sur les bords, centre calme pour les creations */
+  #bp-gallery{ background:linear-gradient(180deg,#0C0B0B 0%,#161412 100%); }
+  #bp-gallery::before{ content:""; position:absolute; z-index:0; inset:0 auto 0 0; width:min(10vw,140px); background:conic-gradient(from 90deg at 50% 50%,color-mix(in srgb,var(--brand-accent) 7%,transparent) 25%,transparent 0 50%,color-mix(in srgb,var(--brand-text) 4%,transparent) 0 75%,transparent 0); background-size:48px 48px; -webkit-mask-image:linear-gradient(90deg,rgba(12,11,11,.65),transparent); mask-image:linear-gradient(90deg,rgba(12,11,11,.65),transparent); pointer-events:none; }
+  #bp-gallery::after{ display:none; }
+
+  /* Footer : ligne d'horizon en pixels, volontairement plus calme */
+  #bp-footer{ background:linear-gradient(180deg,#0C0B0B 0%,#161412 100%); }
+  #bp-footer::before{ content:""; position:absolute; z-index:0; right:0; top:0; width:min(42vw,640px); height:6px; background:linear-gradient(90deg,transparent 0 12%,color-mix(in srgb,var(--brand-accent) 30%,transparent) 12% 28%,transparent 28% 38%,var(--brand-accent) 38% 61%,transparent 61% 74%,color-mix(in srgb,var(--brand-text) 18%,transparent) 74% 100%); pointer-events:none; }
+  #bp-footer::after{ display:none; }
+
+  /* Hierarchie des actions : achat, preuve, navigation */
+  #os-hero .os-hero-cta{ border-radius:6px; background:var(--brand-accent); color:#0C0B0B; box-shadow:0 4px 0 #7A2A0A; transition:transform .16s ease,box-shadow .16s ease,background .2s ease; }
+  #os-hero .os-hero-cta:hover{ transform:translateY(-2px); box-shadow:0 6px 0 #7A2A0A; }
+  #bp-offer .offer-cta{ border-radius:6px; background:#0C0B0B; color:#F5EDE0; box-shadow:0 4px 0 #C23D08; }
+  #bp-offer .offer-cta:hover{ background:#161412; box-shadow:0 6px 0 #C23D08; }
+  #bp-reviews .rv-cta{ border-radius:6px; background:#F5EDE0; background-image:none; color:#0C0B0B; border:2px solid #0C0B0B; box-shadow:0 3px 0 #C9A87C; }
+  #bp-reviews .rv-cta:hover{ background:#0C0B0B; border-color:#0C0B0B; color:#F5EDE0; }
+  #os-hero .os-hero-cta:active{ transform:translateY(2px); box-shadow:0 2px 0 #7A2A0A; }
+  #bp-offer .offer-cta:active{ transform:translateY(2px); box-shadow:0 2px 0 #C23D08; }
+  #bp-reviews .rv-cta:active{ transform:translateY(2px); box-shadow:0 1px 0 #C9A87C; }
+
+  /* Plaque CTA a deux encoches, inspiree des pixels poses */
+  #os-hero .os-hero-cta,#bp-offer .offer-cta,#bp-reviews .rv-cta,.sticky-cta .sc-btn{ border-radius:0; clip-path:polygon(0 0,calc(100% - 10px) 0,calc(100% - 10px) 5px,100% 5px,100% 100%,10px 100%,10px calc(100% - 5px),0 calc(100% - 5px)); }
+
+  /* Fleche pixel : meme vocabulaire, contraste adapte au role */
+  #os-hero .os-hero-cta,#bp-offer .offer-cta,#bp-reviews .rv-cta{ display:inline-flex; align-items:center; gap:12px; }
+  #os-hero .os-hero-cta .arr,#bp-offer .offer-cta .arr,#bp-reviews .rv-cta .arr,.sticky-cta .sc-btn .arr{ flex:none; width:23px; height:23px; display:inline-grid; place-items:center; border-radius:3px; font-family:var(--brand-font-display); font-size:11px; line-height:1; }
+  #os-hero .os-hero-cta .arr{ background:#0C0B0B; color:#F5EDE0; }
+  #bp-offer .offer-cta .arr{ background:var(--brand-accent); color:#0C0B0B; }
+  #bp-reviews .rv-cta .arr{ background:#0C0B0B; color:#F5EDE0; }
+  #bp-reviews .rv-cta:hover .arr{ background:var(--brand-accent); color:#0C0B0B; }
+  .sticky-cta .sc-btn .arr{ background:#0C0B0B; color:#F5EDE0; }
+
+  /* Controles de carrousel : touches pixel, pas de pastilles generiques */
+  #bp-universe .uv-arrow,#bp-offer .kit-arrow,#bp-create .cr-arrow,#bp-reviews .rv-arrow{ border-radius:5px; font-family:var(--brand-font-display); }
+  #bp-universe .uv-arrow{ background:#0C0B0B; color:#F5EDE0; border-color:#0C0B0B; box-shadow:0 3px 0 #C23D08; }
+  #bp-offer .kit-arrow{ background:#F5EDE0; color:#0C0B0B; border-color:color-mix(in srgb,#0C0B0B 18%,transparent); box-shadow:none; }
+  #bp-create .cr-arrow{ background:#F5EDE0; color:#0C0B0B; box-shadow:0 3px 0 #C23D08; }
+  #bp-reviews .rv-arrow{ background:#F5EDE0; color:#0C0B0B; box-shadow:0 3px 0 #C9A87C; }
+
+  /* Cartes : rayon court et constant pour eviter l'effet composant generique */
+  #bp-universe .uv-cover,#bp-universe .uv-media,#bp-how .hw-media,#bp-reasons .reason,#bp-reasons .reason-media,#bp-reviews .rv-card,#bp-reviews .rv-ph,#bp-compare .cx-board,#bp-gallery .gal-item{ border-radius:6px; }
+
+  /* Trois raccords courts en dents pixel, seulement aux ruptures fortes */
+  #os-hero::after,#bp-reviews::after{ display:none; }
+  .bp-seam{ --seam-step:30px; position:relative; z-index:3; height:10px; margin-block:-1px; overflow:hidden; background:var(--seam-to); }
+  .bp-seam::before{ content:""; position:absolute; inset:0; background:linear-gradient(to bottom,var(--seam-from) 0 5px,transparent 5px),linear-gradient(90deg,var(--seam-from) 0 50%,transparent 50%) 0 5px/var(--seam-step) 5px repeat-x; }
+  .bp-seam--dark-light{ --seam-from:#0C0B0B; --seam-to:#F5EDE0; }
+  .bp-seam--light-dark{ --seam-from:#F5EDE0; --seam-to:#0C0B0B; }
+  .bp-seam--light-pop{ --seam-from:#F5EDE0; --seam-to:#FF5C1A; }
+
+  @media (max-width:700px){
+    .bp-seam{ --seam-step:24px; height:8px; }
+    .bp-seam::before{ background:linear-gradient(to bottom,var(--seam-from) 0 4px,transparent 4px),linear-gradient(90deg,var(--seam-from) 0 50%,transparent 50%) 0 4px/var(--seam-step) 4px repeat-x; }
+    #os-hero::before{ width:230px; right:-138px; top:30%; opacity:.7; }
+    #bp-universe::before{ inset:48% 0 0; background-size:22px 22px; -webkit-mask-image:linear-gradient(90deg,rgba(12,11,11,.72),transparent 42%,rgba(12,11,11,.4)); mask-image:linear-gradient(90deg,rgba(12,11,11,.72),transparent 42%,rgba(12,11,11,.4)); }
+    #bp-modes::before{ right:-18px; bottom:7%; width:26px; height:58px; box-shadow:-38px -34px 0 color-mix(in srgb,var(--brand-accent) 13%,transparent),-76px -76px 0 color-mix(in srgb,var(--brand-accent) 7%,transparent); }
+    #bp-how::before{ right:-34px; bottom:5%; width:44px; opacity:.72; }
+    #bp-reviews::before{ left:-48px; top:2%; font-size:200px; opacity:.65; }
+    #bp-forwho::before{ top:-66px; right:-74px; width:160px; border-width:24px; opacity:.75; }
+    #bp-gallery::before{ width:18vw; background-size:40px 40px; opacity:.7; }
+    #bp-footer::before{ width:72vw; }
+  }
+  @media (prefers-reduced-motion:reduce){
+    #os-hero .os-tf-lbl,#os-hero .os-tf-arrow{ animation:none; }
+    .bp-marquee.is-running .bp-marquee-track{ animation:none; }
+  }
+
+  /* Sticky CTA mobile : bouton d'achat persistant en bas d'écran */
+  .sticky-cta{ display:none; }
+  @media (max-width:760px){
+    .sticky-cta{ display:flex; position:fixed; left:0; right:0; bottom:0; z-index:50; align-items:center; justify-content:space-between; gap:12px; padding:11px 16px calc(11px + env(safe-area-inset-bottom, 0px)); background:var(--brand-surface); border-top:1px solid color-mix(in srgb, var(--brand-accent) 32%, transparent); text-decoration:none; box-shadow:0 -8px 24px -12px rgba(0,0,0,.7); }
+    .sticky-cta .sc-price{ display:flex; flex-direction:column; line-height:1.05; }
+    .sticky-cta .sc-amount{ font-family:var(--brand-font-title); font-weight:800; font-size:18px; color:var(--brand-text); }
+    .sticky-cta .sc-note{ font-family:var(--brand-font-body); font-size:10px; color:var(--brand-text-muted); }
+    .sticky-cta .sc-btn{ flex:1; max-width:60%; display:inline-flex; align-items:center; justify-content:center; gap:8px; background:var(--brand-accent); color:#0C0B0B; font-family:var(--brand-font-title); font-weight:800; font-size:15px; padding:13px 18px; border-radius:6px; box-shadow:0 3px 0 #7A2A0A; }
+    .sticky-cta:focus-visible{ outline:3px solid var(--brand-accent); outline-offset:-3px; }
+    body{ padding-bottom:66px; }
+  }
+  @media (prefers-reduced-motion:reduce){ .sticky-cta{ transition:none; } }
+
+  /* Avis clients : galerie éditoriale inspirée des cartes UGC, adaptée à BeadPops */
+  #bp-reviews{ padding:clamp(54px,6vw,92px) 0 clamp(48px,5vw,76px); background:linear-gradient(180deg,#F5EDE0 0%,#EEE3D3 100%); }
+  #bp-reviews::before{ content:""; left:0; top:0; width:100%; height:100%; background:radial-gradient(circle at 8% 18%,color-mix(in srgb,var(--brand-accent) 8%,transparent) 0 2px,transparent 2.5px); background-size:30px 30px; -webkit-mask-image:linear-gradient(90deg,rgba(12,11,11,.65),transparent 24%); mask-image:linear-gradient(90deg,rgba(12,11,11,.65),transparent 24%); opacity:.48; }
+  #bp-reviews .rv-head{ max-width:720px; margin:0 auto clamp(28px,3.6vw,48px); padding-inline:20px; }
+  #bp-reviews .rv-eyebrow{ display:inline-flex; margin:0 0 13px; }
+  #bp-reviews .rv-title{ font-size:clamp(32px,4.4vw,60px); line-height:.98; }
+  #bp-reviews .rv-summary{ display:flex; align-items:center; justify-content:center; gap:10px; margin-top:18px; color:#0C0B0B; font-family:var(--brand-font-body); font-size:clamp(13px,1.2vw,15px); }
+  #bp-reviews .rv-summary-stars{ color:var(--brand-accent); letter-spacing:2px; line-height:1; }
+  #bp-reviews .rv-summary-label{ font-weight:650; }
+  #bp-reviews .rv-carousel{ position:relative; width:100%; }
+  #bp-reviews .rv-viewport{ height:auto; overflow-x:auto; overflow-y:hidden; border-radius:0; scroll-snap-type:x mandatory; scroll-padding-inline:max(20px,calc((100vw - min(82vw,430px))/2)); overscroll-behavior-x:contain; scrollbar-width:none; -ms-overflow-style:none; }
+  #bp-reviews .rv-viewport::-webkit-scrollbar{ display:none; }
+  #bp-reviews .rv-track{ width:max-content; height:auto; gap:clamp(14px,1.6vw,22px); padding-inline:max(20px,calc((100vw - min(82vw,430px))/2)); transform:none!important; transition:none; }
+  #bp-reviews .rv-card{ flex:0 0 min(82vw,430px); height:auto; padding:0; overflow:hidden; scroll-snap-align:center; scroll-snap-stop:always; background:#F5EDE0; border:1px solid color-mix(in srgb,#0C0B0B 16%,transparent); border-radius:6px; opacity:.56; transform:scale(.965); transform-origin:center; transition:opacity .25s ease,transform .25s ease; }
+  #bp-reviews .rv-card.is-active{ opacity:1; transform:scale(1); }
+  #bp-reviews .rv-media{ display:block; width:100%; aspect-ratio:4/5; min-height:0; border:0; border-radius:0; background:#E8DDCC; overflow:hidden; }
+  #bp-reviews .rv-media img{ width:100%; height:100%; object-fit:cover; display:block; }
+  #bp-reviews .rv-copy{ display:flex; flex-direction:column; min-height:248px; padding:clamp(20px,2.2vw,28px); }
+  #bp-reviews .rv-stars{ display:block; margin:0 0 14px; font-size:15px; }
+  #bp-reviews .rv-placeholder{ display:inline-flex; align-self:flex-start; margin-left:8px; color:#6B5E4E; font-family:var(--brand-font-display); font-size:9px; letter-spacing:.05em; text-transform:uppercase; }
+  #bp-reviews .rv-quote{ font-family:var(--brand-font-body); font-size:clamp(16px,1.3vw,18px); line-height:1.48; font-weight:520; letter-spacing:0; text-wrap:pretty; }
+  #bp-reviews .rv-author{ margin:auto 0 0; padding-top:20px; border-top:1px solid color-mix(in srgb,#0C0B0B 12%,transparent); }
+  #bp-reviews .rv-name{ font-family:var(--brand-font-title); font-size:14px; font-weight:800; }
+  #bp-reviews .rv-badge{ padding:0; border-radius:0; background:transparent; color:#6B5E4E; font-size:12px; }
+  #bp-reviews .rv-badge::before{ content:""; width:8px; height:8px; border-radius:2px; background:var(--brand-accent); }
+  #bp-reviews .rv-controls{ display:flex; align-items:center; justify-content:center; gap:18px; min-height:54px; margin-top:24px; padding-inline:20px; }
+  #bp-reviews .rv-arrow{ position:static; width:44px; height:44px; flex:none; border-radius:6px; transform:none; background:#F5EDE0; border:1.5px solid #0C0B0B; color:#0C0B0B; box-shadow:3px 3px 0 #C9A87C; font-size:18px; }
+  #bp-reviews .rv-arrow:hover{ background:#0C0B0B; color:#F5EDE0; transform:translate(-1px,-1px); }
+  #bp-reviews .rv-dots{ min-height:0; margin:0; gap:6px; }
+  #bp-reviews .rv-dot{ width:28px; height:24px; }
+  #bp-reviews .rv-dot::before{ width:22px; height:3px; border-radius:1px; background:color-mix(in srgb,#0C0B0B 22%,transparent); }
+  #bp-reviews .rv-dot.is-active::before{ width:22px; background:#0C0B0B; }
+
+  @media (min-width:821px){
+    #bp-reviews .rv-viewport{ scroll-padding-inline:max(32px,calc((100vw - min(29vw,430px))/2)); }
+    #bp-reviews .rv-track{ padding-inline:max(32px,calc((100vw - min(29vw,430px))/2)); }
+    #bp-reviews .rv-card{ flex-basis:min(29vw,430px); }
+  }
+  @media (max-width:820px){
+    #bp-reviews .rv-eyebrow{ display:inline-flex; }
+    #bp-reviews .rv-card{ display:block; grid-template:none; padding:0; }
+    #bp-reviews .rv-media{ min-height:0; height:auto; border-radius:0; }
+    #bp-reviews .rv-quote{ font-size:16px; line-height:1.45; }
+    #bp-reviews .rv-author{ display:flex; flex-direction:column; align-items:flex-start; gap:5px; margin:auto 0 0; padding-top:18px; }
+    #bp-reviews .rv-badge{ order:initial; }
+    #bp-reviews .rv-stars{ display:block; }
+  }
+  @media (max-width:480px){
+    #bp-reviews .rv-head{ padding-inline:20px; }
+    #bp-reviews .rv-title{ font-size:clamp(31px,10vw,42px); }
+    #bp-reviews .rv-summary{ align-items:flex-start; gap:8px; }
+    #bp-reviews .rv-summary-label{ max-width:190px; text-align:left; line-height:1.3; }
+    #bp-reviews .rv-copy{ min-height:230px; padding:20px; }
+    #bp-reviews .rv-controls{ gap:12px; }
+    #bp-reviews .rv-dots{ gap:2px; }
+    #bp-reviews .rv-dot{ width:24px; }
+    #bp-reviews .rv-dot::before,#bp-reviews .rv-dot.is-active::before{ width:18px; }
+  }
+  @media (prefers-reduced-motion:reduce){
+    #bp-reviews .rv-card{ transition:none; }
+    #bp-reviews .rv-viewport{ scroll-behavior:auto; }
+  }
+
+
+</style>
+
+<div id="beadpops-home-{{ section.id }}" class="beadpops-home" data-beadpops-home>
+<section id="os-hero">
+  <div class="os-hero-grid lp-wrap">
+    <div class="os-hero-head">
+      <p class="os-hero-eyebrow">{{ section.settings.hero_eyebrow | escape }}</p>
+      <h1 class="os-hero-title">{{ section.settings.hero_title | escape }} <span class="os-accent">{{ section.settings.hero_title_accent | escape }}</span></h1>
+      <p class="os-hero-sub">{{ section.settings.hero_subtitle | escape }}</p>
+    </div>
+
+    <div class="os-hero-visual is-tf">
+      <div class="os-tf" role="img" aria-label="DE ÇA, AVEC ÇA, À ÇA">
+        <span class="os-tf-lbl os-tf-lbl-before">DE ÇA</span>
+        <span class="os-tf-lbl os-tf-lbl-after">À ÇA</span>
+        <div class="os-tf-card os-tf-before"><video src="{{ 'bp-hero-before.mp4' | asset_url }}" autoplay loop muted playsinline preload="auto" aria-label="Création en beads en cours"></video></div>
+        <div class="os-tf-card os-tf-after"><video src="{{ 'bp-hero-after.mp4' | asset_url }}" autoplay loop muted playsinline preload="auto" aria-label="Création en beads terminée"></video></div>
+        <div class="os-tf-arrow os-tf-arrow-1"><svg viewBox="0 0 58 78" aria-hidden="true"><path class="sh" d="M6 8 C34 6 50 24 43 56" fill="none"/><path class="hd" d="M33 49 L44 63 L53 47 Z"/></svg></div>
+        <div class="os-tf-arrow os-tf-arrow-2"><svg viewBox="0 0 58 78" aria-hidden="true"><path class="sh" d="M6 8 C34 6 50 24 43 56" fill="none"/><path class="hd" d="M33 49 L44 63 L53 47 Z"/></svg></div>
+      </div>
+    </div>
+
+    <div class="os-hero-body">
+
+      <ul class="os-hero-checks">
+        <li><span class="os-check" aria-hidden="true">✓</span> Aucun talent requis</li>
+        <li><span class="os-check" aria-hidden="true">✓</span> Vraiment satisfaisant</li>
+        <li><span class="os-check" aria-hidden="true">✓</span> Idéal pour se vider la tête</li>
+        <li><span class="os-check" aria-hidden="true">✓</span> Facile à terminer</li>
+      </ul>
+
+      <a class="os-hero-cta" href="{{ primary_cta_url }}">{{ section.settings.primary_cta_label | escape }} <span class="arr" aria-hidden="true">&rarr;</span></a>
+      <div class="os-hero-meta"><span>{{ section.settings.hero_meta | escape }}</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="bp-seam bp-seam--dark-light" aria-hidden="true"></div>
+
+<section id="bp-visual-loop" aria-label="Créations BeadPops en mouvement">
+  <div class="vl-viewport">
+    <div class="vl-row vl-row--left">
+      <div class="vl-group">
+        <figure class="vl-card"><img width="900" height="1201" src="{{ 'bp-community-pink-leopard.webp' | asset_url }}" alt="Création en beads représentant un léopard rose" loading="eager" decoding="async"></figure>
+        <figure class="vl-card"><img width="900" height="1200" src="{{ 'bp-community-floral-animals.webp' | asset_url }}" alt="Collection de créations florales en beads" loading="eager" decoding="async"></figure>
+        <figure class="vl-card"><img width="900" height="1171" src="{{ 'bp-community-sailor-moon.webp' | asset_url }}" alt="Grande création Sailor Moon en beads" loading="lazy" decoding="async"></figure>
+        <figure class="vl-card"><img width="900" height="1200" src="{{ 'bp-community-floral-fox.webp' | asset_url }}" alt="Création renard fleurie en beads" loading="lazy" decoding="async"></figure>
+        <figure class="vl-card"><img width="900" height="1200" src="{{ 'bp-community-neon-panther.webp' | asset_url }}" alt="Création panthère aux couleurs néon" loading="lazy" decoding="async"></figure>
+        <figure class="vl-card"><img width="900" height="1200" src="{{ 'bp-community-fridge-gallery.webp' | asset_url }}" alt="Galerie de créations en beads exposées sur un réfrigérateur" loading="lazy" decoding="async"></figure>
+        <figure class="vl-card"><img width="900" height="1200" src="{{ 'bp-community-fantasy-character.webp' | asset_url }}" alt="Personnage fantasy créé en beads" loading="lazy" decoding="async"></figure>
+        <figure class="vl-card"><img width="900" height="1200" src="{{ 'bp-community-blue-flower-cat.webp' | asset_url }}" alt="Chat fleuri créé en beads" loading="lazy" decoding="async"></figure>
+      </div>
+      <div class="vl-group" aria-hidden="true">
+        <figure class="vl-card"><img width="900" height="1201" src="{{ 'bp-community-pink-leopard.webp' | asset_url }}" alt="" loading="lazy" decoding="async"></figure>
+        <figure class="vl-card"><img width="900" height="1200" src="{{ 'bp-community-floral-animals.webp' | asset_url }}" alt="" loading="lazy" decoding="async"></figure>
+        <figure class="vl-card"><img width="900" height="1171" src="{{ 'bp-community-sailor-moon.webp' | asset_url }}" alt="" loading="lazy" decoding="async"></figure>
+        <figure class="vl-card"><img width="900" height="1200" src="{{ 'bp-community-floral-fox.webp' | asset_url }}" alt="" loading="lazy" decoding="async"></figure>
+        <figure class="vl-card"><img width="900" height="1200" src="{{ 'bp-community-neon-panther.webp' | asset_url }}" alt="" loading="lazy" decoding="async"></figure>
+        <figure class="vl-card"><img width="900" height="1200" src="{{ 'bp-community-fridge-gallery.webp' | asset_url }}" alt="" loading="lazy" decoding="async"></figure>
+        <figure class="vl-card"><img width="900" height="1200" src="{{ 'bp-community-fantasy-character.webp' | asset_url }}" alt="" loading="lazy" decoding="async"></figure>
+        <figure class="vl-card"><img width="900" height="1200" src="{{ 'bp-community-blue-flower-cat.webp' | asset_url }}" alt="" loading="lazy" decoding="async"></figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="bp-universe">
+  <div class="uv-wrap lp-wrap">
+    <div class="uv-head"><p class="uv-eyebrow">Choisis ton univers</p><h2 class="uv-title">Quel style te donne envie de <span class="os-accent">commencer</span> ?</h2></div>
+    <div class="uv-tabs" role="tablist" aria-label="Univers BeadPops">
+      <button class="uv-tab" role="tab" id="uvt-kawaii" aria-controls="uvp-kawaii" aria-selected="true" style="--acc:#FF6B9D"><span class="uv-tab-dot" aria-hidden="true"></span>Kawaii</button>
+      <button class="uv-tab" role="tab" id="uvt-gaming" aria-controls="uvp-gaming" aria-selected="false" tabindex="-1" style="--acc:#67E8F9"><span class="uv-tab-dot" aria-hidden="true"></span>Gaming &amp; Rétro</button>
+      <button class="uv-tab" role="tab" id="uvt-fantasy" aria-controls="uvp-fantasy" aria-selected="false" tabindex="-1" style="--acc:#C084FC"><span class="uv-tab-dot" aria-hidden="true"></span>Fantasy</button>
+      <button class="uv-tab" role="tab" id="uvt-animaux" aria-controls="uvp-animaux" aria-selected="false" tabindex="-1" style="--acc:#FBBF24"><span class="uv-tab-dot" aria-hidden="true"></span>Animaux</button>
+    </div>
+    <p class="uv-swipe-hint">Glisse pour voir l'univers et ses produits</p>
+
+    <div class="uv-panels">
+      <div class="uv-panel is-active" role="tabpanel" id="uvp-kawaii" aria-labelledby="uvt-kawaii" style="--acc:#FF6B9D">
+        <div class="uv-carousel">
+          <button class="uv-arrow prev" type="button" aria-label="Voir les modèles précédents"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 8 12 15 19"/></svg></button>
+          <div class="uv-viewport">
+            <div class="uv-track">
+              <a class="uv-cover" href="{{ kawaii_collection_url }}"><img loading="lazy" decoding="async" width="1024" height="1024" src="{{ 'bp-universe-kawaii.webp' | asset_url }}" alt="Illustration de l'univers Kawaii"><span class="uv-cover-lbl"><span class="uv-cover-kick">Univers</span><span class="uv-cover-name">Kawaii</span><span class="uv-cover-go">Voir la collection <span aria-hidden="true">&rarr;</span></span></span></a>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Facile</span><button class="uv-heart" type="button" aria-label="Ajouter Cœur sucré aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#bp-offer" aria-label="Cœur sucré"></a></div><p class="uv-pname">Cœur sucré</p><p class="uv-price">14,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Facile</span><button class="uv-heart" type="button" aria-label="Ajouter Nuage rieur aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#bp-offer" aria-label="Nuage rieur"></a></div><p class="uv-pname">Nuage rieur</p><p class="uv-price">14,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Medium</span><button class="uv-heart" type="button" aria-label="Ajouter Fraise mochi aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#bp-offer" aria-label="Fraise mochi"></a></div><p class="uv-pname">Fraise mochi</p><p class="uv-price">19,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Medium</span><button class="uv-heart" type="button" aria-label="Ajouter Panda boba aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#bp-offer" aria-label="Panda boba"></a></div><p class="uv-pname">Panda boba</p><p class="uv-price">19,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Boss</span><button class="uv-heart" type="button" aria-label="Ajouter Chat mochi aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#bp-offer" aria-label="Chat mochi"></a></div><p class="uv-pname">Chat mochi</p><p class="uv-price">24,99 €</p></div>
+            </div>
+          </div>
+          <button class="uv-arrow next" type="button" aria-label="Voir les modèles suivants"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5 16 12 9 19"/></svg></button>
+        </div>
+      </div>
+
+      <div class="uv-panel" role="tabpanel" id="uvp-gaming" aria-labelledby="uvt-gaming" style="--acc:#67E8F9" hidden>
+        <div class="uv-carousel">
+          <button class="uv-arrow prev" type="button" aria-label="Voir les modèles précédents"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 8 12 15 19"/></svg></button>
+          <div class="uv-viewport">
+            <div class="uv-track">
+              <a class="uv-cover" href="{{ gaming_collection_url }}"><img loading="lazy" decoding="async" width="1024" height="1024" src="{{ 'bp-universe-gaming.webp' | asset_url }}" alt="Illustration de l'univers Gaming et Rétro"><span class="uv-cover-lbl"><span class="uv-cover-kick">Univers</span><span class="uv-cover-name">Gaming &amp; Rétro</span><span class="uv-cover-go">Voir la collection <span aria-hidden="true">&rarr;</span></span></span></a>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Facile</span><button class="uv-heart" type="button" aria-label="Ajouter Champi power-up aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#bp-offer" aria-label="Champi power-up"></a></div><p class="uv-pname">Champi power-up</p><p class="uv-price">14,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Facile</span><button class="uv-heart" type="button" aria-label="Ajouter Pièce étoile aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#bp-offer" aria-label="Pièce étoile"></a></div><p class="uv-pname">Pièce étoile</p><p class="uv-price">14,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Medium</span><button class="uv-heart" type="button" aria-label="Ajouter Manette 16-bit aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#bp-offer" aria-label="Manette 16-bit"></a></div><p class="uv-pname">Manette 16-bit</p><p class="uv-price">19,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Facile</span><button class="uv-heart" type="button" aria-label="Ajouter Cœur de vie aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#bp-offer" aria-label="Cœur de vie"></a></div><p class="uv-pname">Cœur de vie</p><p class="uv-price">14,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Boss</span><button class="uv-heart" type="button" aria-label="Ajouter Combo arcade aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#bp-offer" aria-label="Combo arcade"></a></div><p class="uv-pname">Combo arcade</p><p class="uv-price">24,99 €</p></div>
+            </div>
+          </div>
+          <button class="uv-arrow next" type="button" aria-label="Voir les modèles suivants"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5 16 12 9 19"/></svg></button>
+        </div>
+      </div>
+
+      <div class="uv-panel" role="tabpanel" id="uvp-fantasy" aria-labelledby="uvt-fantasy" style="--acc:#C084FC" hidden>
+        <div class="uv-carousel">
+          <button class="uv-arrow prev" type="button" aria-label="Voir les modèles précédents"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 8 12 15 19"/></svg></button>
+          <div class="uv-viewport">
+            <div class="uv-track">
+              <a class="uv-cover" href="{{ fantasy_collection_url }}"><img loading="lazy" decoding="async" width="1024" height="1024" src="{{ 'bp-universe-fantasy.webp' | asset_url }}" alt="Illustration de l'univers Fantasy"><span class="uv-cover-lbl"><span class="uv-cover-kick">Univers</span><span class="uv-cover-name">Fantasy</span><span class="uv-cover-go">Voir la collection <span aria-hidden="true">&rarr;</span></span></span></a>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Facile</span><button class="uv-heart" type="button" aria-label="Ajouter Potion de mana aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#bp-offer" aria-label="Potion de mana"></a></div><p class="uv-pname">Potion de mana</p><p class="uv-price">14,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Medium</span><button class="uv-heart" type="button" aria-label="Ajouter Licorne astrale aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#bp-offer" aria-label="Licorne astrale"></a></div><p class="uv-pname">Licorne astrale</p><p class="uv-price">19,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Medium</span><button class="uv-heart" type="button" aria-label="Ajouter Épée héroïque aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#bp-offer" aria-label="Épée héroïque"></a></div><p class="uv-pname">Épée héroïque</p><p class="uv-price">19,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Medium</span><button class="uv-heart" type="button" aria-label="Ajouter Grimoire ancien aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#bp-offer" aria-label="Grimoire ancien"></a></div><p class="uv-pname">Grimoire ancien</p><p class="uv-price">19,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Boss</span><button class="uv-heart" type="button" aria-label="Ajouter Bébé dragon aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#bp-offer" aria-label="Bébé dragon"></a></div><p class="uv-pname">Bébé dragon</p><p class="uv-price">24,99 €</p></div>
+            </div>
+          </div>
+          <button class="uv-arrow next" type="button" aria-label="Voir les modèles suivants"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5 16 12 9 19"/></svg></button>
+        </div>
+      </div>
+
+      <div class="uv-panel" role="tabpanel" id="uvp-animaux" aria-labelledby="uvt-animaux" style="--acc:#FBBF24" hidden>
+        <div class="uv-carousel">
+          <button class="uv-arrow prev" type="button" aria-label="Voir les modèles précédents"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 8 12 15 19"/></svg></button>
+          <div class="uv-viewport">
+            <div class="uv-track">
+              <a class="uv-cover" href="{{ animals_collection_url }}"><img loading="lazy" decoding="async" width="1024" height="1024" src="{{ 'bp-universe-animaux.webp' | asset_url }}" alt="Illustration de l'univers Animaux"><span class="uv-cover-lbl"><span class="uv-cover-kick">Univers</span><span class="uv-cover-name">Animaux</span><span class="uv-cover-go">Voir la collection <span aria-hidden="true">&rarr;</span></span></span></a>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Facile</span><button class="uv-heart" type="button" aria-label="Ajouter Renard des neiges aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#bp-offer" aria-label="Renard des neiges"></a></div><p class="uv-pname">Renard des neiges</p><p class="uv-price">14,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Facile</span><button class="uv-heart" type="button" aria-label="Ajouter Axolotl rose aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#bp-offer" aria-label="Axolotl rose"></a></div><p class="uv-pname">Axolotl rose</p><p class="uv-price">14,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Medium</span><button class="uv-heart" type="button" aria-label="Ajouter Chouette lune aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#bp-offer" aria-label="Chouette lune"></a></div><p class="uv-pname">Chouette lune</p><p class="uv-price">19,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Facile</span><button class="uv-heart" type="button" aria-label="Ajouter Grenouille menthe aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#bp-offer" aria-label="Grenouille menthe"></a></div><p class="uv-pname">Grenouille menthe</p><p class="uv-price">14,99 €</p></div>
+              <div class="uv-card"><div class="uv-media"><span class="uv-badge">Boss</span><button class="uv-heart" type="button" aria-label="Ajouter Shiba roux aux favoris" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-10-9.3C.4 8.5 2 5 5.5 5c2 0 3.4 1.2 4.5 2.6C11.1 6.2 12.5 5 14.5 5 18 5 19.6 8.5 22 11.7 19.5 16.3 12 21 12 21z"/></svg></button><a class="uv-media-link" href="#bp-offer" aria-label="Shiba roux"></a></div><p class="uv-pname">Shiba roux</p><p class="uv-price">24,99 €</p></div>
+            </div>
+          </div>
+          <button class="uv-arrow next" type="button" aria-label="Voir les modèles suivants"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5 16 12 9 19"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="bp-modes">
+  <div class="md-wrap lp-wrap">
+    <div class="md-head"><h2 class="md-title">Choisis ton <span class="os-accent">niveau de difficulté.</span></h2></div>
+    <div class="md-grid">
+      <a class="md-card" href="{{ easy_collection_url }}"><div class="md-top"><span class="md-num">01</span></div><div class="md-media"><img width="900" height="1200" src="{{ 'bp-community-floral-fox.webp' | asset_url }}" alt="Création renard fleurie, exemple du niveau Facile" loading="lazy" decoding="async"></div><div class="md-copy"><span class="md-badge">Facile</span><h3 class="md-name">Flash</h3><p class="md-desc">Un design rapide pour découvrir le geste et voir le résultat prendre forme sans prise de tête.</p></div><span class="md-cta"><span>Voir la collection</span><span class="md-cta-icon" aria-hidden="true">&rarr;</span></span></a>
+      <a class="md-card" href="{{ medium_collection_url }}"><div class="md-top"><span class="md-num">02</span></div><div class="md-media"><img width="900" height="1200" src="{{ 'bp-community-blue-flower-cat.webp' | asset_url }}" alt="Création chat fleurie, exemple du niveau Medium" loading="lazy" decoding="async"></div><div class="md-copy"><span class="md-badge">Medium</span><h3 class="md-name">Chill</h3><p class="md-desc">Plus de détails, plus de temps pour toi, toujours ce plaisir de poser les Pops une à une.</p></div><span class="md-cta"><span>Voir la collection</span><span class="md-cta-icon" aria-hidden="true">&rarr;</span></span></a>
+      <a class="md-card" href="{{ boss_collection_url }}"><div class="md-top"><span class="md-num">03</span></div><div class="md-media"><img width="900" height="1171" src="{{ 'bp-community-sailor-moon.webp' | asset_url }}" alt="Grande création détaillée, exemple du niveau Boss Mode" loading="lazy" decoding="async"></div><div class="md-copy"><span class="md-badge">Boss Mode</span><h3 class="md-name">Le grand projet</h3><p class="md-desc">Le niveau à choisir quand tu veux vraiment te poser et construire une pièce qui marque.</p></div><span class="md-cta"><span>Voir la collection</span><span class="md-cta-icon" aria-hidden="true">&rarr;</span></span></a>
+    </div>
+  </div>
+</section>
+
+<section id="bp-how" data-scroll-story>
+  <div class="hw-wrap lp-wrap">
+    <div class="hw-head"><p class="hw-eyebrow">Comment ça marche ?</p><h2 class="hw-title">Ton design prend vie en <span class="os-accent">trois étapes.</span></h2></div>
+    <div class="hw-scroll">
+      <div class="hw-visual-wrap">
+        <div class="hw-stage" aria-label="Création BeadPops révélée au fil du défilement">
+          <div class="hw-sprite hw-sprite--process" aria-hidden="true"></div>
+          <div class="hw-sprite hw-sprite--result" aria-hidden="true"></div>
+          <div class="hw-stage-top"><span class="hw-stage-step">Étape 01</span></div>
+          <div class="hw-progress" aria-hidden="true"><span></span></div>
+        </div>
+      </div>
+      <div class="hw-story">
+        <article class="hw-step is-active" data-step="01" data-label="Poser une couleur"><div class="hw-step-inner"><span class="hw-badge">Étape 1</span><h3 class="hw-name">Poser une couleur</h3><p class="hw-desc">On commence par une teinte, une zone noire.</p></div></article>
+        <article class="hw-step" data-step="02" data-label="Répéter, ça se révèle"><div class="hw-step-inner"><span class="hw-badge">Étape 2</span><h3 class="hw-name">Répéter, ça se révèle</h3><p class="hw-desc">Pop après Pop, l'image apparaît sous tes yeux.</p></div></article>
+        <article class="hw-step" data-step="03" data-label="Admirer le résultat final"><div class="hw-step-inner"><span class="hw-badge">Étape 3</span><h3 class="hw-name">Admirer le résultat final</h3><p class="hw-desc">Le dernier Pop est posé. Il ne reste plus qu'à regarder ce que tu viens de créer.</p></div></article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="bp-offer">
+  <div class="wrap lp-wrap">
+    <div class="offer-head">
+      <p class="offer-eyebrow">Dans le Starter Kit</p>
+      <h2 class="offer-title">Tout ce qu'il te faut <span class="os-accent">pour te lancer aujourd'hui.</span></h2>
+    </div>
+    <div class="kit-explorer">
+      <div class="kit-overview wf" aria-label="Starter Kit BeadPops">
+        {% if section.settings.starter_kit_image != blank %}
+          {{ section.settings.starter_kit_image | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '480, 760, 1000, 1400', sizes: '(min-width: 961px) 45vw, 100vw', alt: 'Starter Kit BeadPops' }}
+        {% else %}
+          <img src="{{ 'bp-starter-kit.webp' | asset_url }}" width="928" height="1152" loading="lazy" decoding="async" alt="Starter Kit BeadPops">
+        {% endif %}
+      </div>
+      <div class="kit-right">
+        <div class="kit-viewer">
+          <button class="kit-arrow kit-prev" type="button" aria-label="Élément précédent">&larr;</button>
+          <div class="kit-detail" id="kit-detail">
+            <div class="kit-detail-media"><svg class="wf-ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="2.5" stroke="currentColor" stroke-width="1.6"/><circle cx="8.5" cy="9.5" r="1.7" stroke="currentColor" stroke-width="1.6"/><path d="M4 18 L9.5 12.5 L13 16 L16 13 L20 17" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg></div>
+            <div class="kit-detail-body">
+              <span class="kit-badge">7 200 beads</span>
+              <h3 class="kit-name">24 couleurs de beads</h3>
+              <p class="kit-desc">24 sachets × 300 beads = 7 200 beads pour donner vie à tes designs (et te faire plaisir sur les détails).</p>
+            </div>
+          </div>
+          <button class="kit-arrow kit-next" type="button" aria-label="Élément suivant">&rarr;</button>
+        </div>
+        <p class="offer-hint">Clique sur un élément pour voir à quoi il sert.</p>
+        <div class="kit-btns" role="tablist" aria-label="Éléments du Starter Kit">
+          <button class="kit-btn is-active" type="button" aria-selected="true" aria-label="24 couleurs de beads"><span class="ic"><svg class="wf-ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="2.5" stroke="currentColor" stroke-width="1.6"/><circle cx="8.5" cy="9.5" r="1.7" stroke="currentColor" stroke-width="1.6"/><path d="M4 18 L9.5 12.5 L13 16 L16 13 L20 17" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg></span><span class="lbl">Couleurs</span></button>
+          <button class="kit-btn" type="button" aria-selected="false" aria-label="Beads noir + blanc"><span class="ic"><svg class="wf-ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="2.5" stroke="currentColor" stroke-width="1.6"/><circle cx="8.5" cy="9.5" r="1.7" stroke="currentColor" stroke-width="1.6"/><path d="M4 18 L9.5 12.5 L13 16 L16 13 L20 17" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg></span><span class="lbl">Noir + blanc</span></button>
+          <button class="kit-btn" type="button" aria-selected="false" aria-label="Stylo ramasse-beads"><span class="ic"><svg class="wf-ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="2.5" stroke="currentColor" stroke-width="1.6"/><circle cx="8.5" cy="9.5" r="1.7" stroke="currentColor" stroke-width="1.6"/><path d="M4 18 L9.5 12.5 L13 16 L16 13 L20 17" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg></span><span class="lbl">Stylo</span></button>
+          <button class="kit-btn" type="button" aria-selected="false" aria-label="Pince de précision"><span class="ic"><svg class="wf-ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="2.5" stroke="currentColor" stroke-width="1.6"/><circle cx="8.5" cy="9.5" r="1.7" stroke="currentColor" stroke-width="1.6"/><path d="M4 18 L9.5 12.5 L13 16 L16 13 L20 17" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg></span><span class="lbl">Pince</span></button>
+          <button class="kit-btn" type="button" aria-selected="false" aria-label="Plateau à beads"><span class="ic"><svg class="wf-ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="2.5" stroke="currentColor" stroke-width="1.6"/><circle cx="8.5" cy="9.5" r="1.7" stroke="currentColor" stroke-width="1.6"/><path d="M4 18 L9.5 12.5 L13 16 L16 13 L20 17" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg></span><span class="lbl">Plateau</span></button>
+          <button class="kit-btn" type="button" aria-selected="false" aria-label="Plaque connectable"><span class="ic"><svg class="wf-ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="2.5" stroke="currentColor" stroke-width="1.6"/><circle cx="8.5" cy="9.5" r="1.7" stroke="currentColor" stroke-width="1.6"/><path d="M4 18 L9.5 12.5 L13 16 L16 13 L20 17" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg></span><span class="lbl">Plaque</span></button>
+          <button class="kit-btn" type="button" aria-selected="false" aria-label="Papiers de repassage"><span class="ic"><svg class="wf-ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="2.5" stroke="currentColor" stroke-width="1.6"/><circle cx="8.5" cy="9.5" r="1.7" stroke="currentColor" stroke-width="1.6"/><path d="M4 18 L9.5 12.5 L13 16 L16 13 L20 17" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg></span><span class="lbl">Papiers</span></button>
+          <button class="kit-btn" type="button" aria-selected="false" aria-label="Ruban"><span class="ic"><svg class="wf-ic" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4.5" width="18" height="15" rx="2.5" stroke="currentColor" stroke-width="1.6"/><circle cx="8.5" cy="9.5" r="1.7" stroke="currentColor" stroke-width="1.6"/><path d="M4 18 L9.5 12.5 L13 16 L16 13 L20 17" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg></span><span class="lbl">Ruban</span></button>
+        </div>
+      </div>
+
+    </div>
+    <div class="offer-checkout">
+      <div class="offer-price">
+        <span class="amount">{{ section.settings.starter_price | escape }}</span>
+        <span class="note">Le Starter Kit complet, prêt à créer.</span>
+      </div>
+      <a class="offer-cta" href="{{ primary_cta_url }}">{{ section.settings.primary_cta_label | escape }} <span class="arr" aria-hidden="true">&rarr;</span></a>
+    </div>
+  </div>
+</section>
+
+<div class="bp-seam bp-seam--light-dark" aria-hidden="true"></div>
+
+<section id="bp-reasons">
+  <div class="wrap lp-wrap">
+    <div class="reasons-head">
+      <p class="reasons-eyebrow">5 raisons d'essayer</p>
+      <h2 class="reasons-title">Ce qui rend le pixel art en beads aussi <span class="os-accent">FUN.</span></h2>
+    </div>
+    <div class="reasons-main">
+      <div class="reasons-list">
+      <details class="reason" open data-video="{{ 'bp-reason-1.mp4' | asset_url }}">
+        <summary class="reason-head">
+          <div class="reason-img"><svg viewBox="0 0 48 40" aria-hidden="true"><rect x="1.5" y="1.5" width="45" height="37" rx="5" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="14" cy="13" r="3.5" fill="currentColor"/><path d="M5 33 L18 20 L27 28 L35 20 L44 29" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/></svg></div>
+          <div class="reason-titles"><span class="reason-badge">Raison 1</span><h3 class="reason-name">C'est incroyablement satisfaisant</h3></div>
+          <span class="reason-chevron" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </summary>
+        <div class="reason-body"><div class="reason-media"><video data-src="{{ 'bp-reason-1.mp4' | asset_url }}" autoplay loop muted playsinline preload="none" aria-label="Des Pops posées une à une sur la grille"></video></div><p>Chaque Pop posée, c'est un mini « clic » qui fait du bien. Le visuel se construit petit à petit, et chaque étape te donne un petit « yes ».</p></div>
+      </details>
+      <details class="reason" data-video="{{ 'bp-reason-2.mp4' | asset_url }}">
+        <summary class="reason-head">
+          <div class="reason-img"><svg viewBox="0 0 48 40" aria-hidden="true"><rect x="1.5" y="1.5" width="45" height="37" rx="5" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="14" cy="13" r="3.5" fill="currentColor"/><path d="M5 33 L18 20 L27 28 L35 20 L44 29" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/></svg></div>
+          <div class="reason-titles"><span class="reason-badge">Raison 2</span><h3 class="reason-name">Zéro talent requis (vraiment)</h3></div>
+          <span class="reason-chevron" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </summary>
+        <div class="reason-body"><div class="reason-media"><video data-src="{{ 'bp-reason-2.mp4' | asset_url }}" autoplay loop muted playsinline preload="none" aria-label="Le modèle guide le placement des Pops, étape par étape"></video></div><p>Tu n'as pas besoin de savoir dessiner : le modèle te guide étape par étape. Tu avances à ton rythme, et le rendu reste propre et canon.</p></div>
+      </details>
+      <details class="reason" data-video="{{ 'bp-reason-3.mp4' | asset_url }}">
+        <summary class="reason-head">
+          <div class="reason-img"><svg viewBox="0 0 48 40" aria-hidden="true"><rect x="1.5" y="1.5" width="45" height="37" rx="5" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="14" cy="13" r="3.5" fill="currentColor"/><path d="M5 33 L18 20 L27 28 L35 20 L44 29" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/></svg></div>
+          <div class="reason-titles"><span class="reason-badge">Raison 3</span><h3 class="reason-name">C'est apaisant (tu rentres dans ta bulle)</h3></div>
+          <span class="reason-chevron" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </summary>
+        <div class="reason-body"><div class="reason-media"><video data-src="{{ 'bp-reason-3.mp4' | asset_url }}" autoplay loop muted playsinline preload="none" aria-label="Tri des couleurs et placement des Pops, geste répétitif et apaisant"></video></div><p>Choisir les couleurs, trier, placer les Pops une à une… c'est doux, répétitif, relaxant. Parfait pour décompresser.</p></div>
+      </details>
+      <details class="reason" data-video="{{ 'bp-reason-4.mp4' | asset_url }}">
+        <summary class="reason-head">
+          <div class="reason-img"><svg viewBox="0 0 48 40" aria-hidden="true"><rect x="1.5" y="1.5" width="45" height="37" rx="5" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="14" cy="13" r="3.5" fill="currentColor"/><path d="M5 33 L18 20 L27 28 L35 20 L44 29" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/></svg></div>
+          <div class="reason-titles"><span class="reason-badge">Raison 4</span><h3 class="reason-name">Tu es fier·e du résultat</h3></div>
+          <span class="reason-chevron" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </summary>
+        <div class="reason-body"><div class="reason-media"><video data-src="{{ 'bp-reason-4.mp4' | asset_url }}" autoplay loop muted playsinline preload="none" aria-label="La création terminée, prête à être gardée ou offerte"></video></div><p>Tu vois ta création prendre forme sous tes yeux. Et à la fin, tu as un résultat joli, que tu peux garder, offrir, afficher, fait par toi.</p></div>
+      </details>
+      </div>
+      <div class="reasons-preview" aria-hidden="true">
+        <div class="rp-frame">
+          <span class="rp-ico"><svg viewBox="0 0 48 40" aria-hidden="true"><rect x="1.5" y="1.5" width="45" height="37" rx="5" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="14" cy="13" r="3.5" fill="currentColor"/><path d="M5 33 L18 20 L27 28 L35 20 L44 29" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/></svg></span>
+          <span class="rp-label">C'est incroyablement satisfaisant</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="bp-marquee" aria-hidden="true">
+  <div class="bp-marquee-track">
+    <span class="mq-w">Résultat canon</span><span class="mq-d">◆</span><span class="mq-w">Fait par toi</span><span class="mq-d">◆</span><span class="mq-w">Satisfaisant à faire</span><span class="mq-d">◆</span><span class="mq-w">Anti-stress</span><span class="mq-d">◆</span><span class="mq-w">Zéro talent requis</span><span class="mq-d">◆</span><span class="mq-w">Pixel art en beads</span><span class="mq-d">◆</span><span class="mq-w">Résultat canon</span><span class="mq-d">◆</span><span class="mq-w">Fait par toi</span><span class="mq-d">◆</span><span class="mq-w">Satisfaisant à faire</span><span class="mq-d">◆</span><span class="mq-w">Anti-stress</span><span class="mq-d">◆</span><span class="mq-w">Zéro talent requis</span><span class="mq-d">◆</span><span class="mq-w">Pixel art en beads</span><span class="mq-d">◆</span><span class="mq-w">Résultat canon</span><span class="mq-d">◆</span><span class="mq-w">Fait par toi</span><span class="mq-d">◆</span><span class="mq-w">Satisfaisant à faire</span><span class="mq-d">◆</span><span class="mq-w">Anti-stress</span><span class="mq-d">◆</span><span class="mq-w">Zéro talent requis</span><span class="mq-d">◆</span><span class="mq-w">Pixel art en beads</span><span class="mq-d">◆</span><span class="mq-w">Résultat canon</span><span class="mq-d">◆</span><span class="mq-w">Fait par toi</span><span class="mq-d">◆</span><span class="mq-w">Satisfaisant à faire</span><span class="mq-d">◆</span><span class="mq-w">Anti-stress</span><span class="mq-d">◆</span><span class="mq-w">Zéro talent requis</span><span class="mq-d">◆</span><span class="mq-w">Pixel art en beads</span><span class="mq-d">◆</span>
+  </div>
+</div>
+
+<section id="bp-create">
+  <div class="wrap lp-wrap">
+    <div class="cr-head">
+      <p class="cr-eyebrow">Tu peux vraiment tout créer</p>
+      <h2 class="cr-title">Tout ce que tu as en tête <span class="os-accent">en pixel art.</span></h2>
+      <p class="cr-sub">Choisis ce qui t'inspire et construis-le une Pop à la fois.</p>
+    </div>
+  </div>
+  <div class="cr-carousel-wrap">
+    <button class="cr-arrow cr-prev" type="button" aria-label="Création précédente">&lsaquo;</button>
+    <div class="cr-carousel" id="cr-carousel">
+      <a class="cr-slide" href="#bp-offer"><img width="900" height="1201" src="{{ 'bp-community-pink-leopard.webp' | asset_url }}" alt="Léopard rose créé en beads et tenu à la main" loading="lazy" decoding="async"><span class="cr-cap">Une grande pièce qui claque</span></a>
+      <a class="cr-slide" href="#bp-offer"><img width="900" height="1200" src="{{ 'bp-community-fridge-gallery.webp' | asset_url }}" alt="Collection de créations en beads exposées sur un réfrigérateur" loading="lazy" decoding="async"><span class="cr-cap">Ta déco, à ta façon</span></a>
+      <a class="cr-slide" href="#bp-offer"><img width="900" height="1200" src="{{ 'bp-community-floral-animals.webp' | asset_url }}" alt="Créations animales et florales en beads" loading="lazy" decoding="async"><span class="cr-cap">À offrir, fait par toi</span></a>
+      <a class="cr-slide" href="#bp-offer"><img width="900" height="1200" src="{{ 'bp-community-fantasy-character.webp' | asset_url }}" alt="Personnage fantasy créé en beads et tenu à la main" loading="lazy" decoding="async"><span class="cr-cap">Ton perso préféré</span></a>
+      <a class="cr-slide" href="#bp-offer"><img width="900" height="1200" src="{{ 'bp-community-neon-panther.webp' | asset_url }}" alt="Panthère aux couleurs néon créée en beads" loading="lazy" decoding="async"><span class="cr-cap">Une touche pop chez toi</span></a>
+      <a class="cr-slide" href="#bp-offer"><img width="900" height="1200" src="{{ 'bp-community-work-in-progress.webp' | asset_url }}" alt="Création d'un personnage en beads en cours de réalisation" loading="lazy" decoding="async"><span class="cr-cap">Du modèle au résultat</span></a>
+    </div>
+    <button class="cr-arrow cr-next" type="button" aria-label="Création suivante">&rsaquo;</button>
+    <div class="cr-dots" id="cr-dots"></div>
+  </div>
+</section>
+
+
+{% if request.design_mode or section.settings.show_reviews %}
+<section id="bp-reviews">
+  <div class="rv-head lp-wrap">
+    <div class="rv-eyebrow">{{ section.settings.reviews_eyebrow | escape }}</div>
+    <h2 class="rv-title">{{ section.settings.reviews_title | escape }} <span class="os-accent">{{ section.settings.reviews_title_accent | escape }}</span></h2>
+    <div class="rv-summary">
+      <span class="rv-summary-stars" aria-hidden="true">★★★★★</span>
+      <span class="rv-summary-label">{{ section.settings.reviews_summary | escape }}</span>
+    </div>
+  </div>
+  <div class="rv-carousel" aria-roledescription="carrousel" aria-label="Avis clients">
+    <div class="rv-viewport" id="rv-viewport">
+      <div class="rv-track" id="rv-track">
+        {% if section.blocks.size > 0 %}
+          {% for block in section.blocks %}
+            {% assign review_rating = block.settings.rating | plus: 0 %}
+            <article class="rv-card" {{ block.shopify_attributes }}>
+              <div class="rv-media">
+                {% if block.settings.photo != blank %}
+                  {{ block.settings.photo | image_url: width: 900 | image_tag: loading: 'lazy', widths: '360, 540, 720, 900', sizes: '(min-width: 821px) 29vw, 82vw' }}
+                {% else %}
+                  {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                {% endif %}
+              </div>
+              <div class="rv-copy">
+                <div class="rv-stars" aria-label="{{ review_rating }} sur 5">
+                  <span aria-hidden="true">{% for star in (1..5) %}{% if star <= review_rating %}★{% else %}☆{% endif %}{% endfor %}</span>
+                </div>
+                <blockquote class="rv-quote">« {{ block.settings.quote | escape }} »</blockquote>
+                <div class="rv-author">
+                  <span class="rv-name">{{ block.settings.author | escape }}{% if block.settings.location != blank %} · {{ block.settings.location | escape }}{% endif %}</span>
+                  {% if block.settings.verified %}<span class="rv-badge">Achat vérifié</span>{% endif %}
+                </div>
+              </div>
+            </article>
+          {% endfor %}
+        {% elsif request.design_mode %}
+          {% for preview_index in (1..3) %}
+            <article class="rv-card">
+              <div class="rv-media">{{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}</div>
+              <div class="rv-copy">
+                <div class="rv-stars"><span aria-hidden="true">★★★★★</span><span class="rv-placeholder">Aperçu</span></div>
+                <blockquote class="rv-quote">« Ajoutez ici un avis client vérifié et sa photo. »</blockquote>
+                <div class="rv-author"><span class="rv-name">Prénom et ville</span><span class="rv-badge">Avis à renseigner</span></div>
+              </div>
+            </article>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+    <div class="rv-controls lp-wrap">
+      <button class="rv-arrow rv-prev" type="button" aria-label="Avis précédent">&larr;</button>
+      <div class="rv-dots" id="rv-dots" aria-label="Choisir un avis"></div>
+      <button class="rv-arrow rv-next" type="button" aria-label="Avis suivant">&rarr;</button>
+    </div>
+  </div>
+</section>
+<div class="bp-seam bp-seam--light-pop" aria-hidden="true"></div>
+{% endif %}
+
+
+
+<section id="bp-forwho">
+  <div class="wrap lp-wrap">
+    <div class="fw-head">
+      <p class="fw-eyebrow">Pour qui c'est ?</p>
+      <h2 class="fw-title">Tu vas adorer BeadPops si…</h2>
+    </div>
+    <div class="fw-grid">
+      <div class="fw-card">
+        <div class="fw-media"><img width="640" height="800" src="{{ 'bp-forwho-moment-chill.webp' | asset_url }}" alt="Moment créatif fun et chill autour d'un design en beads" loading="lazy" decoding="async"></div>
+        <div class="fw-body"><span class="fw-check" aria-hidden="true">✓</span><p class="fw-text">Tu veux un moment fun &amp; chill rien qu'à toi</p></div>
+      </div>
+      <div class="fw-card">
+        <div class="fw-media"><img width="640" height="800" src="{{ 'bp-forwho-design-prend-vie.webp' | asset_url }}" alt="Un design en beads qui se construit petit à petit" loading="lazy" decoding="async"></div>
+        <div class="fw-body"><span class="fw-check" aria-hidden="true">✓</span><p class="fw-text">Tu adores voir un design se construire petit à petit</p></div>
+      </div>
+      <div class="fw-card">
+        <div class="fw-media"><img width="640" height="800" src="{{ 'bp-forwho-pause-ecrans.webp' | asset_url }}" alt="Une pause créative loin des écrans" loading="lazy" decoding="async"></div>
+        <div class="fw-body"><span class="fw-check" aria-hidden="true">✓</span><p class="fw-text">Le soir, tu cherches une activité qui te fait décrocher des écrans</p></div>
+      </div>
+      <div class="fw-card">
+        <div class="fw-media"><img width="640" height="800" src="{{ 'bp-forwho-univers-au-choix.webp' | asset_url }}" alt="Plusieurs univers créatifs en beads" loading="lazy" decoding="async"></div>
+        <div class="fw-body"><span class="fw-check" aria-hidden="true">✓</span><p class="fw-text">Tu aimes les univers mignons, rétro, gaming ou pop culture</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="bp-compare">
+  <div class="cx-wrap">
+    <div class="cx-head"><h2 class="cx-title">BeadPops <span class="os-accent">vs.</span> les kits créatifs classiques</h2><p class="cx-sub">La différence, c'est surtout la simplicité.</p></div>
+    <div class="cx-board" role="table" aria-label="Comparaison entre BeadPops et les kits créatifs classiques">
+      <div class="cx-board-head" role="row"><div class="cx-corner" role="columnheader">Ce qui change</div><div class="cx-brand us" role="columnheader"><span>Bead<span class="pop">Pops</span></span><span class="cx-tag">Recommandé</span></div><div class="cx-brand them" role="columnheader">Les autres</div></div>
+      <div class="cx-row" role="row"><div class="cx-label" role="rowheader">Pour commencer</div><div class="cx-value us" data-brand="BeadPops" role="cell"><span class="cx-ic" aria-hidden="true">✓</span><span>Guidé pas à pas, tu sais quoi faire</span></div><div class="cx-value them" data-brand="Les autres" role="cell"><span class="cx-ic" aria-hidden="true">✕</span><span>« Débrouille-toi »</span></div></div>
+      <div class="cx-row" role="row"><div class="cx-label" role="rowheader">Premier résultat</div><div class="cx-value us" data-brand="BeadPops" role="cell"><span class="cx-ic" aria-hidden="true">✓</span><span>Rendu canon dès le premier essai</span></div><div class="cx-value them" data-brand="Les autres" role="cell"><span class="cx-ic" aria-hidden="true">✕</span><span>Résultat aléatoire ou frustrant</span></div></div>
+      <div class="cx-row" role="row"><div class="cx-label" role="rowheader">Aller au bout</div><div class="cx-value us" data-brand="BeadPops" role="cell"><span class="cx-ic" aria-hidden="true">✓</span><span>Un format pensé pour être terminé</span></div><div class="cx-value them" data-brand="Les autres" role="cell"><span class="cx-ic" aria-hidden="true">✕</span><span>Des projets qui traînent</span></div></div>
+      <div class="cx-row" role="row"><div class="cx-label" role="rowheader">Choisir son style</div><div class="cx-value us" data-brand="BeadPops" role="cell"><span class="cx-ic" aria-hidden="true">✓</span><span>Des univers au choix</span></div><div class="cx-value them" data-brand="Les autres" role="cell"><span class="cx-ic" aria-hidden="true">✕</span><span>Choix limité ou style imposé</span></div></div>
+      <div class="cx-row" role="row"><div class="cx-label" role="rowheader">Le matériel</div><div class="cx-value us" data-brand="BeadPops" role="cell"><span class="cx-ic" aria-hidden="true">✓</span><span>Tout est dans le kit</span></div><div class="cx-value them" data-brand="Les autres" role="cell"><span class="cx-ic" aria-hidden="true">✕</span><span>Il manque toujours un truc</span></div></div>
+      <div class="cx-row" role="row"><div class="cx-label" role="rowheader">La sensation</div><div class="cx-value us" data-brand="BeadPops" role="cell"><span class="cx-ic" aria-hidden="true">✓</span><span>Satisfaisant à faire</span></div><div class="cx-value them" data-brand="Les autres" role="cell"><span class="cx-ic" aria-hidden="true">✕</span><span>Long et peu gratifiant</span></div></div>
+      <div class="cx-row" role="row"><div class="cx-label" role="rowheader">Le niveau requis</div><div class="cx-value us" data-brand="BeadPops" role="cell"><span class="cx-ic" aria-hidden="true">✓</span><span>Fait pour les débutant·es, vraiment</span></div><div class="cx-value them" data-brand="Les autres" role="cell"><span class="cx-ic" aria-hidden="true">✕</span><span>Pensé pour les personnes déjà manuelles</span></div></div>
+    </div>
+  </div>
+</section>
+
+{% if section.settings.show_custom_footer %}
+<footer id="bp-footer">
+  <div class="ft-wrap lp-wrap">
+    <div class="ft-top">
+      <div class="ft-brand">
+        <span class="ft-logo">Bead<span class="pop">Pops</span></span>
+        <p class="ft-tag">Le pixel art en beads. Choisis ton univers, suis les étapes, et repars avec un truc fait par toi.</p>
+        <div class="ft-social">
+          <a href="#bp-offer" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r="1.1" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#bp-offer" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.5 3c.3 1.8 1.4 3.1 3.5 3.3v2.8c-1.3.1-2.5-.3-3.5-1v5.6a5.6 5.6 0 1 1-5.6-5.6c.3 0 .6 0 .9.1v2.9a2.7 2.7 0 1 0 1.9 2.6V3h2.8z"/></svg></a>
+          <a href="#bp-offer" aria-label="Pinterest"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.6 19.3c-.1-.8-.1-2 .1-2.9l1-4.4s-.3-.5-.3-1.3c0-1.3.7-2.2 1.7-2.2.8 0 1.2.6 1.2 1.3 0 .8-.5 2-.8 3.1-.2.9.5 1.6 1.4 1.6 1.6 0 2.8-1.7 2.8-4.2 0-2.2-1.6-3.7-3.8-3.7a4 4 0 0 0-4.1 4c0 .8.3 1.6.7 2.1.1.1.1.2 0 .3l-.2.9c0 .2-.2.2-.4.1-1.1-.5-1.7-2-1.7-3.2 0-2.6 1.9-5 5.5-5 2.9 0 5.1 2 5.1 4.8 0 2.9-1.8 5.2-4.4 5.2-.9 0-1.7-.5-1.9-1l-.5 2c-.2.8-.7 1.7-1 2.3A10 10 0 1 0 12 2z"/></svg></a>
+        </div>
+      </div>
+      <div class="ft-col"><h4>Boutique</h4><ul><li><a href="#bp-offer">Univers</a></li><li><a href="#bp-offer">Niveaux</a></li><li><a href="#bp-offer">Starter Kit</a></li><li><a href="#bp-offer">Les créations</a></li></ul></div>
+      <div class="ft-col"><h4>Aide</h4><ul><li><a href="#bp-offer">Comment ça marche</a></li><li><a href="#bp-offer">FAQ</a></li><li><a href="#bp-offer">Livraison &amp; retours</a></li><li><a href="#bp-offer">Nous contacter</a></li></ul></div>
+      <div class="ft-col"><h4>La marque</h4><ul><li><a href="#bp-offer">Notre histoire</a></li><li><a href="#bp-offer">Le journal</a></li><li><a href="#bp-offer">Nous suivre</a></li></ul></div>
+    </div>
+    <div class="ft-bottom">
+      <span class="ft-copy">© 2026 BeadPops. Fait avec des Pops.</span>
+      <div class="ft-legal"><a href="#bp-offer">Mentions légales</a><a href="#bp-offer">CGV</a><a href="#bp-offer">Confidentialité</a></div>
+    </div>
+  </div>
+</footer>
+{% endif %}
+
+{% if section.settings.show_sticky_cta %}
+<a class="sticky-cta" href="{{ primary_cta_url }}" aria-label="{{ section.settings.primary_cta_label | escape }}">
+  <span class="sc-price"><span class="sc-amount">{{ section.settings.starter_price | escape }}</span><span class="sc-note">Starter Kit complet</span></span>
+  <span class="sc-btn">Commencer <span class="arr" aria-hidden="true">&rarr;</span></span>
+</a>
+{% endif %}
+</div>
+
+<script>
+(function initBeadPopsHome(){
+  var root = document.getElementById('beadpops-home-{{ section.id }}');
+  if(!root || root.dataset.ready === 'true') return;
+  root.dataset.ready = 'true';
+/* Avis clients : swipe natif, centrage de la carte active et commandes clavier */
+(function(){
+  var viewport = document.getElementById('rv-viewport');
+  var track = document.getElementById('rv-track');
+  if(!viewport || !track) return;
+  var cards = track.querySelectorAll('.rv-card');
+  var N = cards.length;
+  if(!N) return;
+  var dotsWrap = document.getElementById('rv-dots');
+  var idx = N > 1 ? 1 : 0, dots = [], ticking = false;
+  for(var i=0;i<N;i++){ (function(k){ var d=document.createElement('button'); d.type='button'; d.className='rv-dot'; d.setAttribute('aria-label','Avis '+(k+1)); d.addEventListener('click',function(){ go(k); }); dotsWrap.appendChild(d); dots.push(d); })(i); }
+  function sync(){
+    var center = viewport.scrollLeft + viewport.clientWidth / 2;
+    var nearest = 0, distance = Infinity;
+    for(var i=0;i<N;i++){
+      var cardCenter = cards[i].offsetLeft + cards[i].offsetWidth / 2;
+      var currentDistance = Math.abs(cardCenter - center);
+      if(currentDistance < distance){ distance = currentDistance; nearest = i; }
+    }
+    idx = nearest;
+    for(var j=0;j<N;j++){
+      cards[j].classList.toggle('is-active', j===idx);
+      dots[j].classList.toggle('is-active', j===idx);
+      dots[j].setAttribute('aria-current', j===idx ? 'true' : 'false');
+    }
+    ticking = false;
+  }
+  function go(i, instant){
+    idx = Math.max(0,Math.min(N-1,i));
+    var left = cards[idx].offsetLeft - (viewport.clientWidth - cards[idx].offsetWidth) / 2;
+    viewport.scrollTo({ left:left, behavior:instant ? 'auto' : 'smooth' });
+    sync();
+  }
+  viewport.addEventListener('scroll',function(){ if(!ticking){ ticking=true; requestAnimationFrame(sync); } },{passive:true});
+  var prev = document.querySelector('#bp-reviews .rv-prev'), next = document.querySelector('#bp-reviews .rv-next');
+  if(prev) prev.addEventListener('click', function(){ go(idx-1); });
+  if(next) next.addEventListener('click', function(){ go(idx+1); });
+  window.addEventListener('resize',function(){ go(idx,true); },{passive:true});
+  requestAnimationFrame(function(){ go(idx,true); });
+})();
+
+/* Raisons : accordeon un-seul-ouvert (mobile + desktop) + synchro image preview (desktop) */
+(function(){
+  var R = document.querySelectorAll('#bp-reasons .reason');
+  if(!R.length) return;
+  var label = document.querySelector('#bp-reasons .rp-label');
+  var frame = document.querySelector('#bp-reasons .rp-frame');
+  function activate(d){
+    R.forEach(function(o){ if(o!==d){ o.open=false; } });
+    var n = d.querySelector('.reason-name');
+    if(label && n){ label.textContent = n.textContent; }
+    var src = d.getAttribute('data-img');
+    var vsrc = d.getAttribute('data-video');
+    if(frame){
+      var img = frame.querySelector('img');
+      if(src){ if(!img){ img=document.createElement('img'); img.alt=''; frame.appendChild(img); } img.src=src; img.style.display='block'; }
+      else if(img){ img.style.display='none'; }
+      var vid = frame.querySelector('video');
+      if(vsrc){
+        if(!vid){
+          vid=document.createElement('video');
+          vid.muted=true; vid.loop=true; vid.playsInline=true; vid.autoplay=true;
+          vid.setAttribute('muted',''); vid.setAttribute('playsinline',''); vid.setAttribute('preload','metadata');
+          frame.appendChild(vid);
+        }
+        if(vid.getAttribute('src')!==vsrc){ vid.src=vsrc; }
+        vid.style.display='block';
+        var p=vid.play(); if(p&&p.catch){ p.catch(function(){}); }
+      }
+      else if(vid){ vid.pause(); vid.style.display='none'; }
+    }
+  }
+  R.forEach(function(d){ d.addEventListener('toggle', function(){ if(d.open){ activate(d); } }); });
+  R.forEach(function(d,i){ d.open = (i===0); });
+  activate(R[0]);
+})();
+
+/* Starter Kit : explorateur interactif (clic cercle -> fiche element) */
+(function(){
+  var KIT = [
+    { em:"🌈", badge:"7 200 beads", name:"24 couleurs de beads", desc:"24 sachets × 300 beads = 7 200 beads pour donner vie à tes designs (et te faire plaisir sur les détails)." },
+    { em:"⚫", badge:"2 000 beads", name:"Beads noir + blanc", desc:"1 000 noires + 1 000 blanches, pour des contours nets et un rendu propre." },
+    { em:"🖊️", badge:"", name:"Stylo ramasse-beads", desc:"Pour placer vite, propre, et sans t'énerver." },
+    { em:"🔍", badge:"", name:"Pince de précision", desc:"Pour les mini zones et les détails qui font la diff." },
+    { em:"🧺", badge:"", name:"Plateau à beads", desc:"Pour trier, verser, et garder ton espace clean pendant que tu crées." },
+    { em:"🧩", badge:"", name:"Plaque connectable (pegboard)", desc:"Base de création, avec extension possible si tu veux voir plus grand." },
+    { em:"📄", badge:"", name:"Papiers de repassage", desc:"Pour fixer ton pixel art (et le garder nickel)." },
+    { em:"🩹", badge:"", name:"Ruban (scotch)", desc:"Pour maintenir et retourner sans stress avant de repasser." }
+  ];
+  var detail = document.getElementById('kit-detail');
+  if(!detail) return;
+  var btns = document.querySelectorAll('#bp-offer .kit-btn');
+  var badgeEl = detail.querySelector('.kit-badge'),
+      nameEl = detail.querySelector('.kit-name'),
+      descEl = detail.querySelector('.kit-desc');
+  var cur = 0;
+  function render(i){
+    var n = KIT.length; i = ((i % n) + n) % n; cur = i;
+    var k = KIT[i]; if(!k) return;
+    badgeEl.textContent = k.badge; badgeEl.style.display = k.badge ? 'inline-block' : 'none';
+    nameEl.textContent = k.name; descEl.textContent = k.desc;
+    for(var j=0;j<btns.length;j++){ var on = j===i; btns[j].classList.toggle('is-active', on); btns[j].setAttribute('aria-selected', on?'true':'false'); }
+  }
+  for(var i=0;i<btns.length;i++){ (function(idx){ btns[idx].addEventListener('click', function(){ render(idx); }); })(i); }
+  var prevBtn = document.querySelector('#bp-offer .kit-prev'), nextBtn = document.querySelector('#bp-offer .kit-next');
+  if(prevBtn) prevBtn.addEventListener('click', function(){ render(cur-1); });
+  if(nextBtn) nextBtn.addEventListener('click', function(){ render(cur+1); });
+  render(0);
+})();
+
+/* Carrousel "Ce que tu peux creer" : infini a index explicite (avance toujours, recyclage instantane invisible) */
+(function(){
+  var car = document.getElementById('cr-carousel');
+  if(!car) return;
+  var originals = Array.prototype.slice.call(car.querySelectorAll('.cr-slide'));
+  var N = originals.length;
+  if(N < 2) return;
+  var pre = document.createDocumentFragment(), post = document.createDocumentFragment();
+  originals.forEach(function(s){ pre.appendChild(s.cloneNode(true)); });
+  originals.forEach(function(s){ post.appendChild(s.cloneNode(true)); });
+  car.insertBefore(pre, originals[0]);
+  car.appendChild(post);
+  var all = Array.prototype.slice.call(car.querySelectorAll('.cr-slide')); /* 3N : [pre][real][post] */
+  var M = all.length;
+  var idx = N; /* index logique dans la piste etendue */
+  var dotsWrap = document.getElementById('cr-dots');
+  var prevB = document.querySelector('#bp-create .cr-prev');
+  var nextB = document.querySelector('#bp-create .cr-next');
+  var dots = [];
+  for(var i=0;i<N;i++){ (function(k){
+    var b=document.createElement('button'); b.type='button'; b.className='cr-dot'; b.setAttribute('aria-label','Creation '+(k+1));
+    b.addEventListener('click', function(){ goToReal(k); });
+    dotsWrap.appendChild(b); dots.push(b);
+  })(i); }
+  var programmatic=false, pT;
+  function guard(){ programmatic=true; clearTimeout(pT); pT=setTimeout(function(){ programmatic=false; }, 700); }
+  function centerLeft(i){ var s=all[i]; return Math.max(0, s.offsetLeft - (car.clientWidth - s.clientWidth)/2); }
+  function realIdx(){ return ((idx-N)%N+N)%N; }
+  function updateDots(){ var r=realIdx(); for(var i=0;i<dots.length;i++){ dots[i].classList.toggle('is-active', i===r); } }
+  function place(smooth){ if(smooth) guard(); car.scrollTo({ left: centerLeft(idx), behavior: smooth?'smooth':'auto' }); updateDots(); }
+  /* recyclage seamless : si idx sort du set central, on le ramene a l'equivalent (contenu identique, saut invisible) */
+  function recenter(){ if(idx < N || idx >= 2*N){ idx = N + realIdx(); guard(); car.scrollTo({ left: centerLeft(idx), behavior:'auto' }); } }
+  function step(dir){
+    if(idx + dir < 1 || idx + dir > M - 2){ recenter(); }
+    idx += dir;
+    place(true);
+  }
+  function goToReal(r){ recenter(); idx = N + r; place(true); }
+  if(prevB) prevB.addEventListener('click', function(){ step(-1); });
+  if(nextB) nextB.addEventListener('click', function(){ step(1); });
+  var st;
+  car.addEventListener('scroll', function(){ if(programmatic) return; clearTimeout(st); st=setTimeout(function(){
+    var c=car.scrollLeft+car.clientWidth/2, best=idx, bd=Infinity;
+    for(var i=0;i<M;i++){ var cc=all[i].offsetLeft+all[i].clientWidth/2, d=Math.abs(cc-c); if(d<bd){bd=d;best=i;} }
+    idx=best; updateDots(); recenter();
+  }, 150); });
+  function init(){ idx=N; place(false); }
+  requestAnimationFrame(init); setTimeout(init, 150);
+})();
+
+/* Onglets univers : tablist accessible (clic + flèches clavier) */
+(function(){
+  const tablist = document.querySelector('#bp-universe .uv-tabs');
+  if(!tablist) return;
+  const tabs = Array.from(tablist.querySelectorAll('.uv-tab'));
+  function select(tab, focus){
+    tabs.forEach(t=>{
+      const on = t===tab;
+      t.setAttribute('aria-selected', on?'true':'false');
+      t.tabIndex = on?0:-1;
+      const panel = document.getElementById(t.getAttribute('aria-controls'));
+      if(panel){ panel.hidden = !on; panel.classList.toggle('is-active', on); }
+    });
+    if(matchMedia('(max-width:680px)').matches){ tab.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'}); }
+    if(focus) tab.focus();
+  }
+  tablist.addEventListener('click', e=>{ const t=e.target.closest('.uv-tab'); if(t) select(t,false); });
+  tablist.addEventListener('keydown', e=>{
+    const i = tabs.indexOf(document.activeElement);
+    if(i<0) return;
+    let n=-1;
+    if(e.key==='ArrowRight'||e.key==='ArrowDown') n=(i+1)%tabs.length;
+    else if(e.key==='ArrowLeft'||e.key==='ArrowUp') n=(i-1+tabs.length)%tabs.length;
+    else if(e.key==='Home') n=0;
+    else if(e.key==='End') n=tabs.length-1;
+    if(n>=0){ e.preventDefault(); select(tabs[n],true); }
+  });
+
+  /* Flèches carousel : scroll horizontal du viewport */
+  document.querySelectorAll('#bp-universe .uv-carousel').forEach(car=>{
+    const vp = car.querySelector('.uv-viewport');
+    if(!vp) return;
+    car.querySelectorAll('.uv-arrow').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const dir = btn.classList.contains('prev') ? -1 : 1;
+        vp.scrollBy({ left: dir * vp.clientWidth * 0.85, behavior:'smooth' });
+      });
+    });
+  });
+
+  /* Toggle favoris (cœur) */
+  document.querySelectorAll('#bp-universe .uv-heart').forEach(h=>{
+    h.addEventListener('click', e=>{
+      e.preventDefault();
+      const on = h.getAttribute('aria-pressed')==='true';
+      h.setAttribute('aria-pressed', on?'false':'true');
+      h.classList.toggle('is-liked', !on);
+    });
+  });
+})();
+
+/* Comment ça marche : la fabrication avance avec le scroll */
+(function(){
+  var section=document.querySelector('#bp-how[data-scroll-story]');
+  if(!section) return;
+  var stage=section.querySelector('.hw-stage');
+  var processSprite=section.querySelector('.hw-sprite--process');
+  var resultSprite=section.querySelector('.hw-sprite--result');
+  var steps=Array.from(section.querySelectorAll('.hw-step'));
+  var stageStep=section.querySelector('.hw-stage-step');
+  var reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var visible=true;
+  var queued=false;
+
+  function clamp(value,min,max){ return Math.max(min,Math.min(max,value)); }
+  function setSpriteFrame(sprite,progress,frameCount,columns,rows){
+    if(!sprite) return;
+    var frame=Math.round(clamp(progress,0,1)*(frameCount-1));
+    var column=frame%columns;
+    var row=Math.floor(frame/columns);
+    var x=columns>1?column/(columns-1)*100:0;
+    var y=rows>1?row/(rows-1)*100:0;
+    sprite.style.backgroundPosition=x+'% '+y+'%';
+  }
+  function setStep(index){
+    steps.forEach(function(step,i){ step.classList.toggle('is-active',i===index); });
+    var active=steps[index];
+    if(!active) return;
+    if(stageStep) stageStep.textContent='Étape '+active.dataset.step;
+  }
+  function update(){
+    queued=false;
+    if(!visible||reduced) return;
+    var focusRatio=window.matchMedia('(max-width:820px)').matches ? .74 : .52;
+    var focusY=window.scrollY+window.innerHeight*focusRatio;
+    var centers=steps.map(function(step){
+      var rect=step.getBoundingClientRect();
+      return window.scrollY+rect.top+rect.height/2;
+    });
+    var processProgress=clamp((focusY-centers[0])/Math.max(1,centers[1]-centers[0]),0,1);
+    var reveal=clamp((focusY-centers[1])/Math.max(1,centers[2]-centers[1]),0,1);
+    var progress=processProgress<1?processProgress*.5:.5+reveal*.5;
+    setSpriteFrame(processSprite,processProgress,29,6,5);
+    setSpriteFrame(resultSprite,reveal,7,4,2);
+    resultSprite.style.opacity=String(reveal);
+    stage.style.setProperty('--hw-progress',String(progress));
+    var firstBreak=(centers[0]+centers[1])/2;
+    var secondBreak=(centers[1]+centers[2])/2;
+    setStep(focusY<firstBreak?0:focusY<secondBreak?1:2);
+  }
+  function requestUpdate(){
+    if(queued) return;
+    queued=true;
+    requestAnimationFrame(update);
+  }
+  if(reduced){
+    setSpriteFrame(processSprite,1,29,6,5);
+    setSpriteFrame(resultSprite,1,7,4,2);
+    resultSprite.style.opacity='1';
+    setStep(2);
+    return;
+  }
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){ visible=entry.isIntersecting; if(visible) requestUpdate(); });
+    },{rootMargin:'25% 0px 25% 0px'}).observe(section);
+  }
+  window.addEventListener('scroll',requestUpdate,{passive:true});
+  window.addEventListener('resize',requestUpdate,{passive:true});
+  document.addEventListener('visibilitychange',function(){ visible=!document.hidden; if(visible) requestUpdate(); });
+  requestUpdate();
+})();
+
+/* Mouvement progressif : rythme de pose, listes et continuité de lecture */
+(function(){
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduced || !('IntersectionObserver' in window)) return;
+  var heads = document.querySelectorAll('#bp-universe .uv-head,#bp-modes .md-head,#bp-how .hw-head,#bp-offer .offer-head,#bp-reasons .rs-head,#bp-create .cr-head,#bp-reviews .rv-head,#bp-forwho .fw-head,#bp-compare .cx-head,#bp-gallery .gal-head');
+  var groups = [
+    document.querySelectorAll('#bp-modes .md-card'),
+    document.querySelectorAll('#bp-forwho .fw-card'),
+    document.querySelectorAll('#bp-compare .cx-row')
+  ];
+  heads.forEach(function(el){ el.classList.add('bp-motion'); });
+  groups.forEach(function(nodes){
+    nodes.forEach(function(el,index){
+      el.classList.add('bp-motion');
+      el.style.setProperty('--motion-delay',Math.min(index * 55,220) + 'ms');
+    });
+  });
+  document.documentElement.classList.add('motion-ready');
+  var observer = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(!entry.isIntersecting) return;
+      entry.target.classList.add('is-visible');
+      observer.unobserve(entry.target);
+    });
+  },{threshold:.12,rootMargin:'0px 0px -7% 0px'});
+  document.querySelectorAll('.bp-motion').forEach(function(el){ observer.observe(el); });
+  var marquee = document.querySelector('.bp-marquee');
+  if(marquee){
+    var marqueeObserver = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){ marquee.classList.toggle('is-running',entry.isIntersecting && !document.hidden); });
+    },{threshold:.05});
+    marqueeObserver.observe(marquee);
+    document.addEventListener('visibilitychange',function(){ if(document.hidden){ marquee.classList.remove('is-running'); } });
+  }
+  var visualLoop = document.getElementById('bp-visual-loop');
+  if(visualLoop){
+    var visualLoopVisible = false;
+    function syncVisualLoop(){ visualLoop.classList.toggle('is-running',visualLoopVisible && !document.hidden); }
+    var visualLoopObserver = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){ visualLoopVisible=entry.isIntersecting; syncVisualLoop(); });
+    },{threshold:.05});
+    visualLoopObserver.observe(visualLoop);
+    document.addEventListener('visibilitychange',syncVisualLoop);
+  }
+})();
+
+  var reasonCards = root.querySelectorAll('#bp-reasons .reason');
+  reasonCards.forEach(function(card){
+    card.addEventListener('toggle', function(){
+      reasonCards.forEach(function(item){
+        var video = item.querySelector('.reason-media video');
+        if(!video) return;
+        if(item.open){
+          if(!video.getAttribute('src') && video.dataset.src){ video.src = video.dataset.src; }
+          var playPromise = video.play();
+          if(playPromise && playPromise.catch){ playPromise.catch(function(){}); }
+        } else {
+          video.pause();
+        }
+      });
+    });
+  });
+  var openReason = root.querySelector('#bp-reasons .reason[open] .reason-media video');
+  if(openReason && !openReason.getAttribute('src') && openReason.dataset.src){
+    openReason.src = openReason.dataset.src;
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Accueil BeadPops",
+  "tag": "section",
+  "class": "beadpops-home-section",
+  "settings": [
+    { "type": "header", "content": "Hero" },
+    { "type": "text", "id": "hero_eyebrow", "label": "Surtitre", "default": "Nouveau rituel créatif" },
+    { "type": "text", "id": "hero_title", "label": "Titre", "default": "Ce que tu aimes. En pixel art." },
+    { "type": "text", "id": "hero_title_accent", "label": "Titre accentué", "default": "Créé par toi." },
+    { "type": "textarea", "id": "hero_subtitle", "label": "Sous-titre", "default": "Kawaii, gaming, rétro, dark cute… Choisis l'univers qui te parle, suis les étapes, et finis avec un résultat propre, joli, fièrement « fait par toi »." },
+    { "type": "text", "id": "hero_meta", "label": "Réassurance", "default": "Kit complet · Guide inclus · Univers au choix" },
+    { "type": "text", "id": "primary_cta_label", "label": "CTA principal", "default": "Commencer avec le Starter Kit" },
+    { "type": "product", "id": "starter_product", "label": "Produit Starter Kit" },
+
+    { "type": "header", "content": "Collections" },
+    { "type": "collection", "id": "easy_collection", "label": "Niveau Facile" },
+    { "type": "collection", "id": "medium_collection", "label": "Niveau Medium" },
+    { "type": "collection", "id": "boss_collection", "label": "Niveau Boss Mode" },
+    { "type": "collection", "id": "kawaii_collection", "label": "Univers Kawaii" },
+    { "type": "collection", "id": "gaming_collection", "label": "Univers Gaming et Rétro" },
+    { "type": "collection", "id": "fantasy_collection", "label": "Univers Fantasy" },
+    { "type": "collection", "id": "animals_collection", "label": "Univers Animaux" },
+
+    { "type": "header", "content": "Starter Kit" },
+    { "type": "image_picker", "id": "starter_kit_image", "label": "Visuel du Starter Kit" },
+    { "type": "text", "id": "starter_price", "label": "Prix provisoire", "default": "39,99 €", "info": "Placeholder à valider avant publication." },
+
+    { "type": "header", "content": "Avis clients" },
+    { "type": "checkbox", "id": "show_reviews", "label": "Afficher les avis sur la boutique", "default": false, "info": "À activer uniquement après avoir ajouté de vrais avis vérifiés." },
+    { "type": "text", "id": "reviews_eyebrow", "label": "Surtitre des avis", "default": "La communauté BeadPops" },
+    { "type": "text", "id": "reviews_title", "label": "Titre des avis", "default": "Ce que vous en" },
+    { "type": "text", "id": "reviews_title_accent", "label": "Titre accentué des avis", "default": "pensez." },
+    { "type": "text", "id": "reviews_summary", "label": "Résumé des notes", "default": "Note moyenne et avis vérifiés à intégrer", "info": "Ne renseigner que des données réelles et vérifiables." },
+
+    { "type": "header", "content": "Affichage" },
+    { "type": "checkbox", "id": "show_sticky_cta", "label": "Afficher le CTA mobile fixe", "default": true },
+    { "type": "checkbox", "id": "show_custom_footer", "label": "Afficher le footer BeadPops", "default": true, "info": "Activé sur l’accueil. Le footer natif du thème y est masqué." }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Avis client",
+      "limit": 8,
+      "settings": [
+        { "type": "image_picker", "id": "photo", "label": "Photo du client ou de sa création" },
+        { "type": "textarea", "id": "quote", "label": "Avis", "default": "Ajoutez ici un avis client vérifié." },
+        { "type": "text", "id": "author", "label": "Prénom", "default": "Prénom" },
+        { "type": "text", "id": "location", "label": "Ville" },
+        { "type": "select", "id": "rating", "label": "Note", "default": "5", "options": [
+          { "value": "1", "label": "1 sur 5" },
+          { "value": "2", "label": "2 sur 5" },
+          { "value": "3", "label": "3 sur 5" },
+          { "value": "4", "label": "4 sur 5" },
+          { "value": "5", "label": "5 sur 5" }
+        ] },
+        { "type": "checkbox", "id": "verified", "label": "Achat vérifié", "default": true }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    { "name": "Accueil BeadPops" }
+  ]
+}
+{% endschema %}
