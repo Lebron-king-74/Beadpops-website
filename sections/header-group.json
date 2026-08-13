@@ -39,6 +39,7 @@
       "type": "bp-shop-header",
       "settings": {
         "creator_page": "creator",
+        "recharges_page": "recharges-de-perles",
         "all_collection": "",
         "starter_collection": "",
         "accessories_collection": ""
