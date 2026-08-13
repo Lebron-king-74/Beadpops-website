@@ -38,6 +38,7 @@
     "bp-shop-header": {
       "type": "bp-shop-header",
       "settings": {
+        "creator_page": "creator",
         "all_collection": "",
         "starter_collection": "",
         "accessories_collection": ""
