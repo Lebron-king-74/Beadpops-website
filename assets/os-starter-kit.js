@@ -2052,6 +2052,16 @@
   if (!btns.length) return;
   var base = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || '/';
 
+  /* ⛔ CE BLOC EST CONCATENE EN FIN DE FICHIER, HORS DES IIFE DE LA PAGE. Le «DESIGNS«
+     du configurateur y est invisible (ReferenceError paye a l'ecran le 2026-08-16 :
+     l'ajout panier mourait en silence). On relit donc le MEME noeud JSON — une seule
+     source de verite, deux lecteurs. */
+  var DESIGNS = (function(){
+    var n = document.getElementById('os-sk-designs');
+    if (!n) return [];
+    try { return JSON.parse(n.textContent) || []; } catch (e) { return []; }
+  })();
+
   btns.forEach(function(btn){
     btn.addEventListener('click', function(){
       /* la selection incomplete est deja geree ailleurs : ce gestionnaire-la ouvre le
