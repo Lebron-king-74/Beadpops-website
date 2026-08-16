@@ -364,7 +364,13 @@
    par design. L'etat actif est marque par les reperes d'angle de la notice, pas par
    un filet colore sur le bord gauche. */
 .os-sk .packs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0;padding:0;list-style:none;align-items:stretch}
-@media(min-width:600px){.os-sk .packs{gap:12px}}
+/* ⛔ PISTES PLAFONNEES A 200px DES 600px, ET PAS EN 1fr LIBRE. Sur la plage 600-1079 le
+   hero est en une colonne : la buy box fait ~960px et des tiers libres gonflaient les
+   cartes a 280-310px, photo de 210px de haut (releve par l'operateur le 2026-08-16).
+   Le plafond rend les cartes compactes du desktop valide ; a 1080+ la colonne d'achat
+   fait ~630px et les tiers valent ~173px, sous le plafond : le desktop ne bouge pas.
+   Sous 600px, tiers libres inchanges : l'empreinte mobile gelee ne bouge pas non plus. */
+@media(min-width:600px){.os-sk .packs{gap:12px;grid-template-columns:repeat(3,minmax(0,200px))}}
 .os-sk .pack{
   position:relative;display:grid;align-content:start;text-align:center;gap:4px;
   padding:0 0 14px;border:1px solid var(--rule);background:var(--pearl);cursor:pointer;
