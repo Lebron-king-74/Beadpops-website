@@ -1,5 +1,6 @@
 .os-sk{--os-rem:16px}
 @media(min-width:1080px){.os-sk{--os-rem:18px}}
+.os-sk{letter-spacing:normal;word-spacing:normal;text-transform:none}
 .os-sk :is(h1,h2,h3,h4,h5,h6){color:inherit;line-height:inherit}
 
 .os-sk{
