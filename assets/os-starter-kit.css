@@ -1,3 +1,5 @@
+.os-sk{--os-rem:16px}
+@media(min-width:1080px){.os-sk{--os-rem:18px}}
 .os-sk :is(h1,h2,h3,h4,h5,h6){color:inherit}
 
 .os-sk{
@@ -105,8 +107,8 @@
 
 /* ---------- type ---------- */
 .os-sk .h-xl,.os-sk .h-lg,.os-sk .h-md{font-family:var(--display);font-weight:800;letter-spacing:-.04em;line-height:1.02;margin:0;text-wrap:balance}
-.os-sk .h-xl{font-size:clamp(2.3rem,5.8vw,4.4rem)}
-.os-sk .h-lg{font-size:clamp(1.75rem,3.1vw,2.4rem)}
+.os-sk .h-xl{font-size:clamp(calc(2.3 * var(--os-rem)),5.8vw,calc(4.4 * var(--os-rem)))}
+.os-sk .h-lg{font-size:clamp(calc(1.75 * var(--os-rem)),3.1vw,calc(2.4 * var(--os-rem)))}
 /* jamais un mot seul sur la derniere ligne */
 .os-sk p,.os-sk li,.os-sk dd,.os-sk .lede,.os-sk .cell p,.os-sk .checks p{text-wrap:pretty}
 /* mise en avant dans le corps : le corps de texte vit en `--dim`, la phrase qui porte
@@ -115,10 +117,10 @@
    paragraphes, sinon plus rien ne ressort. */
 .os-sk p strong{font-weight:600;color:var(--fg)}
 .os-sk .w{display:inline-block;will-change:transform,opacity}
-.os-sk .h-md{font-size:clamp(1.35rem,2.3vw,1.9rem);letter-spacing:-.03em}
+.os-sk .h-md{font-size:clamp(calc(1.35 * var(--os-rem)),2.3vw,calc(1.9 * var(--os-rem)));letter-spacing:-.03em}
 .os-sk .pop{color:var(--pop)}
 .os-sk .sur{font-family:var(--label);font-weight:700;font-size:13.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--pop);margin:0 0 var(--s2)}
-.os-sk .lede{font-size:clamp(1.05rem,1.5vw,1.3rem);color:var(--dim);max-width:62ch;margin:14px 0 0}
+.os-sk .lede{font-size:clamp(calc(1.05 * var(--os-rem)),1.5vw,calc(1.3 * var(--os-rem)));color:var(--dim);max-width:62ch;margin:14px 0 0}
 .os-sk .p{color:var(--dim);margin:0}
 
 /* en-tete de section : centre, une seule regle sur toute la page */
@@ -216,7 +218,7 @@
      les <a> par defaut : le soulignement etait la depuis toujours, il ne se voyait pas
      sur la variante fantome et il est apparu quand les CTA sont passes en aplat plein. */
   text-decoration:none;
-  font-family:var(--display);font-weight:800;font-size:1.02rem;letter-spacing:-.02em;
+  font-family:var(--display);font-weight:800;font-size:calc(1.02 * var(--os-rem));letter-spacing:-.02em;
   padding:18px 34px;cursor:pointer;overflow:hidden;
   transition:background .2s ease,transform .2s ease;
 }
@@ -237,13 +239,13 @@
    marge interne et de la fleche, la taille de texte ne baisse qu'ensuite — c'est le
    libelle le plus long, « Je commence ma premiere creation », qui fixe le calibre. */
 @media(max-width:559px){
-  .os-sk .cta{padding-inline:18px;gap:10px;white-space:nowrap;font-size:clamp(.86rem,3.9vw,1.02rem)}
+  .os-sk .cta{padding-inline:18px;gap:10px;white-space:nowrap;font-size:clamp(calc(.86 * var(--os-rem)),3.9vw,calc(1.02 * var(--os-rem)))}
   .os-sk .cta::after{width:18px}
   .os-sk .cta--ghost{padding-inline:16px}
 }
 .os-sk .cta:hover{background:var(--fuse)}
 .os-sk .cta:active{transform:translateY(1px)}
-.os-sk .cta--ghost{background:transparent;color:var(--fg);border:1px solid var(--rule-hi);padding:15px 28px;font-size:1.02rem;text-decoration:none}
+.os-sk .cta--ghost{background:transparent;color:var(--fg);border:1px solid var(--rule-hi);padding:15px 28px;font-size:calc(1.02 * var(--os-rem));text-decoration:none}
 .os-sk .cta--ghost:hover{background:transparent;border-color:var(--pop);color:var(--pop)}
 .os-sk .ctarow{display:flex;justify-content:center;margin-top:var(--s4)}
 /* --- reassurance sous le CTA : trois colonnes, jamais deux lignes -----------------
@@ -323,13 +325,13 @@
    regle placee plus bas. Posee plus haut, elle etait ignoree (mesure : 26 px au lieu
    de 18). Le piege est deja consigne au handoff, il vient de resservir. */
 @media(max-width:767px){.os-sk .buy{padding-inline:18px}}
-/* ⚠️ `6.5vw` au palier bas, plus `1.9rem` fixe : le titre fait 57 caracteres et sortait
+/* ⚠️ `6.5vw` au palier bas, plus `calc(1.9 * var(--os-rem))` fixe : le titre fait 57 caracteres et sortait
    sur TROIS lignes a 30,4 px, a 360 comme a 390. Deux lignes veulent ~29 caracteres par
    ligne, donc ~11,1 px d'avance par caractere, donc ~23,5 px de corps sur une colonne de
    322 px. La valeur suit la largeur au lieu d'etre choisie pour un seul telephone.
    Le plafond de 2,6 rem est inchange : le desktop ne bouge pas. */
-.os-sk .buy h1{font-family:var(--display);font-weight:800;font-size:clamp(1.4rem,6.5vw,2.6rem);letter-spacing:-.04em;line-height:1.02;margin:0;overflow:hidden;padding-bottom:.1em}
-.os-sk .buy__sub{color:var(--dim);margin:13px 0 0;font-size:1rem}
+.os-sk .buy h1{font-family:var(--display);font-weight:800;font-size:clamp(calc(1.4 * var(--os-rem)),6.5vw,calc(2.6 * var(--os-rem)));letter-spacing:-.04em;line-height:1.02;margin:0;overflow:hidden;padding-bottom:.1em}
+.os-sk .buy__sub{color:var(--dim);margin:13px 0 0;font-size:calc(1 * var(--os-rem))}
 /* ---- les quatre arguments : une liste, plus six cases ----
    La version precedente etait six boites bordees de meme taille, chacune avec un carre
    orange de 5 px et du texte a .85 rem. C'est le motif que `craft-floor` appelle « la
@@ -343,7 +345,7 @@
 .os-sk .chips li{
   display:flex;align-items:center;gap:12px;min-width:0;
   padding:11px 1px;border-bottom:1px solid var(--rule);
-  font-size:1rem;line-height:1.25;color:var(--fg);
+  font-size:calc(1 * var(--os-rem));line-height:1.25;color:var(--fg);
 }
 .os-sk .chips li::before{content:"";width:10px;height:10px;background:var(--pop);flex:none}
 /* Deux colonnes des que la place existe, avec un filet de separation : en une seule
@@ -405,8 +407,8 @@
 /* cover et non contain : le fichier est genere au meme ratio que la case, donc rien
    n'est rogne, et aucun ecart de fond ne se voit entre l'image et la carte */
 .os-sk .pack__shot img{width:100%;height:100%;object-fit:cover;display:block}
-.os-sk .pack__n{font-family:var(--display);font-weight:800;font-size:clamp(.95rem,2.7vw,1.18rem);letter-spacing:-.03em;line-height:1.05}
-.os-sk .pack__p{font-family:var(--display);font-weight:800;font-size:clamp(.9rem,2.5vw,1.12rem);letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
+.os-sk .pack__n{font-family:var(--display);font-weight:800;font-size:clamp(calc(.95 * var(--os-rem)),2.7vw,calc(1.18 * var(--os-rem)));letter-spacing:-.03em;line-height:1.05}
+.os-sk .pack__p{font-family:var(--display);font-weight:800;font-size:clamp(calc(.9 * var(--os-rem)),2.5vw,calc(1.12 * var(--os-rem)));letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
 .os-sk .pack__u{font-family:var(--label);font-weight:600;font-size:11px;color:var(--dim);letter-spacing:.02em;font-variant-numeric:tabular-nums;line-height:1.3}
 /* le drapeau occupe toute la largeur du bord haut : a 85 px de carte, une pastille
    posee dans un coin devient illisible */
@@ -719,8 +721,8 @@
 }
 .os-sk .dopen__peek img + img{margin-left:-13px}
 .os-sk .dopen__t{display:grid;gap:3px;min-width:0}
-.os-sk .dopen__t b{font-family:var(--display);font-weight:800;font-size:1.05rem;letter-spacing:-.02em}
-.os-sk .dopen__t span{font-size:.92rem;color:var(--dim)}
+.os-sk .dopen__t b{font-family:var(--display);font-weight:800;font-size:calc(1.05 * var(--os-rem));letter-spacing:-.02em}
+.os-sk .dopen__t span{font-size:calc(.92 * var(--os-rem));color:var(--dim)}
 .os-sk .dopen__go{font-family:var(--label);font-weight:700;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--pop);white-space:nowrap}
 
 /* ---- le recapitulatif de selection, sous le declencheur ----
@@ -739,7 +741,7 @@
   font-family:var(--label);font-weight:700;font-size:12px;letter-spacing:.1em;
   text-transform:uppercase;color:var(--dim);
 }
-.os-sk .recap__h b{font-family:var(--display);font-size:1.05rem;letter-spacing:-.02em;color:var(--fg)}
+.os-sk .recap__h b{font-family:var(--display);font-size:calc(1.05 * var(--os-rem));letter-spacing:-.02em;color:var(--fg)}
 .os-sk .recap__h span{letter-spacing:.1em}
 .os-sk .recap .dslot__n,.os-sk .recap .dslot__x,.os-sk .recap .dtray__more{background:var(--pearl);color:var(--void)}
 .os-sk .recap .dslot--x .dslot__n{background:var(--pop);color:var(--void)}
@@ -824,8 +826,8 @@
   display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--s3);align-items:center;
   padding:var(--s3);border-bottom:1px solid var(--rule);
 }
-.os-sk .dpick__hd h2{margin:0;font-family:var(--display);font-weight:800;font-size:1.4rem;letter-spacing:-.03em}
-.os-sk .dpick__hd p{margin:5px 0 0;color:var(--dim);font-size:.95rem}
+.os-sk .dpick__hd h2{margin:0;font-family:var(--display);font-weight:800;font-size:calc(1.4 * var(--os-rem));letter-spacing:-.03em}
+.os-sk .dpick__hd p{margin:5px 0 0;color:var(--dim);font-size:calc(.95 * var(--os-rem))}
 .os-sk .dpick__x{
   width:44px;height:44px;display:grid;place-items:center;flex:none;
   border:1px solid var(--rule-hi);background:transparent;color:var(--fg);cursor:pointer;
@@ -908,7 +910,7 @@
    visible, ca coupait les vignettes en deux en permanence. Les trois boutons de filtre
    disent deja ou on est, l'en-tete peut defiler avec son groupe. */
 @media(max-width:719px){.os-sk .dpick .dgroup__h{position:static}}
-.os-sk .dpick .dcard__i{font-size:.9rem;padding:9px 10px}
+.os-sk .dpick .dcard__i{font-size:calc(.9 * var(--os-rem));padding:9px 10px}
 /* ---- le tarif d'option, dans le catalogue clair ----
    `.dcard__x` etait dessine pour la buy box sombre : `background:var(--ink)` et
    `color:var(--pearl)` sont des tokens ABSOLUS, pas ceux du theme. Sur fond clair ca
@@ -994,7 +996,7 @@
    Selecteur prefixe par `.dpick` (0,3,0) pour passer devant les regles d'etat. */
 .os-sk .dpick .dpack button u:empty{background:transparent;color:transparent;box-shadow:none}
 .os-sk .dpack button b{
-  font-family:var(--display);font-weight:800;font-size:1.05rem;letter-spacing:-.03em;
+  font-family:var(--display);font-weight:800;font-size:calc(1.05 * var(--os-rem));letter-spacing:-.03em;
   line-height:1;padding:7px 14px 2px;
 }
 .os-sk .dpack button b em{font-style:normal;font-size:.66em;font-weight:700;letter-spacing:0}
@@ -1041,9 +1043,9 @@
    les filtres perdent leurs marges, et le plateau se compacte. La grille reprend tout. */
 @media(max-width:719px){
   .os-sk .dpick__hd{padding:11px var(--s2);align-items:center}
-  .os-sk .dpick__hd h2{font-size:1.05rem}
+  .os-sk .dpick__hd h2{font-size:calc(1.05 * var(--os-rem))}
   .os-sk .dpick__long{display:none}
-  .os-sk .dpick__short{display:block;margin:2px 0 0;color:var(--dim);font-size:.8rem;line-height:1.35}
+  .os-sk .dpick__short{display:block;margin:2px 0 0;color:var(--dim);font-size:calc(.8 * var(--os-rem));line-height:1.35}
   .os-sk .dpick__x{width:38px;height:38px;font-size:19px}
   /* ---- UNE seule barre de controles, qui defile ----
      Trois rangees empilees (pack, univers, difficulte) prenaient 210 px, et le pack
@@ -1067,13 +1069,13 @@
      coutait une rangee entiere pour un mot */
   .os-sk .dpack__l{font-size:10px;letter-spacing:.1em}
   .os-sk .dpack button u,.os-sk .dpack button i{display:none}
-  .os-sk .dpack button b{font-size:.92rem;padding:6px 11px}
+  .os-sk .dpack button b{font-size:calc(.92 * var(--os-rem));padding:6px 11px}
   .os-sk .dpack button b em{display:none}
   .os-sk .ufil{padding:4px 10px 4px 4px;gap:0 8px}
   .os-sk .ufil__m{width:28px;height:28px}
-  .os-sk .ufil__n{font-size:.85rem}
+  .os-sk .ufil__n{font-size:calc(.85 * var(--os-rem))}
   .os-sk .ufil__c{font-size:9.5px}
-  .os-sk .nfil{padding:6px 10px;font-size:.84rem;gap:7px}
+  .os-sk .nfil{padding:6px 10px;font-size:calc(.84 * var(--os-rem));gap:7px}
   .os-sk .nfil__g i{width:5px;height:11px}
   /* 124 px de colonne minimale ne laissaient que 2 designs de front : parcourir un gros
      catalogue devenait interminable. A 96 px on en voit 3 par rangee, donc 6 a l'ecran. */
@@ -1097,14 +1099,14 @@
      puis quatre colonnes en montant vers 719 px, sans palier supplementaire a maintenir. */
   .os-sk .dpick .dgroup__g{grid-auto-columns:calc((100cqw - 11px)/2);gap:11px}
   .os-sk .dpick .dgroup__h{padding:8px 0;font-size:12px}
-  .os-sk .dpick .dcard__i{font-size:.78rem;padding:6px 7px}
-  .os-sk .dpack button b{font-size:.95rem;padding:5px 11px 1px}
+  .os-sk .dpick .dcard__i{font-size:calc(.78 * var(--os-rem));padding:6px 7px}
+  .os-sk .dpack button b{font-size:calc(.95 * var(--os-rem));padding:5px 11px 1px}
   .os-sk .dpack button i{padding:0 11px 5px;font-size:10.5px}
   .os-sk .ufil{padding:6px 12px 6px 6px;gap:0 9px}
   .os-sk .ufil__m{width:34px;height:34px}
-  .os-sk .ufil__n{font-size:.9rem}
+  .os-sk .ufil__n{font-size:calc(.9 * var(--os-rem))}
   .os-sk .ufil__c{font-size:10.5px}
-  .os-sk .nfil{padding:7px 12px;font-size:.88rem}
+  .os-sk .nfil{padding:7px 12px;font-size:calc(.88 * var(--os-rem))}
   /* ---- mode resserre : pendant le defilement, tout ce qui n'est pas un design s'efface
      Sur un ecran de 844 px l'habillage prenait 66 % de la hauteur. Il n'a besoin d'etre
      la qu'a l'ARRET : quand on parcourt le catalogue on regarde les designs, pas les
@@ -1149,11 +1151,11 @@
      d'un coup d'oeil, sans rien ouvrir et sans lire. */
   .os-sk .dbar button em{display:flex;align-items:center;gap:7px;font-style:normal;min-width:0;width:100%;overflow:hidden}
   .os-sk .dbar button b{
-    font-family:var(--display);font-weight:800;font-size:.9rem;letter-spacing:-.03em;
+    font-family:var(--display);font-weight:800;font-size:calc(.9 * var(--os-rem));letter-spacing:-.03em;
     line-height:1.05;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;
   }
   .os-sk .dbar__num{
-    font-style:normal;font-family:var(--display);font-weight:800;font-size:.95rem;
+    font-style:normal;font-family:var(--display);font-weight:800;font-size:calc(.95 * var(--os-rem));
     background:var(--pop);color:var(--void);padding:1px 6px;flex:none;line-height:1.25;
   }
   .os-sk .dbar__vig{flex:none;width:22px;height:22px;display:grid;overflow:hidden;background:var(--panel);border:1px solid var(--rule)}
@@ -1195,9 +1197,9 @@
     justify-items:start;text-align:left;gap:0 7px;padding:5px 10px 5px 5px;
   }
   .os-sk .ufil__m{width:30px;height:30px;aspect-ratio:auto}
-  .os-sk .ufil__n{font-size:.8rem;line-height:1.1;white-space:nowrap}
+  .os-sk .ufil__n{font-size:calc(.8 * var(--os-rem));line-height:1.1;white-space:nowrap}
   .os-sk .ufil__c{font-size:9px;letter-spacing:.05em;white-space:nowrap}
-  .os-sk .nfil{padding:7px 6px;justify-content:center;gap:5px;font-size:.8rem}
+  .os-sk .nfil{padding:7px 6px;justify-content:center;gap:5px;font-size:calc(.8 * var(--os-rem))}
   .os-sk .nfil:first-child{padding-inline:11px}
   .os-sk .nfil__g i{width:4px;height:10px}
   /* le pack en trois cartes, comme sur la fiche */
@@ -1210,7 +1212,7 @@
   .os-sk .dpack__v{display:none}
   .os-sk .dpack button u,.os-sk .dpack button i,.os-sk .dpack button s{display:block}
   .os-sk .dpack button u{font-size:7.5px;letter-spacing:.02em;min-height:14px;line-height:14px}
-  .os-sk .dpack button b{font-size:1.05rem;padding:7px 4px 0}
+  .os-sk .dpack button b{font-size:calc(1.05 * var(--os-rem));padding:7px 4px 0}
   .os-sk .dpack button b em{display:block;font-size:.55em;letter-spacing:.06em;text-transform:uppercase;opacity:.72}
   .os-sk .dpack button i{padding:3px 4px 0;font-size:12px;font-weight:700;color:var(--fg)}
   .os-sk .dpack button[aria-pressed="true"] i{color:var(--void)}
@@ -1240,7 +1242,7 @@
 .os-sk .ufil__m img{width:100%;height:100%;object-fit:cover;display:block;grid-area:1/1}
 .os-sk .ufil__m--all{grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
 .os-sk .ufil__m--all img{grid-area:auto}
-.os-sk .ufil__n{grid-area:nom;font-family:var(--display);font-weight:800;font-size:1rem;letter-spacing:-.02em;line-height:1.1}
+.os-sk .ufil__n{grid-area:nom;font-family:var(--display);font-weight:800;font-size:calc(1 * var(--os-rem));letter-spacing:-.02em;line-height:1.1}
 .os-sk .ufil__c{grid-area:cpt;font-family:var(--label);font-weight:600;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
 /* ⚠️ `color` et `text-transform` sont REDECLARES ici. Ces boutons portent encore la
    classe `.filter` (c'est elle que le controleur ecoute), et `.filter[aria-pressed=true]`
@@ -1261,7 +1263,7 @@
 
 .os-sk .nfil{
   display:flex;align-items:center;gap:9px;flex:none;padding:9px 15px;cursor:pointer;
-  font-family:var(--display);font-weight:700;font-size:.95rem;letter-spacing:-.02em;
+  font-family:var(--display);font-weight:700;font-size:calc(.95 * var(--os-rem));letter-spacing:-.02em;
   border:1px solid var(--rule);background:transparent;color:var(--fg);
   transition:border-color .18s ease,background .18s ease;
 }
@@ -1329,7 +1331,7 @@
   font-family:var(--label);font-weight:700;font-size:10.5px;letter-spacing:.11em;
   text-transform:uppercase;color:var(--dim);
 }
-.os-sk .dtray__xh b{font-family:var(--display);font-size:1.02rem;letter-spacing:-.02em;text-transform:none;color:var(--fg)}
+.os-sk .dtray__xh b{font-family:var(--display);font-size:calc(1.02 * var(--os-rem));letter-spacing:-.02em;text-transform:none;color:var(--fg)}
 .os-sk .dtray__xs{display:flex;gap:9px;min-width:0;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
 .os-sk .dtray__xs::-webkit-scrollbar{display:none}
 
@@ -1357,8 +1359,8 @@
    qui les surchargent. Sixieme occurrence du meme piege dans ce fichier. */
 /* le detail des montants n'existe qu'en desktop : le mobile est fige */
 .os-sk .dtray__d{display:none}
-.os-sk .dtray__p{font-family:var(--display);font-weight:800;font-size:1.5rem;letter-spacing:-.03em;color:var(--fg)}
-.os-sk .dtray__p span{font-size:.85rem;font-weight:400;color:var(--dim);margin-left:7px;letter-spacing:0}
+.os-sk .dtray__p{font-family:var(--display);font-weight:800;font-size:calc(1.5 * var(--os-rem));letter-spacing:-.03em;color:var(--fg)}
+.os-sk .dtray__p span{font-size:calc(.85 * var(--os-rem));font-weight:400;color:var(--dim);margin-left:7px;letter-spacing:0}
 
 /* ---- le message d'etat : desormais la seule voix du plateau ----
    Il remplace le compteur « 4/10 ». Un compteur dit ou on en est ; un message dit ce
@@ -1406,9 +1408,9 @@
   .os-sk .dslot{width:56px;height:56px}
   /* prix a gauche, bouton sur tout le reste : la cible la plus large possible */
   .os-sk .dtray__r{display:flex;align-items:center;gap:11px}
-  .os-sk .dtray__p{font-size:1.15rem;white-space:nowrap;flex:none}
+  .os-sk .dtray__p{font-size:calc(1.15 * var(--os-rem));white-space:nowrap;flex:none}
   .os-sk .dtray__p span{display:none}
-  .os-sk .dtray .cta{flex:1 1 auto;justify-content:center;padding:13px 16px;font-size:.95rem;gap:7px;white-space:nowrap}
+  .os-sk .dtray .cta{flex:1 1 auto;justify-content:center;padding:13px 16px;font-size:calc(.95 * var(--os-rem));gap:7px;white-space:nowrap}
 }
 
 /* la vignette qui vole de la grille vers le plateau : c'est Flip qui la porte */
@@ -1426,7 +1428,7 @@
    ce que je veux ». Le compteur dit ce que les filtres viennent de faire, sinon on ne
    sait pas si on regarde 6 designs ou 60. */
 .os-sk .dfind__n{margin:var(--s2) 0 0;font-family:var(--label);font-weight:700;font-size:12px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim)}
-.os-sk .dfind__n b{font-family:var(--display);font-size:1.02rem;letter-spacing:-.02em;color:var(--fg)}
+.os-sk .dfind__n b{font-family:var(--display);font-size:calc(1.02 * var(--os-rem));letter-spacing:-.02em;color:var(--fg)}
 
 /* --- la cellule : selectionner et agrandir sont deux gestes distincts --------------
    Un bouton dans un bouton n'est pas valide : la vignette et la loupe sont deux
@@ -1478,7 +1480,7 @@
    la couleur des commandes, mais il ne porte pas de texte sur du blanc. La meta passe
    en `--dim`, et c'est la graisse qui la distingue. */
 .os-sk .dview__meta{margin:0;font-family:var(--label);font-weight:700;font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim)}
-.os-sk .dview__b h3{font-family:var(--display);font-weight:800;font-size:1.4rem;letter-spacing:-.03em;margin:7px 0 11px;text-wrap:balance}
+.os-sk .dview__b h3{font-family:var(--display);font-weight:800;font-size:calc(1.4 * var(--os-rem));letter-spacing:-.03em;margin:7px 0 11px;text-wrap:balance}
 /* ---- la fiche technique du design : les trois chiffres qui decident ----
    Ce qu'on veut savoir avant de prendre un design, c'est ce qu'il coute en beads, ce
    qu'il demande, et le temps qu'il prend. Les trois en colonnes egales separees d'un
@@ -1497,7 +1499,7 @@
 }
 .os-sk .dspec dd{
   margin:0;display:flex;align-items:center;gap:5px;line-height:1.1;
-  font-family:var(--display);font-weight:800;font-size:1rem;letter-spacing:-.02em;color:var(--fg);
+  font-family:var(--display);font-weight:800;font-size:calc(1 * var(--os-rem));letter-spacing:-.02em;color:var(--fg);
 }
 .os-sk .dspec .ico{width:13px;height:13px;color:var(--dim);flex:none}
 .os-sk .dspec .dcard__d{height:13px}
@@ -1544,7 +1546,7 @@
   display:flex;align-items:center;justify-content:center;gap:7px;min-width:0;flex:0 1 auto;
   padding:12px 14px;cursor:pointer;
   background:var(--blanc);border:1px solid var(--rule-hi);color:var(--dim);
-  font-family:var(--display);font-weight:700;font-size:clamp(.82rem,3.1vw,1rem);
+  font-family:var(--display);font-weight:700;font-size:clamp(calc(.82 * var(--os-rem)),3.1vw,calc(1 * var(--os-rem)));
   letter-spacing:-.02em;text-align:center;white-space:nowrap;
   transition:background .18s ease,color .18s ease,border-color .18s ease;
 }
@@ -1572,15 +1574,15 @@
 
 .os-sk .acc{margin-top:var(--s3);border-top:1px solid var(--rule)}
 .os-sk .acc details{border-bottom:1px solid var(--rule)}
-.os-sk .acc summary{display:flex;align-items:center;gap:13px;padding:15px 0;cursor:pointer;font-family:var(--display);font-weight:700;font-size:1rem;letter-spacing:-.02em;list-style:none}
+.os-sk .acc summary{display:flex;align-items:center;gap:13px;padding:15px 0;cursor:pointer;font-family:var(--display);font-weight:700;font-size:calc(1 * var(--os-rem));letter-spacing:-.02em;list-style:none}
 .os-sk summary::-webkit-details-marker{display:none}
 .os-sk .acc summary .ico{width:24px;height:24px}
 .os-sk .acc summary::after{content:"+";margin-left:auto;color:var(--pop);font-family:var(--pixel);font-size:15px}
 .os-sk .acc details[open] summary::after{content:"−"}
-.os-sk .acc p{margin:0 0 17px;color:var(--dim);font-size:1.02rem;max-width:52ch}
+.os-sk .acc p{margin:0 0 17px;color:var(--dim);font-size:calc(1.02 * var(--os-rem));max-width:52ch}
 .os-sk .duo{margin-top:var(--s3);padding:18px;border:1px solid var(--rule)}
-.os-sk .duo h3{font-family:var(--display);font-weight:800;font-size:1.15rem;letter-spacing:-.03em;margin:0}
-.os-sk .duo p{margin:9px 0 0;color:var(--dim);font-size:1rem}
+.os-sk .duo h3{font-family:var(--display);font-weight:800;font-size:calc(1.15 * var(--os-rem));letter-spacing:-.03em;margin:0}
+.os-sk .duo p{margin:9px 0 0;color:var(--dim);font-size:calc(1 * var(--os-rem))}
 
 /* ================= 2 · BANDEAU ================= */
 .os-sk .mq{overflow:hidden;padding-block:14px;background:var(--pop);color:var(--void)}
@@ -1598,8 +1600,8 @@
 }
 .os-sk .checks{list-style:none;margin:0;padding:0;display:grid;gap:var(--s3)}
 .os-sk .checks li{display:grid;grid-template-columns:auto 1fr;gap:var(--s2);align-items:start}
-.os-sk .checks h3{font-family:var(--display);font-weight:700;font-size:1.05rem;letter-spacing:-.02em;margin:0 0 4px}
-.os-sk .checks p{margin:0;color:var(--dim);font-size:1.02rem}
+.os-sk .checks h3{font-family:var(--display);font-weight:700;font-size:calc(1.05 * var(--os-rem));letter-spacing:-.02em;margin:0 0 4px}
+.os-sk .checks p{margin:0;color:var(--dim);font-size:calc(1.02 * var(--os-rem))}
 .os-sk .figbox{position:relative;aspect-ratio:4/3;width:100%;border:1px solid var(--rule);display:grid;place-items:center;background:var(--void);overflow:hidden}
 @media(min-width:960px){.os-sk .figbox{aspect-ratio:auto;height:100%;min-height:340px}}
 .os-sk .dia{width:88%;aspect-ratio:1/1;background-image:url(os-manual-steps.png);background-size:300% 100%;background-repeat:no-repeat;background-position:50% 50%}
@@ -1656,8 +1658,8 @@
 @media(min-width:620px){.os-sk .bt--c{grid-template-columns:minmax(0,45%) minmax(0,55%)}}
 .os-sk .bt__t,.os-sk .bt--txt{background:var(--panel);padding:var(--s3);display:grid;align-content:center;gap:9px}
 .os-sk .bt__n{font-family:var(--pixel);font-size:10px;letter-spacing:.06em;color:var(--pop)}
-.os-sk .bento h3{font-family:var(--display);font-weight:800;font-size:1.12rem;letter-spacing:-.03em;line-height:1.1;margin:0;text-wrap:balance}
-.os-sk .bento p{margin:0;color:var(--dim);font-size:1.02rem}
+.os-sk .bento h3{font-family:var(--display);font-weight:800;font-size:calc(1.12 * var(--os-rem));letter-spacing:-.03em;line-height:1.1;margin:0;text-wrap:balance}
+.os-sk .bento p{margin:0;color:var(--dim);font-size:calc(1.02 * var(--os-rem))}
 /* tuile photo : l'image remplit sa case, quelle que soit la hauteur de rangee */
 .os-sk .bt--photo{overflow:hidden;background:var(--panel);min-height:150px}
 .os-sk .bt--photo img{width:100%;height:100%;object-fit:cover;display:block}
@@ -1666,7 +1668,7 @@
 /* placement desktop : ce bloc doit rester APRES les regles de base */
 @media(min-width:1080px){
   .os-sk .bento{grid-template-columns:repeat(12,minmax(0,1fr));grid-template-rows:260px 300px;gap:16px}
-  .os-sk .bento h3{font-size:1.3rem} .os-sk .bento p{font-size:1.05rem}
+  .os-sk .bento h3{font-size:calc(1.3 * var(--os-rem))} .os-sk .bento p{font-size:calc(1.05 * var(--os-rem))}
   .os-sk .bt--img.wf{min-height:0;padding:var(--s3)}
   .os-sk .bt--a{grid-column:1/4;grid-row:1}   .os-sk .bt--b{grid-column:4/7;grid-row:1}
   .os-sk .bt--c{grid-column:7/13;grid-row:1}
@@ -1710,7 +1712,7 @@
    le CTA restait centre, 377 px d'ecart mesures. Meme famille que le defaut de cascade
    deja paye sur ce fichier — une regle plus bas bat une regle de meme specificite. */
 .os-sk .who__h,.os-sk .who__q{width:min(calc(100% - 36px),68ch)}
-.os-sk .who__h{font-family:var(--display);font-weight:800;font-size:clamp(1.15rem,2.4vw,1.55rem);
+.os-sk .who__h{font-family:var(--display);font-weight:800;font-size:clamp(calc(1.15 * var(--os-rem)),2.4vw,calc(1.55 * var(--os-rem)));
     letter-spacing:-.03em;margin:0 auto var(--s2);text-align:center;color:var(--fg)}
 .os-sk .who__row{width:100%;overflow:hidden}
 /* ⛔⛔ PAS DE `gap` SUR LA PISTE, ET C'EST UNE CONTRAINTE DE BOUCLE, PAS UN GOUT.
@@ -1731,8 +1733,8 @@
    se lire comme une liste qui passe, pas comme une rangee de boutons */
 .os-sk .who__c{flex:none;white-space:nowrap;padding:11px 18px;margin-right:10px;
     border:1px solid var(--rule-hi);background:var(--panel);color:var(--fg);
-    font-size:1rem;line-height:1.2}
-@media(min-width:760px){.os-sk .who__c{padding:13px 22px;font-size:1.06rem}}
+    font-size:calc(1 * var(--os-rem));line-height:1.2}
+@media(min-width:760px){.os-sk .who__c{padding:13px 22px;font-size:calc(1.06 * var(--os-rem))}}
 .os-sk .who__q{margin:var(--s3) auto 0;text-align:center;color:var(--dim);text-wrap:balance}
 /* ⛔⛔ QUATRE COPIES, TRANSLATION DE -25 %. Ne pas revenir a deux copies et -50 %.
    Le raccord etait deja exact (0,0 px mesure) apres avoir sorti le `gap` de la piste.
@@ -1772,8 +1774,8 @@
 @media(min-width:1150px){.os-sk .grid4--wide{grid-template-columns:repeat(4,1fr)}}
 .os-sk .cell{background:var(--bg);padding:var(--s3)}
 .os-sk .cell__n{font-family:var(--pixel);font-size:12px;color:var(--pop);letter-spacing:.08em;display:block;margin-bottom:var(--s2)}
-.os-sk .cell h3{font-family:var(--display);font-weight:700;font-size:1.08rem;letter-spacing:-.02em;margin:0 0 9px}
-.os-sk .cell p{margin:0;color:var(--dim);font-size:1.02rem}
+.os-sk .cell h3{font-family:var(--display);font-weight:700;font-size:calc(1.08 * var(--os-rem));letter-spacing:-.02em;margin:0 0 9px}
+.os-sk .cell p{margin:0;color:var(--dim);font-size:calc(1.02 * var(--os-rem))}
 
 /* ================= comment ca marche ================= */
 .os-sk .how__row{display:grid;gap:var(--s3);margin-top:var(--s4)}
@@ -1796,7 +1798,7 @@
    principe, pas ce qu'on fait avec ses mains */
 .os-sk .how__shot{aspect-ratio:1/1;overflow:hidden;border:1px solid var(--rule);background:var(--panel)}
 .os-sk .how__shot img{width:100%;height:100%;object-fit:cover;display:block}
-.os-sk .how h3{font-family:var(--display);font-weight:700;font-size:1.12rem;letter-spacing:-.025em;margin:var(--s3) 0 8px;display:flex;gap:11px;align-items:baseline}
+.os-sk .how h3{font-family:var(--display);font-weight:700;font-size:calc(1.12 * var(--os-rem));letter-spacing:-.025em;margin:var(--s3) 0 8px;display:flex;gap:11px;align-items:baseline}
 /* ⚠️ Le jeton encadre du numero est defini ICI, en regle de BASE, et pas plus bas.
    La version mobile existe dans le `@media(max-width:859px)` qui suit : une regle de meme
    specificite ecrite APRES ce media l'aurait ecrase a toutes les largeurs. C'est le piege
@@ -1816,7 +1818,7 @@
      tenir d'un seul tenant, sinon la troisieme ligne rallonge l'en-tete pour rien */
   /* mesure : « Trouve sa case. Recommence. » fait 331 px a 24,4 px dans un conteneur
      de 327. 6,15vw la ramene a 313 px et tient aussi a 320 px de viewport. */
-  .os-sk .how .h-lg{font-size:clamp(1.15rem,6.15vw,1.75rem)}
+  .os-sk .how .h-lg{font-size:clamp(calc(1.15 * var(--os-rem)),6.15vw,calc(1.75 * var(--os-rem)))}
   .os-sk .how__row{gap:var(--s5)}
   .os-sk .how__row > div{
     position:relative;display:grid;align-items:start;column-gap:var(--s2);
@@ -1864,7 +1866,7 @@
     left:auto;right:26%;border-left:0;border-right:2px dotted var(--rule-hi);
   }
 }
-.os-sk .how p{margin:0;color:var(--dim);font-size:1.02rem}
+.os-sk .how p{margin:0;color:var(--dim);font-size:calc(1.02 * var(--os-rem))}
 /* ---- les actions d'une etape : un filet par ligne, pas des puces flottantes ----------
    Chaque etape porte 2 a 3 actions. En puces libres, elles formaient un pave gris qu'on
    lit en entier ou pas du tout. Separees par un filet, elles se scannent une par une et
@@ -1872,7 +1874,7 @@
    operation occupe sa ligne.
    Le filet est en HAUT et pas en bas : la derniere action ne traine donc pas un trait
    dans le vide sous elle, et la premiere n'en porte aucun. */
-.os-sk .how__l{list-style:none;margin:0;padding:0;color:var(--dim);font-size:.97rem;line-height:1.5}
+.os-sk .how__l{list-style:none;margin:0;padding:0;color:var(--dim);font-size:calc(.97 * var(--os-rem));line-height:1.5}
 /* ⛔ LE `<li>` N'EST PAS UNE GRILLE, ET C'EST LA DEUXIEME FOIS CE SOIR.
    En `display:grid`, CHAQUE element enfant devient un item de grille : le `<strong>` du
    payoff se retrouvait dans sa propre cellule, celle de 6 px reservee a la puce, et sortait
@@ -1914,7 +1916,7 @@
 .os-sk .how__l strong{font-weight:600;color:var(--fg)}
 /* l'encadre de securite touchait ses bords : le texte fait trois lignes sur mobile et
    collait au filet en haut, en bas et a droite */
-.os-sk .safety{margin-top:var(--s5);padding:var(--s3);border:1px solid var(--rule);display:flex;gap:16px;align-items:center;justify-content:center;font-size:1.06rem;color:var(--dim);text-align:left}
+.os-sk .safety{margin-top:var(--s5);padding:var(--s3);border:1px solid var(--rule);display:flex;gap:16px;align-items:center;justify-content:center;font-size:calc(1.06 * var(--os-rem));color:var(--dim);text-align:left}
 @media(min-width:600px){.os-sk .safety{padding:var(--s3) var(--s4)}}
 .os-sk .safety .ico{width:22px;height:22px}
 /* `.how p{margin:0}` vaut (0,1,1) et bat `.safety` qui ne vaut que (0,1,0) : la marge
@@ -1962,7 +1964,7 @@
     position:relative;display:grid;grid-template-columns:auto minmax(0,1fr);gap:9px;
     align-items:center;text-align:left;background:transparent;color:var(--fg);
     border:1px solid var(--rule-hi);padding:11px 12px;min-height:48px;cursor:pointer;
-    font-family:var(--display);font-weight:700;font-size:.95rem;letter-spacing:-.02em;
+    font-family:var(--display);font-weight:700;font-size:calc(.95 * var(--os-rem));letter-spacing:-.02em;
     line-height:1.15;transition:background .2s ease,color .2s ease,border-color .2s ease;
   }
   .os-sk .ways__t i{font-family:var(--pixel);font-style:normal;font-size:11px;letter-spacing:.05em;color:var(--pop)}
@@ -2009,10 +2011,10 @@
 @media(min-width:900px){.os-sk .ways__c .ico{width:54px;height:54px}}
 .os-sk .ways__c h3{
   font-family:var(--display);font-weight:800;letter-spacing:-.03em;line-height:1.08;
-  margin:0;text-wrap:balance;color:var(--void);font-size:clamp(1rem,4.1vw,1.35rem);
+  margin:0;text-wrap:balance;color:var(--void);font-size:clamp(calc(1 * var(--os-rem)),4.1vw,calc(1.35 * var(--os-rem)));
 }
-.os-sk .ways__c p{margin:0;color:rgba(12,11,11,.82);font-size:.96rem;max-width:28ch;text-wrap:pretty}
-@media(min-width:900px){.os-sk .ways__c p{font-size:1.02rem}}
+.os-sk .ways__c p{margin:0;color:rgba(12,11,11,.82);font-size:calc(.96 * var(--os-rem));max-width:28ch;text-wrap:pretty}
+@media(min-width:900px){.os-sk .ways__c p{font-size:calc(1.02 * var(--os-rem))}}
 
 /* ================= fierte : trois scenes, puis la reaction =================
    La section vend une projection. Elle a donc besoin de trois lieux qu'on puisse
@@ -2081,7 +2083,7 @@
 .os-sk .wway__k span{font-family:var(--pixel);font-size:10px;letter-spacing:.06em;
   border:1px solid rgba(245,237,224,.55);padding:3px 5px 2px;line-height:1;color:var(--pearl)}
 .os-sk .wway__t h3{
-  font-family:var(--display);font-weight:800;font-size:clamp(1.15rem,2.1vw,1.55rem);
+  font-family:var(--display);font-weight:800;font-size:clamp(calc(1.15 * var(--os-rem)),2.1vw,calc(1.55 * var(--os-rem)));
   letter-spacing:-.03em;line-height:1.1;margin:0;text-wrap:balance;color:var(--pearl);
 }
 
@@ -2122,7 +2124,7 @@
    au-dessus pour la detacher de la carte, peu en dessous pour la coller a ce qu'elle
    commande. */
 .os-sk .sel{margin-top:var(--s4);display:grid;gap:0}
-.os-sk .sel__step{display:flex;align-items:center;gap:11px;margin:var(--s3) 0 12px;font-size:1rem;color:var(--dim)}
+.os-sk .sel__step{display:flex;align-items:center;gap:11px;margin:var(--s3) 0 12px;font-size:calc(1 * var(--os-rem));color:var(--dim)}
 .os-sk .sel__step span{display:grid;place-items:center;flex:none;width:22px;height:22px;border:1px solid currentColor;border-radius:50%;font-family:var(--pixel);font-size:11px}
 .os-sk .sel__stage{position:relative;aspect-ratio:16/12;overflow:hidden;border:1px solid var(--rule);background:var(--panel)}
 @media(min-width:760px){.os-sk .sel__stage{aspect-ratio:2.3}}
@@ -2138,8 +2140,8 @@
 .os-sk .sel__copy{position:absolute;z-index:2;left:var(--s3);right:var(--s3);bottom:var(--s3);top:auto;display:grid;gap:8px;align-content:end}
 @media(min-width:760px){.os-sk .sel__copy{top:var(--s4);bottom:var(--s4);left:var(--s4);right:auto;width:46%;align-content:center}}
 .os-sk .sel__role{font-family:var(--label);font-weight:700;font-size:12.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--pop)}
-.os-sk .sel__stage h3{font-family:var(--display);font-weight:800;font-size:clamp(1.5rem,3.4vw,2.6rem);letter-spacing:-.04em;line-height:1.02;margin:0;text-wrap:balance}
-.os-sk .sel__stage p{margin:0;color:var(--dim);max-width:34ch;font-size:1.02rem}
+.os-sk .sel__stage h3{font-family:var(--display);font-weight:800;font-size:clamp(calc(1.5 * var(--os-rem)),3.4vw,calc(2.6 * var(--os-rem)));letter-spacing:-.04em;line-height:1.02;margin:0;text-wrap:balance}
+.os-sk .sel__stage p{margin:0;color:var(--dim);max-width:34ch;font-size:calc(1.02 * var(--os-rem))}
 /* la bande de vignettes : un seul bloc encadre, comme la reference */
 /* ⚠️ LE NOMBRE DE COLONNES SUIT LE NOMBRE D'OUTILS. Le kit est passe de 6 a 8 : la grille
    a 6 colonnes laissait une deuxieme rangee de 2 vignettes et un trou de 4 places.
@@ -2170,7 +2172,7 @@
 /* ================= outils (interactif) ================= */
 .os-sk .kit{display:grid;gap:var(--s3);margin-top:var(--s4)}
 .os-sk .kit__nav{display:grid;border-top:1px solid var(--rule)}
-.os-sk .kit__b{display:grid;grid-template-columns:auto 1fr auto;gap:var(--s2);align-items:center;width:100%;text-align:left;background:transparent;border:0;border-bottom:1px solid var(--rule);padding:15px 0;cursor:pointer;color:var(--dim);font-family:var(--display);font-weight:700;font-size:1.02rem;letter-spacing:-.02em;transition:color .18s ease}
+.os-sk .kit__b{display:grid;grid-template-columns:auto 1fr auto;gap:var(--s2);align-items:center;width:100%;text-align:left;background:transparent;border:0;border-bottom:1px solid var(--rule);padding:15px 0;cursor:pointer;color:var(--dim);font-family:var(--display);font-weight:700;font-size:calc(1.02 * var(--os-rem));letter-spacing:-.02em;transition:color .18s ease}
 .os-sk .kit__b:hover{color:var(--fg)}
 .os-sk .kit__b[aria-selected="true"]{color:var(--pop)}
 .os-sk .kit__b::after{content:"";width:18px;height:1px;background:currentColor;opacity:.35}
@@ -2184,7 +2186,7 @@
 .os-sk .kit__body{padding:var(--s3);display:grid;gap:10px}
 .os-sk .kit__panel .ico{width:38px;height:38px}
 .os-sk .kit__role{font-family:var(--label);font-weight:700;font-size:13.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--pop)}
-.os-sk .kit__panel h3{font-family:var(--display);font-weight:800;font-size:1.5rem;letter-spacing:-.03em;margin:0}
+.os-sk .kit__panel h3{font-family:var(--display);font-weight:800;font-size:calc(1.5 * var(--os-rem));letter-spacing:-.03em;margin:0}
 .os-sk .kit__panel p{margin:0;color:var(--dim);max-width:44ch}
 /* la liste d'outils et le panneau se terminent au meme y : la liste etire ses lignes,
    le panneau passe en visuel a gauche / texte a droite au lieu de s'allonger sous une
@@ -2209,9 +2211,9 @@
    dans une grille). Specificite (0,2,0) contre (0,1,0), la regle passe. */
 .os-sk .incl .mention{margin-top:0}
 .os-sk .incl__hd{display:flex;align-items:center;gap:13px}
-.os-sk .incl h3{font-family:var(--display);font-weight:800;font-size:1.1rem;letter-spacing:-.025em;margin:0}
+.os-sk .incl h3{font-family:var(--display);font-weight:800;font-size:calc(1.1 * var(--os-rem));letter-spacing:-.025em;margin:0}
 .os-sk .incl .ico{width:32px;height:32px}
-.os-sk .incl ul{list-style:none;margin:0;padding:0;display:grid;gap:9px;color:var(--dim);font-size:1.02rem}
+.os-sk .incl ul{list-style:none;margin:0;padding:0;display:grid;gap:9px;color:var(--dim);font-size:calc(1.02 * var(--os-rem))}
 /* ⚠️ `display:flex` sur le `<li>` etait cale sur des items d'UN MOT (« Un fer a repasser »).
    Depuis que la ligne porte aussi le ROLE de l'outil, le `<b>` devenait une colonne flex a
    part : il se cassait sur deux lignes et laissait un trou de 100 px avant la suite de la
@@ -2222,7 +2224,7 @@
 .os-sk .incl li::before{content:"";display:inline-block;width:5px;height:5px;background:var(--pop);
   margin-right:11px;vertical-align:middle;position:relative;top:-1px}
 .os-sk .incl li b{color:var(--fg);font-weight:700}
-.os-sk .mention{margin-top:var(--s3);font-size:.92rem;color:var(--dim)}
+.os-sk .mention{margin-top:var(--s3);font-size:calc(.92 * var(--os-rem));color:var(--dim)}
 .os-sk .mention--mid{text-align:center}
 .os-sk .lede--flush{margin:0}
 
@@ -2240,7 +2242,7 @@
 .os-sk .faqwrap summary{
   display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--s3);align-items:center;
   padding:18px 18px 18px 20px;cursor:pointer;list-style:none;
-  font-family:var(--display);font-weight:700;font-size:1.02rem;letter-spacing:-.025em;line-height:1.22;
+  font-family:var(--display);font-weight:700;font-size:calc(1.02 * var(--os-rem));letter-spacing:-.025em;line-height:1.22;
 }
 .os-sk .faqwrap summary::after{
   content:"+";width:30px;height:30px;display:grid;place-items:center;flex:none;
@@ -2249,7 +2251,7 @@
 }
 .os-sk .faqwrap summary:hover::after{background:var(--fuse)}
 .os-sk .faqwrap details[open] summary::after{content:"−"}
-.os-sk .faqwrap p{margin:0;padding:0 20px 20px;color:var(--dim);max-width:56ch;font-size:1.02rem}
+.os-sk .faqwrap p{margin:0;padding:0 20px 20px;color:var(--dim);max-width:56ch;font-size:calc(1.02 * var(--os-rem))}
 
 /* ================= pied de page =================
    Remplace le CTA final (demande operateur du 2026-08-12). Le CTA collant reste la
@@ -2264,9 +2266,9 @@
 @media(min-width:760px){.os-sk .ft__top{grid-template-columns:minmax(0,1.5fr) repeat(3,minmax(0,1fr));gap:var(--s3)}}
 @media(min-width:1080px){.os-sk .ft__top{grid-template-columns:minmax(0,1.8fr) repeat(3,minmax(0,1fr));gap:var(--s4)}}
 .os-sk .ft__brand{display:grid;gap:var(--s2);align-content:start;min-width:0}
-.os-sk .ft__logo{font-family:var(--display);font-weight:800;font-size:1.5rem;letter-spacing:-.04em;color:var(--fg)}
+.os-sk .ft__logo{font-family:var(--display);font-weight:800;font-size:calc(1.5 * var(--os-rem));letter-spacing:-.04em;color:var(--fg)}
 .os-sk .ft__logo span{color:var(--pop)}
-.os-sk .ft__tag{margin:0;color:var(--dim);font-size:1rem;max-width:38ch;text-wrap:pretty}
+.os-sk .ft__tag{margin:0;color:var(--dim);font-size:calc(1 * var(--os-rem));max-width:38ch;text-wrap:pretty}
 .os-sk .ft__social{display:flex;gap:10px}
 .os-sk .ft__social a{
   display:grid;place-items:center;width:40px;height:40px;
@@ -2281,7 +2283,7 @@
   letter-spacing:.14em;text-transform:uppercase;color:var(--pop);
 }
 .os-sk .ft__col ul{margin:0;padding:0;list-style:none;display:grid;gap:9px}
-.os-sk .ft__col a{color:var(--dim);text-decoration:none;font-size:1rem;transition:color .18s ease}
+.os-sk .ft__col a{color:var(--dim);text-decoration:none;font-size:calc(1 * var(--os-rem));transition:color .18s ease}
 .os-sk .ft__col a:hover,.os-sk .ft__col a:focus-visible{color:var(--fg)}
 /* barre basse : marques de coin de la notice, comme les panneaux de la page */
 .os-sk .ft__bottom{
@@ -2309,17 +2311,17 @@
 .os-sk .sticky.is-on{transform:none}
 .os-sk .sticky__in{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--s3);align-items:center;padding-block:13px}
 .os-sk .sticky__l{display:grid;gap:5px;min-width:0}
-.os-sk .sticky__l strong{font-family:var(--display);font-weight:800;font-size:1.2rem;letter-spacing:-.03em;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.os-sk .sticky__l strong{font-family:var(--display);font-weight:800;font-size:calc(1.2 * var(--os-rem));letter-spacing:-.03em;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .os-sk .sticky__l span{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:var(--label);font-weight:600;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:rgba(19,17,16,.68)}
 .os-sk .sticky__l .ico{width:16px;height:16px}
 .os-sk .sticky__l .ico:not(:first-child){margin-left:10px}
-.os-sk .sticky__cta{padding:15px 26px;font-size:1rem;text-decoration:none;white-space:nowrap;gap:11px}
+.os-sk .sticky__cta{padding:15px 26px;font-size:calc(1 * var(--os-rem));text-decoration:none;white-space:nowrap;gap:11px}
 .os-sk .sticky__cta b{font-weight:800}
 @media(max-width:719px){
   .os-sk .sticky__in{padding-block:10px;gap:var(--s2)}
-  .os-sk .sticky__l strong{font-size:1rem}
+  .os-sk .sticky__l strong{font-size:calc(1 * var(--os-rem))}
   .os-sk .sticky__l span{display:none}
-  .os-sk .sticky__cta{padding:14px 18px;font-size:.94rem}
+  .os-sk .sticky__cta{padding:14px 18px;font-size:calc(.94 * var(--os-rem))}
 }
 @media(prefers-reduced-motion:reduce){.os-sk .sticky{transition:none}}
 .os-sk .rv{opacity:1}
@@ -2396,14 +2398,14 @@
      cinq univers occupaient 345 px a eux seuls. Les composants gardent leur dessin, ils
      perdent du rembourrage et de la vignette — ce sont des reperes, pas des affiches. */
   .os-sk .dpick__hd{padding:var(--s2) var(--s3)}
-  .os-sk .dpick__hd h2{font-size:1.12rem}
+  .os-sk .dpick__hd h2{font-size:calc(1.12 * var(--os-rem))}
   .os-sk .dpick__f{padding:var(--s2) var(--s3) 12px;gap:9px}
   .os-sk .dpick__f .ufil{padding:5px 10px 5px 5px;gap:0 8px}
   .os-sk .dpick__f .ufil__m{width:30px;height:30px}
-  .os-sk .dpick__f .ufil__n{font-size:.86rem}
+  .os-sk .dpick__f .ufil__n{font-size:calc(.86 * var(--os-rem))}
   .os-sk .dpick__f .ufil__c{font-size:9.5px}
-  .os-sk .dpick__f .nfil{padding:6px 10px;font-size:.82rem}
-  .os-sk .dpick__f .dpack button b{font-size:.92rem}
+  .os-sk .dpick__f .nfil{padding:6px 10px;font-size:calc(.82 * var(--os-rem))}
+  .os-sk .dpick__f .dpack button b{font-size:calc(.92 * var(--os-rem))}
   .os-sk .dpick__f .dpack__v{width:46px;aspect-ratio:1/1}
 
   /* ---- dire ce que chaque groupe FAIT ----
@@ -2504,7 +2506,7 @@
   .os-sk .dtray .dtray__d > div{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s2)}
   .os-sk .dtray .dtray__d dt{font-family:var(--label);font-weight:600;font-size:12.5px;color:var(--dim)}
   .os-sk .dtray .dtray__d dd{
-    margin:0;font-family:var(--display);font-weight:700;font-size:1rem;color:var(--fg);
+    margin:0;font-family:var(--display);font-weight:700;font-size:calc(1 * var(--os-rem));color:var(--fg);
     font-variant-numeric:tabular-nums;
   }
   /* le total se detache du detail par un filet, comme sur un recu */
@@ -2534,11 +2536,11 @@
   .os-sk .dpick__f{gap:6px;padding-bottom:8px}
   .os-sk .dpick__f .ufil{padding:3px 9px 3px 3px}
   .os-sk .dpick__f .ufil__m{width:26px;height:26px}
-  .os-sk .dpick__f .ufil__n{font-size:.82rem}
-  .os-sk .dpick__f .nfil{padding:5px 9px;font-size:.79rem}
+  .os-sk .dpick__f .ufil__n{font-size:calc(.82 * var(--os-rem))}
+  .os-sk .dpick__f .nfil{padding:5px 9px;font-size:calc(.79 * var(--os-rem))}
   .os-sk .dpick__f .dpack__v{width:38px}
   .os-sk .dpick__f .dpack button{padding:6px 10px;gap:0 9px}
-  .os-sk .dpick__f .dpack button b{font-size:.86rem}
+  .os-sk .dpick__f .dpack button b{font-size:calc(.86 * var(--os-rem))}
   .os-sk .dpick__f .dpack button u{padding:1px 5px;font-size:8.5px}
   .os-sk .dpick__f .ufil{padding:2px 8px 2px 2px}
   .os-sk .dpick__f .ufil__m{width:24px;height:24px}
@@ -2574,7 +2576,7 @@
    pas se ressembler sous peine de redevenir le meme tracker sur chaque section.
    Rendu en display 600 sur `--dim`, il se lit comme la question dont le H2 est la
    reponse — donc comme un dialogue, pas comme un libelle. */
-.os-sk .ask{font-family:var(--display);font-weight:600;font-size:clamp(1rem,1.35vw,1.15rem);
+.os-sk .ask{font-family:var(--display);font-weight:600;font-size:clamp(calc(1 * var(--os-rem)),1.35vw,calc(1.15 * var(--os-rem)));
      letter-spacing:-.02em;line-height:1.25;color:var(--dim);margin:0 0 10px;
      max-width:40ch;text-wrap:balance}
 .os-sk .hd .ask{margin-inline:auto}
@@ -2644,15 +2646,15 @@
    desktop, ça reste des titres importants qu'il faut lire ».
    Il a raison et c'est structurel : ce titre n'accompagne pas le module, il DECLENCHE le
    geste. C'est la seule instruction de la page qui demande une action immediate, elle ne
-   peut pas etre plus discrete qu'un chapeau de section. Elle monte donc a 2,3rem, juste
-   sous les H2 de section (2,4rem) : elle reste un titre de module, pas un titre de
+   peut pas etre plus discrete qu'un chapeau de section. Elle monte donc a 2,calc(3 * var(--os-rem)), juste
+   sous les H2 de section (2,calc(4 * var(--os-rem))) : elle reste un titre de module, pas un titre de
    section, mais elle se lit de la meme distance. */
 /* ⛔⛔ SELECTEUR EN `.how .bd__h`, ET C'EST OBLIGATOIRE. Ne pas le simplifier en `.bd__h`.
    Le module vit dans `<section class="sec how">`, donc la regle `.how h3` le matche —
    specificite (0,1,1) contre (0,1,0) pour `.bd__h`. Elle gagnait quel que soit l'ordre
    d'ecriture, et elle imposait DEUX choses :
-     · `font-size:1.12rem` — le titre restait a 20 px pendant que je le montais a 2,3 puis
-       2,4rem. Deux augmentations sans le moindre effet a l'ecran, et l'operateur qui le
+     · `font-size:calc(1.12 * var(--os-rem))` — le titre restait a 20 px pendant que je le montais a 2,3 puis
+       2,calc(4 * var(--os-rem)). Deux augmentations sans le moindre effet a l'ecran, et l'operateur qui le
        redisait a chaque fois. La regle etait juste, la cible ne l'ecoutait pas.
      · `display:flex` — le titre devenait un conteneur flex, donc ses deux `<span>` se
        posaient COTE A COTE en colonnes au lieu de couler comme du texte. C'est la meme
@@ -2661,7 +2663,7 @@
    > La regle : avant de croire qu'une valeur ne « prend pas », verifier qui d'autre
    > matche l'element. Ici il suffisait de lire la taille calculee. */
 .os-sk .how .bd__h{font-family:var(--display);font-weight:800;letter-spacing:-.035em;line-height:1.08;
-    font-size:clamp(1.75rem,3.1vw,2.4rem);margin:0;max-width:46ch;text-wrap:balance;
+    font-size:clamp(calc(1.75 * var(--os-rem)),3.1vw,calc(2.4 * var(--os-rem)));margin:0;max-width:46ch;text-wrap:balance;
     display:block;gap:0}
 
 .os-sk .bd__scene{display:grid;gap:var(--s3);align-items:start}
@@ -2680,14 +2682,14 @@
 /* l'invite : elle disparait au premier bead pose, elle n'a plus rien a dire apres */
 .os-sk .bd__hint{position:absolute;inset:12px;display:grid;place-items:center;pointer-events:none;
     background:rgba(12,11,11,.66);backdrop-filter:blur(2px);border-radius:2px}
-.os-sk .bd__hint p{font-family:var(--display);font-weight:800;font-size:clamp(1rem,2vw,1.3rem);
+.os-sk .bd__hint p{font-family:var(--display);font-weight:800;font-size:clamp(calc(1 * var(--os-rem)),2vw,calc(1.3 * var(--os-rem)));
     letter-spacing:-.02em;margin:0;text-align:center;max-width:16ch;line-height:1.2;color:var(--pearl)}
-.os-sk .bd__hint small{display:block;font-family:var(--body);font-weight:500;font-size:.8rem;
+.os-sk .bd__hint small{display:block;font-family:var(--body);font-weight:500;font-size:calc(.8 * var(--os-rem));
     color:var(--sand,#C9A87C);margin-top:8px;letter-spacing:0}
 
 .os-sk .bd__side{display:grid;gap:18px;align-content:start}
 .os-sk .bd__stat{border:1px solid var(--rule);border-radius:4px;padding:15px 17px}
-.os-sk .bd__n{font-family:var(--display);font-weight:800;font-size:clamp(2rem,4.4vw,2.7rem);
+.os-sk .bd__n{font-family:var(--display);font-weight:800;font-size:clamp(calc(2 * var(--os-rem)),4.4vw,calc(2.7 * var(--os-rem)));
     letter-spacing:-.04em;line-height:1;display:block;font-variant-numeric:tabular-nums}
 .os-sk .bd__l{font-family:var(--pixel);font-size:10px;letter-spacing:.08em;color:var(--dim);
     text-transform:uppercase;display:block;margin-top:8px}
@@ -2703,9 +2705,9 @@
 
 /* le module ne commente pas ce qu'il fait, il dit ce que la visiteuse comprend */
 .os-sk .bd__say{min-height:78px;padding-left:14px;border-left:1px solid var(--pop)}
-.os-sk .bd__say h4{font-family:var(--display);font-weight:800;font-size:1.04rem;letter-spacing:-.02em;
+.os-sk .bd__say h4{font-family:var(--display);font-weight:800;font-size:calc(1.04 * var(--os-rem));letter-spacing:-.02em;
     margin:0 0 6px;line-height:1.15}
-.os-sk .bd__say p{margin:0;color:var(--dim);font-size:.94rem;line-height:1.5}
+.os-sk .bd__say p{margin:0;color:var(--dim);font-size:calc(.94 * var(--os-rem));line-height:1.5}
 
 .os-sk .bd__pal{display:flex;flex-wrap:wrap;gap:6px}
 .os-sk .bd__pal b{display:flex;align-items:center;gap:6px;font-family:var(--pixel);font-size:9.5px;
@@ -2714,7 +2716,7 @@
 .os-sk .bd__pal i{width:13px;height:13px;border-radius:99px;display:block;flex:0 0 13px}
 
 .os-sk .bd__acts{display:flex;flex-wrap:wrap;gap:9px}
-.os-sk .bd__b{font-family:var(--body);font-weight:700;font-size:.9rem;border:0;border-radius:3px;
+.os-sk .bd__b{font-family:var(--body);font-weight:700;font-size:calc(.9 * var(--os-rem));border:0;border-radius:3px;
     padding:11px 17px;cursor:pointer;transition:transform .12s ease,filter .12s ease,color .12s ease}
 .os-sk .bd__b:active{transform:translateY(1px)}
 .os-sk .bd__b[hidden]{display:none}
@@ -2727,11 +2729,11 @@
    plus tot, c'est vendre a quelqu'un qui n'a pas encore ressenti ce qu'on lui vend. */
 .os-sk .bd__done{border:1px solid var(--pop);border-radius:4px;padding:18px;background:rgba(255,92,26,.07)}
 .os-sk .bd__done[hidden]{display:none}
-.os-sk .bd__done h4{font-family:var(--display);font-weight:800;font-size:1.16rem;letter-spacing:-.025em;
+.os-sk .bd__done h4{font-family:var(--display);font-weight:800;font-size:calc(1.16 * var(--os-rem));letter-spacing:-.025em;
     margin:0 0 8px;line-height:1.15}
-.os-sk .bd__done p{margin:0 0 15px;color:var(--dim);font-size:.94rem;line-height:1.5}
+.os-sk .bd__done p{margin:0 0 15px;color:var(--dim);font-size:calc(.94 * var(--os-rem));line-height:1.5}
 .os-sk .bd__done a{display:block;text-align:center;background:var(--pop);color:var(--void);
-    font-weight:700;font-size:.97rem;padding:13px;border-radius:3px;text-decoration:none}
+    font-weight:700;font-size:calc(.97 * var(--os-rem));padding:13px;border-radius:3px;text-decoration:none}
 
 /* ================================================================================
    §5 · LA REPARTITION DES BEADS
@@ -2742,7 +2744,7 @@
    d'apres ne fait que nommer ce que l'œil vient de constater.
    Les 8 comptes sont ceux du modele reel de l'operateur et somment a 1 808. */
 .os-sk .cnt__intro{max-width:62ch;margin:0 auto var(--s4);text-align:center;color:var(--dim);
-    font-size:clamp(1rem,1.4vw,1.15rem)}
+    font-size:clamp(calc(1 * var(--os-rem)),1.4vw,calc(1.15 * var(--os-rem)))}
 /* ⛔ DEUX COLONNES : le design MONTRE a gauche, son compte a droite. Sans le visuel,
    « celui-ci demande 794 beads » ne designe rien — releve par l'operateur, et c'est le
    reflexe « le sous-entendu ». Ils sont cote a cote et pas l'un sous l'autre parce que
@@ -2774,12 +2776,12 @@
    gauche dans un bordereau, pas centre dans une tuile de statistique. */
 .os-sk .cnt__tot{margin:0 0 var(--s3);display:grid;gap:3px}
 /* ⚠️ TRACKING A -.02em ET PAS -.05em, et c'est le separateur de milliers qui l'impose.
-   `toLocaleString('fr-FR')` insere une espace fine insecable ; a -.05em sur 4,4rem le
+   `toLocaleString('fr-FR')` insere une espace fine insecable ; a -.05em sur 4,calc(4 * var(--os-rem)) le
    creneau negatif la mangeait entierement et le total se lisait « 2472 ». Un chiffre
    de quatre rangs colle n'est plus un chiffre, c'est une reference. */
 .os-sk .cnt__tot b{font-family:var(--display);font-weight:800;letter-spacing:-.02em;line-height:.9;
-    font-size:clamp(2.8rem,5.4vw,4.4rem);color:var(--fg);font-variant-numeric:tabular-nums}
-.os-sk .cnt__tot span{color:var(--dim);font-size:1.02rem}
+    font-size:clamp(calc(2.8 * var(--os-rem)),5.4vw,calc(4.4 * var(--os-rem)));color:var(--fg);font-variant-numeric:tabular-nums}
+.os-sk .cnt__tot span{color:var(--dim);font-size:calc(1.02 * var(--os-rem))}
 /* les deux extremes se lisent en LIGNE : pastille, compte, nom, qualificatif. Les deux
    filets les detachent du total sans dessiner une carte de plus. */
 .os-sk .cnt__ext{list-style:none;margin:0 0 var(--s3);padding:var(--s2) 0;display:grid;gap:13px;
@@ -2787,14 +2789,14 @@
 .os-sk .cnt__ext li{display:grid;grid-template-columns:14px auto minmax(0,1fr) auto;
     align-items:baseline;gap:12px}
 .os-sk .cnt__ext .cnt__sw{align-self:center}
-.os-sk .cnt__ext b{font-family:var(--display);font-weight:800;font-size:1.4rem;letter-spacing:-.03em;
+.os-sk .cnt__ext b{font-family:var(--display);font-weight:800;font-size:calc(1.4 * var(--os-rem));letter-spacing:-.03em;
     color:var(--fg);font-variant-numeric:tabular-nums}
 .os-sk .cnt__ext i{font-family:var(--pixel);font-style:normal;font-size:9.5px;letter-spacing:.08em;
     text-transform:uppercase;color:var(--dim);white-space:nowrap}
 /* les deux paragraphes de cloture se touchaient : la chute et la phrase de garantie se
    lisaient comme un seul bloc. */
 .os-sk .cnt__one + .cnt__get{margin-top:var(--s2)}
-.os-sk .cnt__h{margin:0 0 18px;font-size:1.02rem;color:var(--dim);text-wrap:pretty}
+.os-sk .cnt__h{margin:0 0 18px;font-size:calc(1.02 * var(--os-rem));color:var(--dim);text-wrap:pretty}
 .os-sk .cnt__h b{color:var(--fg);font-family:var(--display);font-weight:800;letter-spacing:-.02em;
     font-variant-numeric:tabular-nums}
 
@@ -2808,13 +2810,13 @@
     align-items:center;gap:12px}
 .os-sk .cnt__sw{width:14px;height:14px;border-radius:3px;background:var(--c);
     box-shadow:inset 0 0 0 1px rgba(128,128,128,.28)}
-.os-sk .cnt__nm{font-size:.92rem;color:var(--dim);white-space:nowrap}
+.os-sk .cnt__nm{font-size:calc(.92 * var(--os-rem));color:var(--dim);white-space:nowrap}
 .os-sk .cnt__tk{display:block;height:6px;background:var(--rule);border-radius:99px;overflow:hidden}
 /* min-width : sans elle, une piste a 0,13 % ne peint aucun pixel et la ligne parait
    cassee. On veut « presque rien, mais quelque chose » — c'est l'argument. */
 .os-sk .cnt__tk i{display:block;height:100%;width:var(--w);min-width:3px;background:var(--fg);
     border-radius:99px;transform-origin:left}
-.os-sk .cnt__v{font-family:var(--display);font-weight:800;font-size:1.02rem;letter-spacing:-.02em;
+.os-sk .cnt__v{font-family:var(--display);font-weight:800;font-size:calc(1.02 * var(--os-rem));letter-spacing:-.02em;
     font-variant-numeric:tabular-nums;min-width:3.2ch;text-align:right}
 
 /* la ligne du rose vif : c'est la chute de la section, elle a droit a son accent */
@@ -2822,11 +2824,11 @@
 .os-sk .cnt__row--one .cnt__nm,.os-sk .cnt__row--one .cnt__v{color:var(--fg)}
 
 .os-sk .cnt__one{margin:20px 0 0;padding-top:16px;border-top:1px solid var(--rule);
-    font-size:clamp(1.02rem,1.5vw,1.18rem);color:var(--dim);text-wrap:pretty}
+    font-size:clamp(calc(1.02 * var(--os-rem)),1.5vw,calc(1.18 * var(--os-rem)));color:var(--dim);text-wrap:pretty}
 .os-sk .cnt__one b{color:var(--fg);font-weight:700}
 
 .os-sk .cnt__after{max-width:62ch;margin:var(--s4) auto 0;text-align:center}
-.os-sk .cnt__get{margin:0;font-size:clamp(1.02rem,1.5vw,1.18rem);color:var(--dim);text-wrap:pretty}
+.os-sk .cnt__get{margin:0;font-size:clamp(calc(1.02 * var(--os-rem)),1.5vw,calc(1.18 * var(--os-rem)));color:var(--dim);text-wrap:pretty}
 .os-sk .cnt__get b{color:var(--fg);font-weight:700}
 
 
@@ -2846,7 +2848,7 @@
 .os-sk .obj__d summary::-webkit-details-marker{display:none}
 .os-sk .obj__d summary::marker{content:""}
 .os-sk .obj__q{font-family:var(--display);font-weight:800;letter-spacing:-.03em;line-height:1.2;
-    font-size:clamp(1.02rem,1.8vw,1.28rem);text-wrap:balance}
+    font-size:clamp(calc(1.02 * var(--os-rem)),1.8vw,calc(1.28 * var(--os-rem)));text-wrap:balance}
 .os-sk .obj__x{position:relative;width:16px;height:16px;flex:0 0 16px}
 .os-sk .obj__x::before,.os-sk .obj__x::after{content:"";position:absolute;left:0;right:0;top:50%;
     height:1.6px;background:var(--pop);border-radius:2px;transform:translateY(-50%)}
@@ -2902,8 +2904,8 @@
 .os-sk .pk__in::after{bottom:-1px;right:-1px;border-left:0;border-top:0}
 .os-sk .pk__top{display:flex;align-items:flex-start;gap:var(--s2);margin-bottom:var(--s3)}
 .os-sk .pk__t{font-family:var(--display);font-weight:800;letter-spacing:-.035em;line-height:1.05;
-       font-size:clamp(1.3rem,4vw,1.7rem);margin:0}
-.os-sk .pk__s{margin:8px 0 0;color:rgba(245,237,224,.72);font-size:.92rem;text-wrap:pretty}
+       font-size:clamp(calc(1.3 * var(--os-rem)),4vw,calc(1.7 * var(--os-rem)));margin:0}
+.os-sk .pk__s{margin:8px 0 0;color:rgba(245,237,224,.72);font-size:calc(.92 * var(--os-rem));text-wrap:pretty}
 .os-sk .pk__x{margin-left:auto;flex:0 0 32px;width:32px;height:32px;border-radius:3px;
        border:1px solid rgba(245,237,224,.18);background:none;cursor:pointer;
        display:grid;place-items:center;position:relative}
@@ -2927,7 +2929,7 @@
 .os-sk .pk__tb tbody tr:last-child th,.os-sk .pk__tb tbody tr:last-child td{border-bottom:0}
 /* la colonne des libelles : etroite, alignee a gauche, elle ne rivalise pas avec les
    donnees. C'est une legende de ligne, pas une quatrieme colonne a comparer. */
-.os-sk .pk__tb th[scope=row]{text-align:left;font-weight:500;font-size:.82rem;
+.os-sk .pk__tb th[scope=row]{text-align:left;font-weight:500;font-size:calc(.82 * var(--os-rem));
         color:rgba(245,237,224,.66);width:31%;padding-left:0;text-wrap:pretty}
 .os-sk .pk__tb thead td{border-bottom:1px solid rgba(245,237,224,.1)}
 .os-sk .pk__tb thead th{padding:0 4px 10px}
@@ -2939,17 +2941,17 @@
         text-transform:uppercase;color:var(--pop);line-height:1.3;min-height:2.6em;
         display:flex;align-items:flex-end;justify-content:center;text-wrap:balance}
 .os-sk .pk__tb thead b{font-family:var(--display);font-weight:800;letter-spacing:-.04em;
-        font-size:1.55rem;line-height:1}
-.os-sk .pk__tb thead span{font-size:.72rem;color:rgba(245,237,224,.66)}
+        font-size:calc(1.55 * var(--os-rem));line-height:1}
+.os-sk .pk__tb thead span{font-size:calc(.72 * var(--os-rem));color:rgba(245,237,224,.66)}
 /* la colonne choisie se marque, sinon la modale ne dit pas ou en est la cliente */
 .os-sk .pk__tb thead [aria-current="true"]{background:rgba(255,92,26,.12);
         box-shadow:inset 0 0 0 1px var(--pop)}
-.os-sk .pk__tb tbody b{font-family:var(--display);font-weight:800;letter-spacing:-.03em;font-size:1.02rem}
+.os-sk .pk__tb tbody b{font-family:var(--display);font-weight:800;letter-spacing:-.03em;font-size:calc(1.02 * var(--os-rem))}
 .os-sk .pk__tb .ico{width:16px;height:16px;margin-inline:auto;color:var(--pop)}
 .os-sk .pk__sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
-.os-sk .pk__if td{font-size:.8rem;color:rgba(245,237,224,.72);line-height:1.35;text-wrap:pretty}
+.os-sk .pk__if td{font-size:calc(.8 * var(--os-rem));color:rgba(245,237,224,.72);line-height:1.35;text-wrap:pretty}
 .os-sk .pk__note{margin:var(--s3) 0 0;padding-top:14px;border-top:1px solid rgba(245,237,224,.1);
-        font-size:.86rem;color:rgba(245,237,224,.72);text-wrap:pretty}
+        font-size:calc(.86 * var(--os-rem));color:rgba(245,237,224,.72);text-wrap:pretty}
 .os-sk .pk__note b{color:var(--pearl);font-weight:700}
 
 /* ================================================================================
@@ -2969,9 +2971,9 @@
 }
 @media(min-width:620px){
   .os-sk .pk__in{padding:var(--s4)}
-  .os-sk .pk__tb th[scope=row]{font-size:.92rem}
+  .os-sk .pk__tb th[scope=row]{font-size:calc(.92 * var(--os-rem))}
   .os-sk .pk__tb td,.os-sk .pk__tb th{padding:13px 12px}
-  .os-sk .pk__tb thead b{font-size:1.9rem}
+  .os-sk .pk__tb thead b{font-size:calc(1.9 * var(--os-rem))}
 }
 @media(min-width:960px){
   /* ⚠️ LE PLATEAU PREND LA PART LA PLUS LARGE, et la colonne de droite est fixe.
