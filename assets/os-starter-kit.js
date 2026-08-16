@@ -1480,7 +1480,7 @@
 
   window.addEventListener('load', function(){ ScrollTrigger.refresh(); });
 })();
-(function(){let lm=null;setInterval(async()=>{try{const r=await fetch(location.href,{method:'HEAD',cache:'no-store'});const v=r.headers.get('last-modified');if(lm&&v&&v!==lm)location.reload();lm=v;}catch(e){}},1500);})();
+
 
 ;
 
@@ -1886,7 +1886,7 @@
       peindre(performance.now());
     }
 
-    fetch('proto/grille-renard.json').then(function(r){ return r.json(); }).then(function(g){
+    fetch(window.__osAssetBase + 'os-proto-grille-renard.json').then(function(r){ return r.json(); }).then(function(g){
       G = g;
       pose = new Uint8Array(G.l * G.h);
       var tot = root.querySelector('[data-bd-tot]');

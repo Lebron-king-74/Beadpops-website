@@ -70,6 +70,25 @@
 
 <div class="os-sk" id="os-sk-{{ section.id }}">
 
+<!--
+THESIS: Le Starter Kit se lit comme une notice de montage, pas comme une page produit. Il refuse
+le hero photo plein cadre et les cartes empilees de la categorie loisir creatif.
+OWN-WORLD: Rythme clair/sombre alterne. Les sections qui portent un dessin restent off-black,
+les sections de texte passent en beige, blanc casse ou orange plein. Trait fin uniforme, projection
+isometrique, lignes de rappel pointillees, numeros cercles, marques de repere aux angles.
+Texte uniquement blanc casse, off-black ou orange, jamais de sable. En-tetes centres.
+Bricolage Grotesque 800 tres serre, Silkscreen pour les numeros, Hanken Grotesk pour le reste.
+STORY: la visiteuse comprend qu'aucun talent n'est requis, ressent que ce sera satisfaisant et
+apaisant, croit que le rendu sera canon, et compose son pack.
+FIRST VIEWPORT: vue eclatee du kit a gauche, sticky, pendant que le panneau d'achat defile a droite.
+FORM: notice de montage, candidate 4 de la liste ordonnee, seed key 131182b6.
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
+-->
+<div class="rail"><span data-progress></span></div>
+<!-- Le sprite SVG des 12 icones a ete retire le 2026-08-12 : les icones ne sont
+     plus dessinees en code mais generees, et posees en masques alpha (voir .ico). -->
+
+
 
 <!-- ===== 1 · HERO ===== -->
 <section class="sec hero t-dark" id="top">
@@ -1083,6 +1102,174 @@
     </div>
   </div>
 </footer>
+
+
+
+<!-- ===== « COMMENT CHOISIR ? » — L'AIDE AU CHOIX DU PACK =====
+     ⛔ ELLE REMPLACE LA SECTION « QUEL PACK » DU BAS DE PAGE, supprimee par l'operateur.
+     Son raisonnement, et il tient : la question « je pars sur combien de designs ? » se
+     pose AU MOMENT OU ON CHOISIT, pas quinze ecrans plus bas. Une section de comparaison
+     en fin de page arrive apres la decision, ou jamais.
+
+     ⚠️ CE N'EST PAS UN SECOND CONFIGURATEUR. Elle ne selectionne rien elle-meme : cliquer
+     une colonne rejoue un clic sur la vraie vignette `.pack` de la buy box, donc c'est le
+     configurateur GELE qui fait le travail, avec sa logique de quota et son recalcul de
+     prix. Aucune ligne de sa mecanique n'est dupliquee ici.
+
+     ⚠️ UN VRAI `<table>`, et pas trois cartes. La consigne etait « tout visible en un
+     ecran, sans empiler ». Trois cartes empilent sur mobile par construction ; un tableau
+     garde les trois colonnes de front et fait lire EN LIGNE, ce qui est le geste de la
+     comparaison. C'est aussi la bonne semantique : ce sont des donnees comparables.
+
+     ⚠️ La ligne « beads livres » N'EXISTE PAS ici et ne doit pas y revenir : le compte
+     depend des designs que la cliente choisit, pas du pack. -->
+<dialog class="pk" data-pk aria-labelledby="pk-t">
+  <div class="pk__in">
+    <div class="pk__top">
+      <div>
+        <h2 class="pk__t" id="pk-t">Comment choisir&nbsp;?</h2>
+        <p class="pk__s">Le même Starter Kit dans les 3. Seul le nombre de designs change.</p>
+      </div>
+      <button class="pk__x" type="button" data-pk-close aria-label="Fermer"><i aria-hidden="true"></i></button>
+    </div>
+
+    <table class="pk__tb">
+      <thead>
+        <tr>
+          <td></td>
+          <th scope="col"><button type="button" data-pk-pick="5"><i>Pour commencer</i><b>5</b><span>designs</span></button></th>
+          <th scope="col"><button type="button" data-pk-pick="10"><i>Le plus choisi</i><b>10</b><span>designs</span></button></th>
+          <th scope="col"><button type="button" data-pk-pick="15"><i>Meilleur prix</i><b>15</b><span>designs</span></button></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Prix</th>
+          <td><b>44,90 €</b></td><td><b>69,90 €</b></td><td><b>89,90 €</b></td>
+        </tr>
+        <tr>
+          <th scope="row">Le design te revient à</th>
+          <td><b>8,98 €</b></td><td><b>6,99 €</b></td><td><b>5,99 €</b></td>
+        </tr>
+        <tr>
+          <th scope="row">Les 8 outils</th>
+          <td><i class="ico ico--check" aria-hidden="true"></i><span class="pk__sr">inclus</span></td>
+          <td><i class="ico ico--check" aria-hidden="true"></i><span class="pk__sr">inclus</span></td>
+          <td><i class="ico ico--check" aria-hidden="true"></i><span class="pk__sr">inclus</span></td>
+        </tr>
+        <tr class="pk__if">
+          <th scope="row">Tu le prends si</th>
+          <td>tu commences petit</td>
+          <td>tu en fais plusieurs</td>
+          <td>tu vises un mur</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="pk__note">Un design de plus, c'est <b>6,90 €</b>. Tu ne paies pas un dessin, tu paies les beads qu'il demande et le modèle qui va avec.</p>
+  </div>
+</dialog>
+
+<!-- ===== SELECTEUR DE DESIGNS, PLEIN ECRAN ===== -->
+<dialog class="dpick" data-dpick aria-label="Choisis tes designs">
+  <div class="dpick__in">
+    <div class="dpick__top" data-dtop>
+    <div class="dpick__hd">
+      <div>
+        <h2>Choisis tes designs</h2>
+      </div>
+      <button class="dpick__x" type="button" data-dpick-close aria-label="Fermer le catalogue">&times;</button>
+    </div>
+
+    <div class="dpick__f">
+      <div class="dbar" data-dbar>
+        <button type="button" data-sheet="pack" aria-expanded="false">
+          <span>Ton pack</span>
+          <em><i class="dbar__num" data-lab-pack-n>10</i><b data-lab-pack>designs</b></em>
+        </button>
+        <button type="button" data-sheet="univ" aria-expanded="false">
+          <span>Univers</span>
+          <em><i class="dbar__vig" data-lab-univ-v></i><b data-lab-univ>Tous</b></em>
+        </button>
+        <button type="button" data-sheet="niv" aria-expanded="false">
+          <span>Difficulté</span>
+          <em><i class="dbar__g" data-lab-niv-g></i><b data-lab-niv>Toutes</b></em>
+        </button>
+      </div>
+      <div class="dpack" role="group" aria-label="Taille de ton pack" data-dpack data-grp="pack"></div>
+      <div class="picker picker--u" role="group" aria-label="Filtrer par univers" data-fu data-grp="univ"></div>
+      <div class="picker picker--n" role="group" aria-label="Filtrer par niveau" data-fn data-grp="niv"></div>
+    </div>
+
+    </div>
+
+    <div class="dpick__g">
+      <div class="dgrid" data-dgrid role="group" aria-label="Designs disponibles"></div>
+      <p class="dgrid__none" data-dnone hidden>Aucun design ne correspond. Retire un filtre.</p>
+    </div>
+
+    <div class="dtray">
+      <div class="dtray__l">
+        <p class="dtray__c" data-dtray-c aria-live="polite"></p>
+        <div class="dtray__inc">
+          <div class="dtray__rows" data-dtray-s></div>
+          <button class="dtray__more" type="button" data-dmore aria-expanded="false" hidden></button>
+        </div>
+        <div class="dtray__xt" data-dtray-xt hidden>
+          <p class="dtray__xh"><span>En plus</span><b data-dtray-xp></b></p>
+          <div class="dtray__xs" data-dtray-xs></div>
+        </div>
+      </div>
+      <div class="dtray__r">
+        <!-- Le detail des deux montants, DESKTOP uniquement (masque par defaut, la
+             version mobile est figee). Un total unique obligeait a faire le calcul de
+             tete pour savoir ce que les designs en plus ont coute. -->
+        <dl class="dtray__d" data-dtray-d></dl>
+        <p class="dtray__p"><b data-dtray-p>69,90 €</b><span>tout compris</span></p>
+        <button class="cta" type="button" data-dpick-ok><i class="cta__tick cta__tick--a"></i><i class="cta__tick cta__tick--b"></i>Valider ma sélection</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<!-- ===== VISIONNEUSE DE DESIGN ===== -->
+<dialog class="dview" data-dview aria-label="Aperçu du design">
+  <button class="dview__x" type="button" data-dclose aria-label="Fermer l'aperçu">&times;</button>
+  <!-- pas d'attribut `src` tant que la visionneuse n'a pas servi : un `src=""` declenche
+       une requete vers la page elle-meme et compte comme une image cassee.
+       width/height : indice de ratio requis par Theme Check (ImgWidthAndHeight), inerte a
+       l'ecran — le CSS force width:100% / height:auto et le vrai ratio reprend la main au
+       chargement. Le dialog est ferme par defaut, impact visuel mesure : zero. -->
+  <figure class="dview__f"><img data-dimg alt="" width="1080" height="1080"></figure>
+  <div class="dview__b">
+    <p class="dview__meta"><span data-dmeta></span></p>
+    <h3 data-dtitle></h3>
+    <dl class="dspec">
+      <div><dt>Beads</dt><dd><span class="bead" aria-hidden="true"><img src="{{ 'os-beads-bead.webp' | asset_url }}" alt="" loading="lazy" decoding="async" width="320" height="320"></span><b data-dbeads></b></dd></div>
+      <div><dt>Difficulté</dt><dd><span class="dcard__d" data-dlv><i></i><i></i><i></i></span><span data-dlvn></span></dd></div>
+      <div><dt>Temps estimé</dt><dd><i class="ico ico--clock" aria-hidden="true"></i><span data-dtime></span></dd></div>
+    </dl>
+    <button class="cta cta--full" type="button" data-dpick></button>
+  </div>
+</dialog>
+
+<!-- ===== CTA COLLANT ===== -->
+<div class="sticky t-white" data-sticky>
+  <div class="wrap sticky__in">
+    <div class="sticky__l">
+      <strong>Starter Kit BeadPops</strong>
+      <span><i class="ico ico--undo" aria-hidden="true"></i>14 jours pour changer d'avis<i class="ico ico--truck" aria-hidden="true"></i>Livraison <span class="todo">à confirmer</span></span>
+    </div>
+    <a class="cta sticky__cta" href="#top"><i class="cta__tick cta__tick--a"></i><i class="cta__tick cta__tick--b"></i>Ajouter au panier <b data-sticky-price>69,90 €</b></a>
+  </div>
+</div>
+
+
+
+
+
+
+
 </div>
 
 <script src="{{ 'os-starter-kit.js' | asset_url }}" defer></script>
