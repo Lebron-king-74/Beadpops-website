@@ -6,6 +6,15 @@
   assign marketplace_url = creator_url | append: '#/marketplace'
   assign creator_editor_url = creator_url | append: '#/nouveau'
 %}
+{% comment %}
+  Le span #cart-icon-bubble (invisible, voir plus bas) n'est pas décoratif : le thème Dawn
+  (assets/cart.js) s'attend à trouver un élément portant cet ID sur TOUTE page où le panier peut
+  être modifié en Ajax (ex. changer une quantité sur /cart). Ce header custom remplace le header
+  Dawn standard (voir sections/header.liquid), qui est le seul autre endroit où cet ID existe
+  normalement — sans lui, la boucle de mise à jour des sections plante avant d'atteindre le total
+  du panier (main-cart-footer), qui reste alors figé à l'ancien prix après un changement de
+  quantité.
+{% endcomment %}
 <style>
 
 @font-face{font-family:Silkscreen;src:url({{ 'bp-silkscreen-400.woff2' | asset_url }}) format('woff2');font-display:swap}
@@ -25,7 +34,7 @@
   <div class="bp-shopbar bp-wrap">
     <a class="bp-shopbrand" href="{{ routes.root_url }}" aria-label="BeadPops, accueil">BEAD<span>POPS</span></a>
     <nav class="bp-shopnav" aria-label="Navigation principale"><a href="{{ starter_url }}">Starter Kit</a><a href="{{ recharges_url }}">Recharges de perles</a><a href="{{ outils_url }}">Outils</a><div class="bp-shopdesigns"><button type="button" data-bp-designs-trigger aria-expanded="false">Designs</button><div class="bp-shopdesigns__panel" data-bp-designs-panel aria-hidden="true"><a href="{{ creator_editor_url }}">Créer un design</a><a href="{{ marketplace_url }}">Trouver un design</a></div></div></nav>
-    <div class="bp-shopactions"><a class="bp-shopicon" href="{{ routes.cart_url }}" aria-label="Panier"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8h12l-1 12H7L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span class="bp-cartcount" data-bp-cart-count>0</span></a><button class="bp-shoptoggle" type="button" data-bp-drawer-trigger aria-label="Ouvrir le menu" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div>
+    <div class="bp-shopactions"><a class="bp-shopicon" href="{{ routes.cart_url }}" aria-label="Panier"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8h12l-1 12H7L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span class="bp-cartcount" data-bp-cart-count>0</span></a><span id="cart-icon-bubble" class="visually-hidden" aria-hidden="true"></span><button class="bp-shoptoggle" type="button" data-bp-drawer-trigger aria-label="Ouvrir le menu" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div>
   </div>
 </header>
 <nav class="bp-shopdrawer" data-bp-drawer aria-hidden="true" aria-label="Navigation mobile"><div class="bp-shopdrawer__primary"><a href="{{ starter_url }}">Starter Kit</a><a href="{{ recharges_url }}">Recharges de perles</a><a href="{{ outils_url }}">Outils</a><a href="{{ creator_editor_url }}">Créer un design</a><a href="{{ marketplace_url }}">Trouver un design</a></div></nav>
