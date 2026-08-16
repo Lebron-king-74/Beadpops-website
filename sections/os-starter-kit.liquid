@@ -1,0 +1,1083 @@
+{%- comment -%}
+  Fiche Starter Kit BeadPops — section generee depuis
+  «marques/beadpops/pages/starter-kit/work.html« par
+  «liquid-builder/lib/vers-section-liquid.mjs« puis «assemble-section.mjs«.
+
+  ⛔ NE PAS EDITER CETTE SECTION A LA MAIN. La source est le HTML local ; toute
+  correction faite ici serait perdue a la prochaine generation. On modifie «work.html«,
+  on regenere, on repousse.
+
+  ⚠️ Le CSS est porte sous «.os-sk« : la page a ete ecrite en autonome, ses selecteurs
+  sont generiques («.sec«, «.wrap«, «.cta«) et repeindraient le theme sans cette portee.
+{%- endcomment -%}
+
+{{ 'os-starter-kit.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  Les designs partent en JSON plutot qu'en JS genere : «json« echappe apostrophes et
+  accents des titres produits une fois pour toutes.
+  ⚠️ «variant« est indispensable — c'est lui qui part au panier pour les designs en plus.
+{%- endcomment -%}
+{%- assign designs = collections.all.products | where: 'type', 'Design' -%}
+{%- comment -%}
+  ⛔ LA BASE D'ASSETS EST INDISPENSABLE AU JS. Le catalogue, les outils, les photos de la
+  galerie et le bead du plateau sont composes en JavaScript, or «asset_url« n'existe pas
+  cote navigateur. On resout donc UNE url connue et on en retire le nom du fichier : il
+  reste le prefixe CDN du theme, que le JS concatene.
+  ⚠️ Sans ce pont, aucune de ces images ne charge — et le module de beads reste noir.
+{%- endcomment -%}
+<script>window.__osAssetBase = {{ 'os-beads-bead.webp' | asset_url | split: 'os-beads-bead.webp' | first | json }};</script>
+
+<script type="application/json" id="os-sk-designs">
+[
+{%- for d in designs -%}
+  {%- assign v = d.first_available_variant | default: d.variants.first -%}
+  {%- assign univers = '' -%}
+  {%- if d.tags contains 'univers-kawaii' -%}{%- assign univers = 'kawaii' -%}
+  {%- elsif d.tags contains 'univers-fantasy' -%}{%- assign univers = 'fantasy' -%}
+  {%- elsif d.tags contains 'univers-anime' -%}{%- assign univers = 'anime' -%}
+  {%- elsif d.tags contains 'univers-cartoons' -%}{%- assign univers = 'cartoons' -%}{%- endif -%}
+  {%- assign niveau = 'medium' -%}
+  {%- if d.tags contains 'niveau-facile' -%}{%- assign niveau = 'facile' -%}
+  {%- elsif d.tags contains 'niveau-boss' -%}{%- assign niveau = 'boss' -%}{%- endif -%}
+  {"t":{{ d.title | json }},"f":{{ d.featured_image | image_url: width: 640 | json }},"u":{{ univers | json }},"n":{{ niveau | json }},"v":{{ v.id | json }},"p":{{ v.price | json }}}{%- unless forloop.last -%},{%- endunless -%}
+{%- endfor -%}
+]
+</script>
+
+<div class="os-sk" id="os-sk-{{ section.id }}">
+
+
+<!-- ===== 1 · HERO ===== -->
+<section class="sec hero t-dark" id="top">
+  <div class="wrap hero__grid">
+    <div class="hero__side">
+      <div class="plate plate--photo">
+        <img src="{{ 'os-offer-kit-studio.webp' | asset_url }}" alt="Le Starter Kit BeadPops en studio : le coffret debout, le Bead Board, la Sort Box remplie de beads triés par couleur, les sachets de beads, le Ruban de masquage, le Papier de repassage, la Pince de précision, le BeadPen, les modèles imprimés et une création terminée sur son chevalet" width="1400" height="1045" fetchpriority="high" decoding="async">
+      </div>
+    </div>
+
+    <div class="buy tp">
+      <h1 data-split>Starter Kit BeadPops : ton pixel art, sans savoir dessiner</h1>
+      <p class="buy__sub">Des heures de calme, loin des écrans. Au bout, un pixel art que personne d'autre n'a.</p>
+      <ul class="chips">
+        <li>Fait par toi, de A à Z</li>
+        <li>Idéal pour décrocher des écrans</li>
+        <li>Aucun talent requis</li>
+        <li>Pour les ados comme les adultes</li>
+      </ul>
+      <!-- ⚠️ SEULE ENTORSE AU GEL DE LA BUY BOX, ET ELLE EST DEMANDEE PAR L'OPERATEUR.
+           Le selecteur de packs lui-meme n'est PAS touche : on ajoute un declencheur a
+           cote du titre d'etape, et la modale vit en dehors de la buy box, tout en bas du
+           document avec les autres `<dialog>`. La buy box ne gagne donc qu'un bouton.
+           ⚠️ `_empreinte-mobile.json` a ete RE-POSE apres ce changement : la reference
+           datait d'avant, l'ecart etait donc attendu et non un defaut. Le garde-fou
+           redevient valable a partir de cette reference-la. -->
+      <p class="step-hd"><b>Étape 1</b> Choisis ton pack
+        <button class="hlp" type="button" data-pk-open aria-haspopup="dialog">
+          <i class="hlp__q" aria-hidden="true">?</i>Comment choisir&nbsp;?
+        </button>
+      </p>
+      <ul class="packs" role="radiogroup" aria-label="Choisis ton pack">
+        {%- for variant in product.variants -%}
+          {%- assign quota = variant.title | split: ' ' | first | plus: 0 -%}
+          {%- assign unite = variant.price | divided_by: quota -%}
+          <li class="pack" role="radio" tabindex="0"
+              aria-checked="{% if forloop.index == 2 %}true{% else %}false{% endif %}"
+              data-pack="{{ quota }}"
+              data-variant="{{ variant.id }}"
+              data-price-cents="{{ variant.price }}"
+              data-price="{{ variant.price | money_without_currency }}"
+              {% unless variant.available %}data-epuise="1"{% endunless %}>
+            {%- if forloop.index == 2 -%}<span class="badge">Le plus choisi</span>
+            {%- elsif forloop.last -%}<span class="badge">Meilleur prix</span>
+            {%- else -%}<span class="badge badge--n">Pour commencer</span>{%- endif -%}
+            <span class="pack__shot">{% if variant.image %}{{ variant.image | image_url: width: 420 | image_tag: loading: 'lazy', alt: variant.title }}{% elsif product.featured_image %}{{ product.featured_image | image_url: width: 420 | image_tag: loading: 'lazy', alt: variant.title }}{% endif %}</span>
+            <span class="pack__n">{{ quota }} designs</span>
+            <span class="pack__p">{{ variant.price | money }}</span>
+            <span class="pack__u">{{ unite | money }}/design</span>
+          </li>
+        {%- endfor -%}
+      </ul>
+      <p class="step-hd"><b>Étape 2</b> Choisis tes designs</p>
+      <button class="dopen" type="button" data-dopen>
+        <!-- Un apercu du catalogue, dans le declencheur : « Ouvre le catalogue » ne dit
+             pas ce qu'il y a derriere. Trois vraies vignettes le disent en une image, et
+             c'est ce qu'on vient acheter. Le compteur qui vivait ici disait un etat que le
+             recapitulatif juste dessous porte deja. -->
+        <span class="dopen__peek" data-dpeek aria-hidden="true"></span>
+        <span class="dopen__t">
+          <b data-dopen-t>Ouvre le catalogue</b>
+          <span data-dopen-s>20 designs, 4 univers.</span>
+        </span>
+        <span class="dopen__go">Choisir</span>
+      </button>
+      <!-- Le recapitulatif reprend EXACTEMENT le vocabulaire du plateau du catalogue :
+           memes emplacements numerotes, meme croix de retrait, meme separation entre ce
+           qui est compris et ce qui s'ajoute. Deux surfaces, une seule langue — et une
+           seule fonction de rendu (`rendreSurface`), donc rien qui puisse diverger.
+           Il remplace l'ancien trio « vignettes en vrac + jauge + encadre d'etape 3 »,
+           qui ecrivait les trois memes chiffres a quatre endroits. -->
+      <div class="recap" data-recap hidden>
+        <p class="recap__h"><b data-chosen>0</b> / <b data-total>10</b> <span>compris dans ton pack</span></p>
+        <div class="meter"><span data-meter></span></div>
+        <div class="dtray__inc">
+          <div class="dtray__rows" data-rslots></div>
+          <button class="dtray__more" type="button" data-rmore aria-expanded="false" hidden></button>
+        </div>
+        <div class="dtray__xt" data-rxt hidden>
+          <p class="dtray__xh"><span>En plus</span><b data-rxp></b></p>
+          <div class="dtray__xs" data-rxs></div>
+        </div>
+      </div>
+      <div style="margin-top:var(--s3)">
+        <p class="cta-hint" data-cta-hint hidden></p>
+        <button class="cta cta--full" type="button" data-buy><i class="cta__tick cta__tick--a"></i><i class="cta__tick cta__tick--b"></i>Ajouter au panier <span data-total-price>69,90 €</span></button>
+        <div class="reassure">
+          <span><i class="reassure__b"><i class="ico ico--truck" aria-hidden="true"></i></i>Livraison</span>
+          <span><i class="reassure__b"><i class="ico ico--undo" aria-hidden="true"></i></i>Retour sous 14 jours</span>
+          <span><i class="reassure__b"><i class="ico ico--lock" aria-hidden="true"></i></i>Paiement sécurisé</span>
+        </div>
+      </div>
+      <div class="acc">
+        <!-- ⛔ COPY DES ACCORDEONS ALIGNE SUR `copy-v5.md` (§1, « Les 2 accordeons »),
+             demande de l'operateur le 2026-08-15.
+             ⚠️ UNE SEULE RETOUCHE AU TEXTE DE LA V5, ET ELLE EST OBLIGATOIRE : la v5 ecrit
+             « 6 outils ». Le kit en compte HUIT — l'operateur a fourni la composition
+             reelle apres la redaction de la v5, et le HANDOFF trace la correction. Recopier
+             la v5 au mot ici, c'etait reintroduire un fait faux dans la buy box, a l'endroit
+             meme ou la cliente decide. Le compte « 8 outils » vit a 4 endroits de la page,
+             ils bougent ensemble ou pas du tout.
+             ⚠️ La v5 ne definit que DEUX accordeons. Les deux autres (« Comment ca se
+             passe », « Livraison et retours ») ont ete ajoutes depuis et portent de la
+             reassurance que la v5 ne couvrait pas : ils sont CONSERVES, pas supprimes en
+             silence. A trancher par l'operateur s'il veut revenir a deux. -->
+        <details open><summary><i class="ico ico--loupe" aria-hidden="true"></i>C'est quoi, un design ?</summary><p>Un dessin en pixels, son modèle qui te dit où va chaque couleur, et tous les beads qu'il faut pour le faire. Tu choisis lesquels, on t'envoie le compte exact.</p></details>
+        <details><summary><i class="ico ico--box" aria-hidden="true"></i>Ce que tu reçois</summary><p>Les 8 outils, le modèle de chacun de tes designs en papier comme en numérique, et les beads comptés couleur par couleur. <span class="todo">quantités à confirmer</span></p></details>
+        <details><summary><i class="ico ico--clock" aria-hidden="true"></i>Comment ça se passe</summary><p>Tu installes ton modèle, tu poses tes beads case par case, puis tu fixes ta création. Compte plusieurs heures par design, en une ou deux sessions.</p></details>
+        <details><summary><i class="ico ico--undo" aria-hidden="true"></i>Et si je me trompe ?</summary><p>Rien n'est fixé tant que tu n'as pas terminé. Tu retires le bead à la pince, tu le replaces, autant de fois que tu veux. (On ne juge pas.)</p></details>
+        <details><summary><i class="ico ico--truck" aria-hidden="true"></i>Livraison et retours</summary><p><span class="todo">délai à confirmer</span>. Tu as 14 jours après réception pour changer d'avis.</p></details>
+      </div>
+      <div class="duo">
+        <h3>Prends-en 2. La soirée est meilleure.</h3>
+        <p>Deux kits, deux séries de designs, chacun son Bead Board. Et une table où personne ne regarde son téléphone. <span class="todo">remise à confirmer</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== BANDEAU DES 4 PILIERS =====
+     Conserve, et toujours juste apres la buy box : arbitrage operateur, copy-v5 § C. -->
+<div class="mq" aria-hidden="true">
+  <div class="mq__t" data-mq>
+    <span>Fait par toi</span><span>Satisfaisant à faire</span><span>Anti-stress</span><span>Résultat canon</span>
+    <span>Fait par toi</span><span>Satisfaisant à faire</span><span>Anti-stress</span><span>Résultat canon</span>
+    <span>Fait par toi</span><span>Satisfaisant à faire</span><span>Anti-stress</span><span>Résultat canon</span>
+  </div>
+</div>
+
+
+<!-- ===== 2 · LE RESULTAT =====
+     Job de la section : le DESIR. C'est la seule de la page dont le travail est de faire
+     rever, et c'est pour ca que son surtitre AFFIRME au lieu de questionner. -->
+<section class="sec sec--tight tr--cotes t-white">
+  <div class="wrap">
+    <div class="hd">
+      <!-- ⚠️⚠️ SURTITRE ARBITRE DEUX FOIS PAR L'OPERATEUR. NE PAS LE REMETTRE EN QUESTION.
+           J'y avais mis « Ca donne quoi, en vrai ? ». Refuse, puis re-refuse apres que je
+           l'aie reintroduit dans une reecriture globale. La raison : une question ouvre un
+           doute, et ici il faut une affirmation positive qui eveille le desir. « Trop
+           canon » est le registre Gen Z demande.
+           C'est aussi pour ca que cette section garde `.sur` (l'etiquette de marque) et
+           non `.ask` (la question du visiteur) : ce n'est pas sa voix a elle, c'est la
+           notre. -->
+      <p class="sur rv">Résultat trop canon</p>
+      <h2 class="h-lg rv">Ce que d'autres ont créé avec le même kit, <span class="pop">et exposé chez eux</span>.</h2>
+      <!-- ⛔ SOUS-TITRE SUPPRIME PAR L'OPERATEUR : « Aucun de ceux qui les ont faites ne
+           savait dessiner. » Ne pas le remettre.
+           C'est la deuxieme ligne que cette section perd, apres la legende sous la galerie.
+           Le job de la §2 est le DESIR : le surtitre affirme, le titre promet, et les
+           photos prouvent. Une phrase de plus entre le titre et les images retarde la seule
+           chose qui travaille ici. L'argument « personne ne sait dessiner » n'est pas perdu,
+           il est plaide en §10, dans les objections, ou il repond a un doute precis. -->
+    </div>
+  </div>
+  <div class="ugc rv" data-ugc>
+    <p class="ugc__sr">Créations partagées par la communauté BeadPops.</p>
+    <div class="ugc__row"><div class="ugc__track" data-ugc-track></div></div>
+    <div class="ugc__row ugc__row--rev"><div class="ugc__track" data-ugc-track></div></div>
+  </div>
+  <!-- ⛔ SUPPRIME PAR L'OPERATEUR (2026-08-14 soir) : la legende « Tes potes demandent ou
+       tu l'as achetee. Tu reponds que tu l'as faite. » Ne pas la reintroduire.
+       La v5 la proposait ici en retrogradant l'ancien H2 de la section « Fierte ». La
+       galerie se suffit : ajouter une phrase sous des images qui parlent deja, c'est
+       commenter ce qu'on vient de montrer. -->
+</section>
+
+<!-- ===== 3 · COMMENT CA MARCHE =====
+     ⛔ C'EST LA SECTION QUI INSTALLE LE VOCABULAIRE. Tout ce qui suit s'appuie dessus.
+     Mots poses ici, et utilisables seulement a partir d'ici : modele, case, Bead Board,
+     picot, Pince de precision, BeadPen, Papier de repassage, fer.
+     ⚠️ Le mot « grille » est BANNI de la page : on dit « case » et « picot ». Deux mots
+     concrets valent mieux qu'un mot abstrait, et « grille » n'etait jamais pose avant
+     d'etre employe — le lecteur butait dessus. -->
+<section class="sec how tr--iso t-dark" id="mecanisme">
+  <div class="wrap">
+    <div class="hd">
+      <p class="ask rv">Mais ça marche comment ?</p>
+      <h2 class="h-lg rv">3 étapes, et aucune <span class="pop">ne demande de savoir dessiner</span>.</h2>
+      <!-- ⛔ SOUS-TITRE SUPPRIME PAR L'OPERATEUR : « Chaque case a deja sa couleur, du
+           premier bead au dernier. » Ne pas le remettre.
+           ⚠️ VERIFIE AVANT DE COUPER : cette section reste celle qui INSTALLE LE
+           VOCABULAIRE, et le mot « case » etait ici. Il est toujours pose — l'etape 01 dit
+           « Ton modele donne la couleur de chaque case », donc rien ne se perd et les
+           sections suivantes peuvent continuer a l'employer.
+           (Historique : l'avant-derniere version disait « le modele DECIDE a ta place ».
+           Un modele imprime n'agit pas ; la formulation lui pretait une volonte.) -->
+    </div>
+    <div class="how__row">
+      <!-- ⛔⛔ CE COPY EST CELUI DE L'OPERATEUR, ET IL DECRIT LA METHODE DU RUBAN.
+           C'est la methode REELLE du kit, celle que le Ruban de masquage et le Perforator
+           servent : on colle, on perce, on RETOURNE, et on repasse hors du Bead Board.
+           ⚠️ NE PAS LA REMPLACER PAR LA METHODE DIRECTE (poser, couvrir de papier, repasser
+           sur la plaque). C'est ce que decrivent tous les tutoriels generiques du web, et
+           c'est FAUX pour ce kit : on repasserait sur les picots et on les ferait gondoler.
+           Le Perforator n'aurait plus aucun sens non plus.
+
+           ⚠️ UNE ERREUR DE FAIT CORRIGEE dans le copy fourni : « frottez le ruban pour que
+           chaque bead SE SOUDE ». Frotter ne soude rien, la soudure vient de la chaleur du
+           fer a l'etape 3. Le frottage fait ADHERER le ruban a chaque bead, pour qu'aucun
+           ne reste sur la plaque au moment de soulever. Corrige en « accroche au ruban ».
+
+           ⚠️ LONGUEUR ASSUMEE PAR L'OPERATEUR : 105 mots la ou les 3 etapes precedentes en
+           faisaient 19. Il l'a tranche en connaissance de cause — cette version ENSEIGNE la
+           methode, l'autre vendait vite. Ne pas la raccourcir sans le lui redemander.
+
+           ⚠️ LES 3 IMAGES SONT DES REMPLACANTES GENEREES, en attendant les visuels reels.
+           Cadrage tire de `video-references/ANALYSE.md` : 3/4 par-dessus l'epaule, plaque
+           inclinee, bureau reel en lumiere du jour. JAMAIS de plan zenithal ni de studio
+           sombre, les 6 vraies videos n'en montrent aucun. -->
+      <div class="rv">
+        <div class="how__shot"><img src="{{ 'os-how-etape-1-ruban.png' | asset_url }}" alt="Deux mains posent une bande de ruban de masquage sur un design de beads terminé, sur le Bead Board" loading="lazy" decoding="async" width="1024" height="1024"></div>
+        <h3><i>01</i>Pose les beads et le ruban</h3>
+        <ul class="how__l">
+          <li>Place tes beads une par une.</li>
+          <li>Pose le ruban de masquage sur tout le design.</li>
+          <li>Frotte sur toute la surface pour que chaque bead accroche.</li>
+        </ul>
+      </div>
+      <div class="rv">
+        <div class="how__shot"><img src="{{ 'os-how-etape-2-percer.png' | asset_url }}" alt="Une main perce de petits trous dans le ruban collé sur le design, à l'aide du Perforator" loading="lazy" decoding="async" width="1024" height="1024"></div>
+        <h3><i>02</i>Retourne et perce</h3>
+        <ul class="how__l">
+          <li>Perce le ruban en face des beads pour laisser l'air circuler.</li>
+          <li>Retourne le tout : le ruban en dessous, le côté brut face à toi.</li>
+        </ul>
+      </div>
+      <div class="rv">
+        <!-- ⚠️ L'ancien alt disait « la vapeur monte ». FAUX : le fer se passe SANS VAPEUR,
+             et la mention de securite le dit maintenant explicitement. -->
+        <div class="how__shot"><img src="{{ 'os-how-etape-3-repassage.png' | asset_url }}" alt="Un fer à repasser fait des cercles sur une feuille d'Ironing Paper posée sur le design retourné" loading="lazy" decoding="async" width="1024" height="1024"></div>
+        <h3><i>03</i>Le repassage, et le meilleur moment</h3>
+        <ul class="how__l">
+          <li>Pose l'Ironing Paper sur le ruban perforé.</li>
+          <li>Passe le fer en cercles pendant 10 à 20 secondes.</li>
+          <li>Laisse tiédir, décolle le ruban : le côté lisse et brillant apparaît.</li>
+        </ul>
+      </div>
+    </div>
+    <!-- ⚠️ « SANS VAPEUR » N'EST PAS UN DETAIL, c'est une consigne d'usage : la vapeur
+         deforme les beads et rate la fusion. Elle manquait, et une cliente qui rate sa
+         premiere creation ne recommande pas. Vient de la documentation reelle du produit
+         (cf. HANDOFF, methode de sourcing par Apercu IA). -->
+    <p class="safety rv"><i class="ico ico--iron" aria-hidden="true"></i>Fer chaud, sans vapeur : surface protégée, tu restes à côté, tu laisses refroidir avant de décoller.</p>
+
+    <!-- ⚠️ LE MODULE EST DANS LE `.wrap`, ET C'EST CE QUI GARANTIT SON ALIGNEMENT.
+         Il en est SORTI un moment pour saigner jusqu'aux bords ; son contenu se calait
+         alors sur une gouttiere `clamp()` a moi, qui ne tombait pas sur celle du `.wrap`.
+         Le titre demarrait 8 px a gauche des etapes juste au-dessus — releve par
+         l'operateur. Faire coincider deux gouttieres a la main, c'est se garantir un
+         decalage a la premiere fois ou l'une des deux bouge.
+         Dans le `.wrap`, l'alignement est vrai par construction. Le module reste bien
+         plus large qu'avant : ce qui l'etranglait etait son `max-width:1000px`, pas le
+         conteneur. Il vaut maintenant toute la largeur de lecture. -->
+    <div class="bd rv" data-bd>
+      <!-- ⛔ LE GESTE N'EST PAS DANS LE TITRE, ET IL NE DOIT PAS Y REVENIR.
+           Trois versions ont ete essayees et rejetees :
+             1. « Passe la souris sur le modele » — decrivait la manipulation au lieu
+                d'inviter, et faux au doigt.
+             2. « Pose tes beads a la souris, comme tu le ferais chez toi » — contradiction
+                dans la meme phrase : chez soi, justement, on ne pose pas ses beads a la
+                souris.
+             3. « Pose tes beads a la souris. Chez toi, ce sera a la pince. » — juste, mais
+                l'operateur l'a trouve lourd, et il l'est : le titre porte alors deux
+                informations qui ne servent pas le meme moment.
+           Le titre garde donc la seule chose qui vaut ici : l'invitation et la projection.
+           Le GESTE vit dans l'invite du plateau (« Passe ta souris ici » / « Glisse ton
+           doigt ici »), qui bascule selon le pointeur et se lit au moment ou on en a
+           besoin — c'est-a-dire les yeux sur le plateau, pas sur le titre. -->
+      <div class="bd__head">
+        <h3 class="bd__h">Essaie tout de suite. <span class="pop">Pose tes beads comme tu le ferais chez toi.</span></h3>
+      </div>
+      <div class="bd__scene">
+        <div class="bd__board">
+          <canvas data-bd-cv></canvas>
+          <div class="bd__hint" data-bd-hint>
+            <p data-bd-invite>Passe ta souris ici.</p>
+          </div>
+        </div>
+        <div class="bd__side">
+          <div class="bd__stat">
+            <b class="bd__n" data-bd-n>0</b>
+            <span class="bd__l">beads posés sur <span data-bd-tot>0</span></span>
+            <div class="bd__bar"><i data-bd-bar></i></div>
+          </div>
+          <!-- Le module ne commente pas ce qu'il fait, il dit ce que le visiteur est en
+               train de comprendre. Les paliers sont dans le JS. -->
+          <div class="bd__say" data-bd-say>
+            <h4 data-bd-say-t>Chaque case a sa couleur</h4>
+            <p data-bd-say-p>Elle est déjà sur ton modèle, du premier bead au dernier.</p>
+          </div>
+          <!-- ⛔ LE CTA DU PIC D'EXPERIENCE. Il n'existe PAS avant la derniere case, et ce
+               n'est pas un detail de mise en scene : le proposer plus tot, c'est vendre a
+               quelqu'un qui n'a pas encore ressenti ce qu'on lui vend. A la derniere case,
+               l'ecart entre ce qu'elle vient de faire a la souris et ce qu'elle ferait avec
+               ses mains est a son maximum. C'est la, et nulle part ailleurs. -->
+          <div class="bd__done" data-bd-done hidden>
+            <!-- ⚠️ « avec une souris » est devenu « sur un écran » : la phrase doit tenir
+                 au doigt comme a la souris. Et elle y gagne — l'ecart qu'on vend n'est pas
+                 souris contre main, c'est ECRAN contre objet, ce que toute la marque dit
+                 par ailleurs. Une seule phrase, juste sur les deux appareils. -->
+            <h4>Ça, c'était sur un écran.</h4>
+            <!-- ⛔ REECRIT LE 2026-08-15. L'ancienne version disait : « Le vrai a du poids,
+                 un petit clic sous le doigt a chaque bead, et il finit sur ton mur. »
+                 Rejetee par l'operateur, et elle cumulait quatre defauts nommes :
+                   · « Le vrai A DU POIDS » est une construction ecrite. A l'oral on
+                     reprend par le pronom : « le vrai, IL pese ».
+                   · poids / clic / mur est un TRIPLET separe par des virgules, que
+                     `feedback.md` nomme comme signal n°2 du style qui sent l'IA.
+                   · « il finit sur ton mur » : « il » ne renvoie a rien.
+                   · trois idees dans une phrase, donc aucune ne frappe.
+                 La nouvelle en garde DEUX, chacune sur sa phrase, et nomme son sujet. -->
+            <p>Ta vraie création, tu la tiens dans la main. Et elle finit au mur.</p>
+            <a href="#top">Je compose mon Starter Kit</a>
+          </div>
+          <div class="bd__pal" data-bd-pal></div>
+          <div class="bd__acts">
+            <button class="bd__b bd__b--go" type="button" data-bd-fin hidden>Finir la création</button>
+            <button class="bd__b bd__b--gh" type="button" data-bd-raz>Recommencer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 7 · CE QUE CA TE FAIT =====
+     SECTION NOUVELLE. Le trou de la chaine : apres §6 elle sait qu'elle PEUT le faire, mais
+     personne ne lui a encore dit ce que ca lui APPORTE. Ce sont les benefices interieurs.
+     Elle absorbe les deux anciennes sections « Addictif » et « La moitie du plaisir », qui
+     plaidaient la meme chose a deux endroits.
+
+     ⛔ « THERAPEUTIQUE » EST INTERDIT, ET CE N'EST PAS NEGOCIABLE. `reglementaire.md` le
+     nomme : allegations sante/bien-etre non prouvees (therapeutique, soigne l'anxiete) →
+     rester sur le RESSENTI (apaisant, anti-stress) sans promesse medicale. Le ressenti est
+     decrit, la promesse medicale n'est pas faite. Ne pas reintroduire le mot.
+
+     ✅ RECOUVREMENT §7/§8 TRANCHE PAR L'OPERATEUR (2026-08-14) : cette section garde
+     l'EMOTION, la §8 garde les REPERES DE TEMPS. Ne pas redire ici ce que la §8 chiffre,
+     ne pas redire la-bas ce qu'on ressent ici. -->
+<section class="sec tr--millim t-white">
+  <div class="wrap">
+    <div class="hd">
+      <p class="ask rv">Concrètement, ça m'apporte quoi ?</p>
+      <h2 class="h-lg rv">4 choses que tu ressens en posant, <span class="pop">et qu'aucun écran ne te donne</span>.</h2>
+      <!-- ⛔ SOUS-TITRE SUPPRIME PAR L'OPERATEUR : « Ca commence a la premiere rangee et ca
+           ne s'arrete plus. » Ne pas le remettre. Le titre annonce deja les 4 points, et
+           les 4 cartes les portent : la ligne n'ajoutait rien qu'une phrase de plus a lire
+           avant d'y arriver. -->
+    </div>
+    <div class="bento">
+      <!-- ⛔ COPY RACCOURCI SUR DEMANDE DE L'OPERATEUR (2026-08-14 soir), sur les regles de
+           Sebastien : Do 16 (mots courts), Do 29 (paragraphes courts — « donner la sensation
+           qu'il y a moins a lire »), Do 18 (langage actif), Don't 9 (ne pas tourner autour du
+           pot). Les 4 cartes passent de 3-4 lignes a 1-2.
+           Deux fautes corrigees au passage :
+             · « dix minutes » s'ecrit « 10 minutes » (Do 19 : les chiffres se scannent) ;
+             · « Pas achete, pas imprime, pas commande » etait un triplet staccato, que
+               `feedback.md` interdit nommement comme signal n°2 du style qui sent l'IA.
+           ⚠️ Ne PAS rallonger ces cartes en croyant les enrichir : chacune porte une seule
+           idee, et c'est la consigne.
+
+           ⛔⛔ CE COPY EST CELUI DE L'OPERATEUR, MOT POUR MOT. NE PAS LE REECRIRE.
+           Il me l'a donne le 2026-08-14 apres deux tentatives ratees de ma part. Mes
+           versions etaient MECANIQUES : « tu tombes dans ta bulle » (personne ne dit ca, on
+           dit « tu ES dans ta bulle »), « tu vois le dessin arriver » (personne ne voit un
+           dessin arriver — on voit sa creation PRENDRE FORME SOUS SES YEUX).
+           Sa consigne : « parle un francais avec lequel on s'exprime a l'oral ».
+           C'est Do 9 (voler les mots du client) + Do 10 (entamer la conversation) +
+           Don't 15 (« ecrivez comme les gens parlent ») des 50 regles.
+
+           > LE TEST, avant toute ligne de cette page : est-ce que la cible le DIRAIT a voix
+           > haute a un pote ? Si non, c'est faux, MEME SI C'EST JOLI. Raccourcir ne suffit
+           > pas : une phrase courte peut rester une phrase ecrite.
+
+           ⚠️⚠️ « PRESQUE THERAPEUTIQUE » : ARBITRAGE EXPLICITE DE L'OPERATEUR, NE PAS LE
+           RETIRER. J'avais substitue « presque hypnotique » parce que `reglementaire.md`
+           interdit nommement « therapeutique » (allegation sante/bien-etre non prouvee).
+           Je l'ai signale, et l'operateur a tranche : « garde therapeutique, presque
+           therapeutique, garde-le. » C'est sa decision et elle est prise en connaissance
+           de cause. Une session suivante ne doit PAS la « corriger » au nom du fichier
+           reglementaire — elle doit lui reposer la question si le sujet se rouvre.
+
+           ⚠️ Une seule substitution subsiste : « placer les PERLES une a une » -> « les
+           beads ». `feedback.md` bannit « perles » hors couche SEO et `check-copy.mjs` le
+           refuse — c'est du vocabulaire de marque, pas du reglementaire.
+           Tout le reste est verbatim. -->
+      <div class="bt bt--a bt--txt rv"><span class="bt__n">01</span><h3>Ça te met dans ta bulle</h3><p>Le <em>flow</em>, cet état où tu es tellement absorbé que le temps file à une vitesse incroyable. <strong>Résultat, tu te sens bien.</strong></p></div>
+      <div class="bt bt--b bt--img bt--photo rv"><img src="{{ 'os-scenes-absorbe.webp' | asset_url }}" alt="Quelqu'un penché sur son Bead Board en fin de journée, le téléphone posé à côté" loading="lazy" decoding="async" width="1000" height="671"></div>
+      <div class="bt bt--c rv">
+        <div class="bt__t"><span class="bt__n">02</span><h3>C'est apaisant et presque thérapeutique</h3><p>Choisir les couleurs, trier, placer les beads une à une… c'est doux, répétitif, relaxant. <strong>Parfait pour décompresser.</strong></p></div>
+        <div class="bt--img bt--photo"><img src="{{ 'os-scenes-clic-macro.webp' | asset_url }}" alt="Une pince dépose un bead orange sur un picot du Bead Board" loading="lazy" decoding="async" width="1400" height="1128"></div>
+      </div>
+      <div class="bt bt--d bt--img bt--photo rv"><img src="{{ 'os-scenes-rangee.webp' | asset_url }}" alt="Une rangée de beads alignés qui accrochent la lumière" loading="lazy" decoding="async" width="1400" height="939"></div>
+      <div class="bt bt--e bt--txt rv"><span class="bt__n">03</span><h3>Tu ressens de la fierté</h3><p>Tu vois ta création prendre forme et ça change tout. À la fin, tu as un résultat propre, joli, <strong>fait par toi</strong>.</p></div>
+      <div class="bt bt--f bt--txt rv"><span class="bt__n">04</span><h3>Zéro talent requis (vraiment)</h3><p>Pas besoin de savoir dessiner : le modèle te guide. Tu avances à ton rythme, <strong>le rendu reste propre et canon.</strong></p></div>
+      <div class="bt bt--g bt--img bt--photo rv"><img src="{{ 'os-scenes-avant-apres.webp' | asset_url }}" alt="Le même design à moitié rempli puis terminé" loading="lazy" decoding="async" width="1400" height="1875"></div>
+    </div>
+
+
+
+  </div>
+
+  <!-- ⚠️ LE BANDEAU EST HORS DU `.wrap`, ET C'EST CE QUI LE FAIT SAIGNER JUSQU'AUX BORDS.
+       Demande de l'operateur : « faudrait que le scroll sorte du bord de l'ecran des deux
+       cotes, pas qu'on cree une sorte de masque ». Dans le `.wrap`, les pistes s'arretaient
+       a la largeur du conteneur avec du vide de chaque cote : ca se lisait comme un cadre,
+       pas comme un defilement continu.
+       ⛔ On ferme donc le `.wrap` avant et on le rouvre apres, exactement comme le ruban
+       UGC de la §2. On NE passe PAS par `width:100vw` + marges negatives : `100vw` compte
+       la barre de defilement et rouvre un debordement horizontal, que la sonde surveille.
+       -->
+    <!-- ⛔ SECTION DES PROFILS, ajoutee le 2026-08-15 sur demande de l'operateur, avec ses
+         cibles et sa reference visuelle (bandeau a deux pistes, une vers la droite, une
+         vers la gauche). Elle vit DANS la section des benefices, juste avant le CTA :
+         l'ordre voulu est « voila ce que ca t'apporte » -> « voila a qui c'est fait » ->
+         « alors vas-y ». La question finale n'est pas decorative, c'est la marche du CTA.
+
+         ⚠️ DEUX ARBITRAGES CONTRE LA LISTE FOURNIE, et les deux sont imposes par la page :
+           1. « Les enfants (et adultes) ayant besoin de canaliser leur attention » est
+              retire. La carte objection dit, avec le copy de l'operateur lui-meme, « un
+              enfant n'a pas la motricite pour ca ». Garder les deux, c'est se contredire a
+              deux sections d'ecart. Le profil SURVIT sous sa forme adulte : « tu ne tiens
+              pas en place ».
+           2. « Mario, Pokemon, Zelda » ne peuvent pas s'ecrire. `reglementaire.md`
+              l'interdit jusque dans les alt et le SEO, et `test-refonte-v5` porte un
+              controle « zero licence nommee ». On passe par les CATEGORIES, exactement
+              comme le catalogue le fait deja avec ses univers.
+
+         ⚠️ Le bandeau reprend la mecanique du ruban UGC (`.ugc__track`) : le jeu de
+         libelles est pose DEUX fois et la piste se translate de -50 %. Pas une deuxieme
+         invention, la meme technique. C'est aussi le deuxieme bandeau defilant de la page,
+         ce que le detecteur signale ; c'est un arbitrage assume de l'operateur.
+
+         ⚠️ Les libelles sont ECRITS A LA DEUXIEME PERSONNE et pas en etiquettes de persona
+         (« les perfectionnistes », « les hyperconnectes »). Une etiquette se lit comme un
+         classement marketing ; « tu ranges tout par couleur » se reconnait. C'est Do 9,
+         voler les mots du client, et ca prepare la question qui suit. -->
+    <div class="who rv">
+      <h3 class="who__h">C'est fait pour toi si…</h3>
+      <div class="who__row">
+        <div class="who__track">
+          <span class="who__c">Tu n'arrives pas à décrocher</span>
+          <span class="who__c">Tu as grandi avec Mario</span>
+          <span class="who__c">Tu ne tiens pas en place</span>
+          <span class="who__c">Tu ranges tout par couleur</span>
+          <span class="who__c">Tu customises tout chez toi</span>
+          <span class="who__c">Tu n'arrives pas à décrocher</span>
+          <span class="who__c">Tu as grandi avec Mario</span>
+          <span class="who__c">Tu ne tiens pas en place</span>
+          <span class="who__c">Tu ranges tout par couleur</span>
+          <span class="who__c">Tu customises tout chez toi</span>
+          <span class="who__c">Tu n'arrives pas à décrocher</span>
+          <span class="who__c">Tu as grandi avec Mario</span>
+          <span class="who__c">Tu ne tiens pas en place</span>
+          <span class="who__c">Tu ranges tout par couleur</span>
+          <span class="who__c">Tu customises tout chez toi</span>
+          <span class="who__c">Tu n'arrives pas à décrocher</span>
+          <span class="who__c">Tu as grandi avec Mario</span>
+          <span class="who__c">Tu ne tiens pas en place</span>
+          <span class="who__c">Tu ranges tout par couleur</span>
+          <span class="who__c">Tu customises tout chez toi</span>
+        </div>
+      </div>
+      <div class="who__row who__row--rev">
+        <div class="who__track">
+          <span class="who__c">8 heures d'écran par jour</span>
+          <span class="who__c">Tu as fini Zelda trois fois</span>
+          <span class="who__c">Team Pokémon depuis toujours</span>
+          <span class="who__c">Mangas et animes à fond</span>
+          <span class="who__c">Tu veux juste penser à rien</span>
+          <span class="who__c">8 heures d'écran par jour</span>
+          <span class="who__c">Tu as fini Zelda trois fois</span>
+          <span class="who__c">Team Pokémon depuis toujours</span>
+          <span class="who__c">Mangas et animes à fond</span>
+          <span class="who__c">Tu veux juste penser à rien</span>
+          <span class="who__c">8 heures d'écran par jour</span>
+          <span class="who__c">Tu as fini Zelda trois fois</span>
+          <span class="who__c">Team Pokémon depuis toujours</span>
+          <span class="who__c">Mangas et animes à fond</span>
+          <span class="who__c">Tu veux juste penser à rien</span>
+          <span class="who__c">8 heures d'écran par jour</span>
+          <span class="who__c">Tu as fini Zelda trois fois</span>
+          <span class="who__c">Team Pokémon depuis toujours</span>
+          <span class="who__c">Mangas et animes à fond</span>
+          <span class="who__c">Tu veux juste penser à rien</span>
+        </div>
+      </div>
+      <p class="who__q">Tu te reconnais ? Ou tu penses déjà à quelqu'un ?</p>
+    </div>
+
+  <div class="wrap">
+    <!-- ⛔ TOUS LES CTA DE PAGE DISENT LE MEME GESTE DEPUIS LE 2026-08-15 : « Je compose
+         mon Starter Kit ». Ne pas les rediversifier en « j'ajoute au panier » ou « je
+         prends ».
+         Arbitrage de l'operateur, et c'est une question d'HONNETETE de promesse, pas de
+         style : ces quatre boutons pointent tous sur `#top`, c'est-a-dire sur le
+         CONFIGURATEUR. On y choisit un pack et des designs. L'ajout au panier vient
+         APRES, et il a son propre bouton dans la buy box. Un CTA qui annonce « j'ajoute
+         au panier » et qui livre un selecteur de packs promet une etape qu'il ne tient
+         pas — c'est Do 23, « plus on sait ce qu'on trouvera, plus on clique ».
+         ⚠️ Le CTA COLLANT dit toujours « Ajouter au panier » et pointe pourtant sur
+         `#top` : meme ecart. Il n'est PAS corrige ici parce qu'il fait partie du
+         perimetre GELE. A remonter a l'operateur, pas a trancher tout seul.
+         ⚠️ L'uniformite est voulue : Do 22, repeter les messages cles aux endroits
+         strategiques. La variation se fera dans ce qui ENTOURE le bouton, jamais en
+         faisant dire au bouton une action qu'il n'execute pas. -->
+    <!-- ▸ CTA INTERMEDIAIRE 1 · regle du template Offre (« CTA reguliers entre les
+         sections »). Place juste apres les benefices interieurs : c'est le premier pic
+         d'envie de la page. Il renvoie a la buy box, il ne la duplique pas. -->
+    <div class="ctarow">
+      <a class="cta rv" href="#top"><i class="cta__tick cta__tick--a"></i><i class="cta__tick cta__tick--b"></i>Je compose mon Starter Kit</a>
+    </div>
+    <p class="mention mention--mid rv">14 jours pour changer d'avis · Paiement sécurisé</p>
+  </div>
+</section>
+
+<!-- ===== 4 · LE STARTER KIT =====
+     ⛔ Chaque outil dit maintenant A QUOI IL SERT VRAIMENT, et part du PROBLEME qu'il
+     regle. L'ancienne version ne disait jamais pourquoi l'outil existe.
+     ⚠️ Le Ruban de masquage etait completement faux : ce n'est pas un maintien pour
+     ranger, c'est ce qui permet de DECOLLER le dessin du Bead Board d'un seul bloc. Sans
+     lui, on ne peut simplement pas sortir sa creation de la plaque. Les 7 videos reelles
+     de `video-references/` l'ont montre.
+     Le copy des 6 outils vit dans le tableau `TOOLS` du JS, pas ici. -->
+<section class="sec tr--hachures t-dark" id="kit">
+  <div class="wrap">
+    <div class="hd">
+      <p class="ask rv">Je reçois quoi ?</p>
+      <h2 class="h-lg rv">8 outils dans le Starter Kit, <span class="pop">et tu ne les rachètes plus jamais</span>.</h2>
+      <!-- ⛔ SOUS-TITRE SUPPRIME PAR L'OPERATEUR : « Chacun regle un probleme precis que tu
+           rencontrerais sans lui. » Ne pas le remettre.
+           Troisieme sous-titre de section retire dans la meme passe, et la logique est
+           constante : il ANNONCAIT ce que la section allait montrer, alors que le
+           selecteur juste dessous le montre. Dire puis montrer, c'est faire lire deux fois.
+           L'idee n'est pas perdue — elle vit dans le copy de chaque outil, qui part du
+           probleme qu'il regle, et dans l'instruction « Choisis un outil pour voir le
+           probleme qu'il regle ». -->
+    </div>
+    <!-- ⚠️ ORDRE DEMANDE PAR L'OPERATEUR (2026-08-14 soir) : la carte d'abord, l'instruction
+         ENTRE la carte et les vignettes, les vignettes en dessous.
+         L'instruction est ainsi collee a ce qu'elle commande, au lieu de flotter au-dessus
+         d'une carte qui est deja remplie quand on arrive.
+         ⚠️ L'ordre du DOM reste l'ordre de LECTURE : le panneau (`role="tabpanel"`) est
+         avant sa liste d'onglets, et les onglets le referencent par `aria-controls`, donc
+         le lien est explicite et rien ne se perd au clavier. Ne pas « reparer » cet ordre
+         avec un `order` CSS : ca desynchroniserait la lecture visuelle et la lecture vocale. -->
+    <div class="sel rv">
+      <div class="sel__stage" data-selstage role="tabpanel"></div>
+      <p class="sel__step"><span>1</span>Choisis un outil pour voir le problème qu'il règle.</p>
+      <div class="sel__picker" role="tablist" aria-label="Les 8 outils du kit" data-selpick></div>
+    </div>
+    <div class="incl">
+      <div class="rv">
+        <!-- ⚠️ LE FER N'EST PAS DANS LE KIT, arbitrage de l'operateur. Son ROLE est explique
+             ici quand meme : `50-regles.md` Don't 2, « ne sous-entendez rien, votre client
+             ne doit rien deduire ». Dire « pas de fer » sans dire a quoi il sert laisse la
+             cliente se demander si elle peut faire sans. « Sans vapeur » est une consigne
+             d'usage, pas un detail : la vapeur deforme les beads. -->
+        <div class="incl__hd"><i class="ico ico--iron" aria-hidden="true"></i><h3>Ce qui n'est pas dans le Starter Kit</h3></div>
+        <ul><li><b>Un fer à repasser classique</b>, impérativement sans vapeur. Sa chaleur uniforme fait fondre les beads juste assez pour qu'ils se soudent.</li></ul>
+        <p class="mention">Petites pièces, hors de portée des jeunes enfants. Âge conseillé 6 ans et plus.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 5 · UN DESIGN, C'EST UN COMPTE DE BEADS =====
+     ⛔ LA SECTION CŒUR. C'est elle qui fait comprendre ce qu'on achete reellement.
+
+     ⛔ LES TROIS GARDE-FOUS DU CHIFFRE, a ne jamais retirer. L'operateur a donne un modele
+     reel : 1 808 beads en 8 couleurs. J'avais mis ce chiffre dans le TITRE comme si
+     c'etait la valeur de TOUS les designs. C'est FAUX : la renarde du catalogue en demande
+     2 472 en 11 couleurs, et la fourchette reelle va de 1 000 a 3 500.
+       1. le titre ne porte AUCUN chiffre
+       2. l'ecart est annonce des le sous-titre
+       3. le bloc chiffre est cadre par « celui-ci, par exemple »
+     ⚠️ La ligne « beads livres » du tableau des packs a ete SUPPRIMEE pour la meme raison :
+     le configurateur laisse la cliente choisir ses designs, donc le compte depend de SES
+     choix et ne peut pas s'annoncer par pack. -->
+<section class="sec tr--millim t-white" id="compte">
+  <div class="wrap">
+    <div class="hd">
+      <!-- ⛔ ENTREE REPRISE LE 2026-08-15. L'operateur : « le copy n'est vraiment pas
+           clair, il n'est pas bien amene, tout ca nous detache completement du truc. »
+           Le defaut etait STRUCTUREL, pas une affaire de mots : la section empilait
+           QUATRE entrees — surtitre, titre, `.lede`, puis `.cnt__intro` — avant que le
+           visuel apparaisse. On lisait trois fois avant de voir une seule fois.
+
+           1. LE SURTITRE NE CHAINAIT PLUS. « Attends, un design c'est quoi au juste ? »
+              avait ete ecrit quand cette section suivait « Comment ca marche ». Depuis le
+              reordonnancement elle suit LE STARTER KIT : la visiteuse vient de voir les
+              8 outils, elle ne se demande plus ce qu'est un design, elle se demande ce
+              qu'elle recoit AVEC. Le surtitre pose donc cette question-la.
+           2. LE `.lede` DISAIT DEJA CE QUE LE BLOC CHIFFRE DIT. Il annoncait « Celui-ci
+              en demande 794 » trois centimetres au-dessus de `.cnt__h`, qui dit « Celui-ci
+              demande 794 beads, repartis en 8 couleurs ». Le meme chiffre, deux fois, a
+              deux pas d'ecart. C'est exactement la regle des sous-titres du HANDOFF : un
+              `.lede` qui ANNONCE fait lire deux fois. Il saute.
+           ⚠️ Rien n'est perdu : l'ordre de grandeur (« un plus grand en demandera
+           plusieurs milliers ») vit toujours dans `.mention` en bas de section, avec sa
+           fourchette et son `.todo`. -->
+      <p class="ask rv">Les beads, j'en reçois combien ?</p>
+      <h2 class="h-lg rv">Le dessin ne coûte rien. <span class="pop">Ce que tu paies, ce sont les beads.</span></h2>
+    </div>
+
+    <p class="cnt__intro rv">Un bead, c'est un pixel. Chaque design a donc son propre compte, qui dépend de sa taille et de son niveau de détail.</p>
+
+    <!-- ⛔ LE VISUEL EST OBLIGATOIRE, PAS DECORATIF. Releve par l'operateur : sans lui,
+         « CELUI-CI demande N beads » ne designe RIEN. Le lecteur n'a aucun referent et la
+         section entiere flotte. C'est le reflexe « le sous-entendu » de `reflexes.md` :
+         le visiteur ne deduit rien, ce qui n'est pas montre n'existe pas.
+
+         ⚠️ L'IMAGE ET LES CHIFFRES VIENNENT DE LA MEME SOURCE, et c'est non negociable.
+         Afficher un design et les chiffres d'un autre, c'est le piege de chiffre du
+         HANDOFF sous une forme plus difficile a voir : tout parait juste, rien ne l'est.
+
+         ⛔ SOURCE CHANGEE LE 2026-08-15 : ce n'est plus le renard de demonstration, c'est
+         UN VRAI MODELE, fourni par l'operateur. Le HANDOFF attendait ce jour-la — il
+         disait « pour y revenir, il faut SON IMAGE, jamais l'un sans l'autre ». C'est fait.
+           · image   `assets/offer/design-exemple.webp`, recadree de sa planche (le bandeau
+                     de l'app de generation est tombe au recadrage, la grille et les cotes
+                     restent) ;
+           · comptes les 11 valeurs de la legende de CETTE planche : 577, 536, 357, 289,
+                     255, 202, 111, 62, 46, 27, 10. Somme verifiee = 2 472, exactement le
+                     total imprime en tete de la planche ;
+           · hex     PRELEVES AU PIXEL sur les pastilles de la meme legende par
+                     `liquid-builder/lib/lit-legende.mjs`. Les noms francais decrivent la
+                     couleur relevee, ils n'inventent aucune reference produit.
+         ⚠️ La 11e pastille (H2, blanche) n'est pas detectee par le balayage automatique —
+         elle se confond avec le fond de la planche. Elle a ete echantillonnee a part et
+         vaut #ffffff. Si on relit une autre planche, VERIFIER le nombre de pastilles
+         trouvees contre le nombre de codes de la legende avant de faire confiance au
+         resultat : il en manquera une a chaque fois qu'un modele emploie du blanc.
+         ⚠️ Le `.cnt__sw` porte un anneau interne gris, c'est lui qui rend la pastille
+         blanche visible sur la section claire. Ne pas le retirer.
+
+         ⚠️ Le renard reste disponible : `proto/grille-renard.json` + `rend-grille.mjs` le
+         regenerent a l'identique si on veut revenir a un exemple neutre. -->
+
+    <div class="cnt rv" data-cnt>
+      <figure class="cnt__ph">
+        <img src="{{ 'os-offer-design-exemple.webp' | asset_url }}" alt="Le modèle imprimé d'un design : une grille de 62 cases sur 66, chaque case portant le code de la couleur du bead à poser" width="1080" height="1140" loading="lazy" decoding="async">
+        <figcaption>62 × 66 cases</figcaption>
+      </figure>
+
+      <!-- ⛔ COLONNE DE DROITE REFAITE LE 2026-08-15. Le skill dataviz tranche la forme
+           AVANT la couleur, et sa premiere question est « est-ce meme un graphique ? ».
+           Ici la reponse est NON, pour deux raisons de fond :
+             1. onze series dont quatre oranges quasi identiques (#f47a2f, #ec9059,
+                #fc9379, #ffd1b8). Une barre empilee les rendrait indistinguables, et je
+                ne peux pas les re-teinter pour les separer : ce sont les VRAIES couleurs
+                du produit. La couleur EST la donnee, pas un encodage au choix.
+             2. le travail de la section n'est pas « compare onze categories », c'est
+                « le compte est exact ». Ca se dit avec DEUX chiffres, pas onze.
+           La barre empilee de onze segments a donc ete retiree, et la liste des onze
+           lignes avant elle : la legende imprimee sur la planche, a gauche, porte deja
+           le detail code par code.
+           Ce qui reste dit ce que la planche ne dit pas : le TOTAL, et l'AMPLITUDE.
+           577 d'un cote, 10 de l'autre — un compte qui descend a dix unites ne peut pas
+           passer pour une estimation. C'est l'argument de la section en deux lignes. -->
+      <div class="cnt__data">
+        <p class="cnt__tot"><b data-cnt-tot="2472">2 472</b><span>beads, en 11 couleurs</span></p>
+
+        <ul class="cnt__ext">
+          <li><span class="cnt__sw" style="--c:#010101"></span><b class="cnt__v" data-cnt-v="577">577</b><span class="cnt__nm">Noir</span><i>le plus posé</i></li>
+          <li><span class="cnt__sw" style="--c:#fc9379"></span><b class="cnt__v" data-cnt-v="10">10</b><span class="cnt__nm">Corail clair</span><i>le moins posé</i></li>
+        </ul>
+
+        <p class="cnt__one">Le corail clair ne sert que 10 fois dans tout le design. <b>Les 10 sont dans ton sachet.</b></p>
+        <p class="cnt__get">Tu ne reçois pas une feuille. Tu reçois <b>le compte exact du design que tu as choisi</b>, trié couleur par couleur, et le modèle qui te dit où va chacun.</p>
+      </div>
+    </div>
+
+    <div class="cnt__after rv">
+      <p class="mention">Les plus petits tournent autour de 800 beads, les plus détaillés dépassent 3 500. <span class="todo">fourchette à valider</span></p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===== 9 · APRES =====
+     Le degrade blanc detache cette section de la §8, blanche elle aussi : un aplat
+     identique les collait en un seul bloc de deux ecrans. Il reste dans la famille du
+     blanc — le beige `--paper` a ete supprime de la page, ne pas le rouvrir par ici. -->
+<section class="sec tr--iso t-dark">
+  <div class="wrap">
+    <div class="hd">
+      <p class="ask rv">Une fois ta création finie ?</p>
+      <!-- ⛔⛔ CE TITRE POSE UNE TENSION, IL NE RACONTE PAS LA SECTION. Ne pas revenir en
+           arriere. L'ancien disait « Tu l'exposes, quelqu'un te demande comment, et la
+           prochaine il la fait avec toi » : c'etait les TROIS POINTS, dans l'ordre, en une
+           phrase. Le point 3 en reprenait meme les mots. Resultat, rien n'arrivait — on
+           lisait la meme histoire deux fois, une fois vite puis une fois lentement.
+           C'est le defaut du « sommaire place avant la page », deja paye sur l'ancienne §3.
+
+           ⚠️ Cette ligne etait le SOUS-TITRE, et elle avait ete supprimee avec les trois
+           autres sous-titres de section. C'etait une erreur de tri : les trois autres
+           ANNONCAIENT ce que leur section allait montrer, celle-ci pose une thèse et cree
+           l'attente que les 3 points resolvent. On avait garde le resume et jete l'argument.
+           Remontee en H2 sur arbitrage de l'operateur. -->
+      <h2 class="h-lg rv">Le meilleur moment n'est pas la fin. <span class="pop">C'est juste après.</span></h2>
+    </div>
+    <ul class="wway">
+      <li class="wway__i">
+        <figure class="wway__ph"><img src="{{ 'os-scenes-fierte-chez-toi.webp' | asset_url }}" alt="Une création en pixel art accrochée au mur au-dessus d un bureau" loading="lazy" decoding="async" width="1400" height="1045"></figure>
+        <div class="wway__t"><p class="wway__k"><span>01</span>Chez toi</p><h3>Tu accroches ta création à la meilleure place de ta chambre</h3></div>
+      </li>
+      <li class="wway__i">
+        <figure class="wway__ph"><img src="{{ 'os-scenes-fierte-cadeau.webp' | asset_url }}" alt="Deux personnes devant une création accrochée, l une la montre à l autre" loading="lazy" decoding="async" width="1400" height="1045"></figure>
+        <div class="wway__t"><p class="wway__k"><span>02</span>Devant les autres</p><!-- ⛔ LA DERNIERE PHRASE REFERME LA BOUCLE DE LA PAGE, ne pas la retirer.
+                 Toute la fiche vend « eteins l'ecran », et jusqu'ici le payoff ne rebranchait
+                 jamais dessus : on parlait des compliments sans dire ce qu'ils changent.
+                 « Tu n'es plus celle qui scrolle, tu es celle qui fabrique » est le seul
+                 endroit ou l'axe de la marque revient au moment de la fierte.
+                 ⚠️ Elle remplace « il demande si tu peux lui montrer », qui disait deja ce
+                 que le point 3 raconte en entier — on ne l'annonce plus deux fois. -->
+              <h3>Tout le monde va te demander comment tu as fait ça</h3></div>
+      </li>
+      <li class="wway__i">
+        <figure class="wway__ph"><img src="{{ 'os-scenes-fierte-a-deux.webp' | asset_url }}" alt="Deux personnes penchées chacune sur son Bead Board" loading="lazy" decoding="async" width="1400" height="1045"></figure>
+        <div class="wway__t"><p class="wway__k"><span>03</span>À deux</p><h3>Du coup, la prochaine création, vous la faites à deux</h3></div>
+      </li>
+    </ul>
+
+    <!-- ▸ CTA INTERMEDIAIRE 2 · variante differente du premier, comme le template Offre
+         l'exige (« CTA reguliers entre les sections »).
+         ⚠️ Il vivait dans la section « Quel pack », supprimee par l'operateur au profit de
+         la modale « Comment choisir ? » de la buy box. Il est RELOGE ici plutot que perdu :
+         sans lui il ne resterait qu'un seul CTA intermediaire sur toute la page, et c'est
+         precisement l'oubli que la confrontation au template avait releve. -->
+    <div class="ctarow">
+      <a class="cta rv" href="#top"><i class="cta__tick cta__tick--a"></i><i class="cta__tick cta__tick--b"></i>Je compose mon Starter Kit</a>
+    </div>
+    <p class="mention mention--mid rv">Livraison estimée entre le <span class="todo">date</span> et le <span class="todo">date</span> · 14 jours pour changer d'avis</p>
+  </div>
+</section>
+
+
+<!-- ===== 11 · LES OBJECTIONS =====
+     Le surtitre REPOND (deuxieme forme). Elle a un doute precis, on ne lui pose pas une
+     question de plus.
+     ⚠️ « Ca va rendre moche » : l'ancienne reponse disait « le rendu ne depend pas de ta
+     main, il depend de la grille ». Mot jamais pose, ET formulation qui DIMINUE la cible,
+     ce que `feedback.md` interdit nommement. La nouvelle dit la meme preuve a l'endroit :
+     tout le monde obtient le meme resultat. Ca rassure au lieu de rabaisser. -->
+<!-- ⛔ REFONTE DU 2026-08-15, DEMANDE DE L'OPERATEUR : l'accordeon `.obj` est remplace par
+     le DAMIER photo / aplat orange (reference Goodroots, capture fournie), et le fond de
+     section passe au degrade blanc.
+     Le composant `.ways` existait DEJA en CSS, construit sur cette meme reference dans une
+     passe precedente, et n'avait jamais recu de balisage. On le rebranche, on n'en ecrit
+     pas un deuxieme.
+     ⚠️ Le commentaire du composant disait « les aplats sont off-black et non orange,
+     l'operateur a interdit tout fond orange de surface ». C'est PERIME : le CSS porte deja
+     le degrade orange, et l'operateur le redemande nommement ici. Commentaire corrige.
+
+     ⚠️ ORDRE DES TUILES : photo, carte, carte, photo, photo, carte, carte, photo.
+     C'est le seul ordre qui donne le vrai damier EN MOBILE (2 colonnes), et c'est la
+     capture mobile que l'operateur a fournie. En desktop (4 colonnes) chaque rangee
+     devient photo, carte, carte, photo — symetrique plutot qu'alternee. Les deux ne sont
+     pas conciliables avec un seul ordre de DOM ; le mobile a la priorite.
+
+     ⛔⛔ LES 4 REPONSES SONT LE COPY DE L'OPERATEUR, FOURNI LE 2026-08-15. NE PAS LES
+     REECRIRE. Elles remplacent les miennes, y compris celle de « pour enfants » qu'il
+     m'avait deja fait corriger une fois. Sa premiere objection a change d'intitule :
+     « Je ne sais pas dessiner du tout » est devenue « Je ne suis pas creatif ».
+
+     RETOUCHES, et chacune est imposee par une regle de la marque, aucune par le style :
+       · vouvoiement -> tutoiement (x7)      `feedback.md`, refuse par `check-copy.mjs`
+       · « perles » -> « beads » (x4)        `feedback.md`, vocabulaire de marque
+       · « la plaque » -> « le Bead Board »  on nomme le produit, pas un generique
+       · « une pince a epiler » -> « une Pince de precision »   idem
+       · « un meuble IKEA » -> « un meuble en kit »   `reglementaire.md` : jamais une marque
+       · les etiquettes de note (« La reponse cash : », « L'illusion d'optique (Le recul) : »)
+         ne sont pas passees a l'ecran, c'etaient des reperes de redaction
+
+     ⛔ DEUX CONFLITS DE FAIT NON TRANCHES, signales a l'operateur, PAS resolus ici :
+       1. TAILLE DES BEADS. Son texte dit « Mini de 2 millimetres » puis « ces perles de
+          2,5 mm ». La page affiche 2,6 mm partout (ici, la FAQ, le module). J'ai garde
+          2,6 mm : ecrire un autre chiffre a trois centimetres du meme fait, c'est le
+          piege de chiffre du HANDOFF. Si le kit vend bien du 2 mm, c'est TOUTE la page
+          qui bouge, pas cette carte.
+       2. AGE. Son texte dit « uniquement a partir de 10 ans ». La page dit « age
+          conseille 6 ans et plus » en §4 et dans la FAQ. Les deux ne peuvent pas coexister,
+          et c'est une mention de SECURITE (`reglementaire.md` : petites pieces). Je n'ai
+          donc repris aucun age dans cette carte, en attendant son arbitrage.
+
+     ⛔ PUIS SOUSTRAITES (2026-08-15, methode « less is more », visuel fourni par
+     l'operateur : on RAYE des mots, on ne reformule pas). 201 mots -> 145, 28 % en moins.
+     Les survivants gardent leur ordre ET leur forme ; seule la ponctuation se referme
+     sur les trous.
+       creatif    31 -> 21   « Ce n'est pas un probleme, car », « semblable a », « a monter »
+       moche      57 -> 48   « tres », « que ce soit brut », « les yeux s'adaptent », « meme »
+       enfants    54 -> 32   « et les plus precis », « a cause de la taille »,
+                             « c'est tellement minuscule qu' », et la redite sur les doigts
+       finir      59 -> 44   « ou a la colle qui durcit », « sur le Bead Board »,
+                             « pendant », « si ca te chante »
+     ⚠️ AUCUN FAIT N'EST TOMBE : les 2,6 mm, la Pince, le fer, les semaines, les 10 par
+     jour et le mois sont tous encore la. Ce qui part est du remplissage ou une redite —
+     « un enfant n'a pas la motricite » et « impossible de les poser avec les doigts »
+     disaient la meme chose deux fois.
+     ⛔ DEUXIEME TOUR SUR LES DEUX CARTES LONGUES, demande par l'operateur : « moche » et
+     « finir » faisaient deux fois la hauteur des deux autres. 48 -> 30 et 44 -> 30 mots.
+     Les quatre cartes tiennent maintenant entre 21 et 32 mots.
+     ⚠️ CE TOUR-LA A COUPE DES ARGUMENTS, PAS DU REMPLISSAGE — le premier avait deja pris
+     tout le gras. Ce qui est parti, et ce que ca coute :
+       moche  · « C'est impossible : si le modele est bon, le rendu sera bon. »
+                 → redit ce que la carte « creatif » etablit deja (c'est le modele qui
+                   decide). Cout reel : la reponse perd son « non » frontal.
+              · « C'est le principe du pixel art. »
+                 → une etiquette posee sur une demonstration qui vient d'avoir lieu.
+       finir  · « Non, tu geres ton temps comme tu veux. »
+                 → une affirmation que les deux phrases suivantes PROUVENT.
+              · « Contrairement a la peinture qui seche, »
+                 → vrai renfort, mais « des semaines » fait le meme travail en plus court.
+                   Cout reel : on perd la comparaison a la categorie.
+     ⛔ NE PAS EN FAIRE UN TROISIEME. Il ne reste plus que des faits : le geste du fer,
+     la duree, la cadence, les 2,6 mm, la Pince. Couper encore, c'est retirer une raison
+     d'acheter, plus une longueur. -->
+
+<section class="sec sec--degrade tr--millim t-white">
+  <div class="wrap">
+    <div class="hd">
+      <p class="sur rv">On te répond franchement</p>
+      <h2 class="h-lg rv">4 trucs que tu es en train de te dire, <span class="pop">et nos réponses cash</span>.</h2>
+    </div>
+    <div class="ways" data-ways>
+      <figure class="ways__ph"><img src="{{ 'os-etapes-premiere-3-motif.webp' | asset_url }}" alt="Un motif à moitié rempli, déjà reconnaissable, les picots nus au premier plan" loading="lazy" decoding="async" width="1200" height="509"></figure>
+      <div class="ways__c" data-onglet="Pas créatif">
+        <i class="ico ico--obj-modele" aria-hidden="true"></i>
+        <h3>« Je ne suis pas créatif. »</h3>
+        <p>Cette activité ne demande aucune créativité. <strong>C'est de l'exécution pure</strong> : un puzzle, un meuble en kit, un coloriage à numéros.</p>
+      </div>
+      <div class="ways__c" data-onglet="Ça rendra moche">
+        <i class="ico ico--obj-recul" aria-hidden="true"></i>
+        <h3>« Ça va rendre moche. »</h3>
+        <p>De près, ce ne sont que des carrés de plastique, c'est normal. <strong>Mais dès que tu recules d'un mètre, les pixels se mélangent et le motif devient net et stylé.</strong></p>
+      </div>
+      <figure class="ways__ph"><img src="{{ 'os-etapes-premiere-4-fer.webp' | asset_url }}" alt="Une création décollée du plateau, tenue à deux mains devant une fenêtre en fin de journée" loading="lazy" decoding="async" width="1200" height="509"></figure>
+      <figure class="ways__ph"><img src="{{ 'os-scenes-clic-macro.webp' | asset_url }}" alt="Une pince dépose un bead orange sur un picot du Bead Board" loading="lazy" decoding="async" width="1400" height="1128"></figure>
+      <div class="ways__c" data-onglet="Pour enfants">
+        <i class="ico ico--obj-minuscule" aria-hidden="true"></i>
+        <!-- ⚠️ TROISIEME REDACTION DE CETTE REPONSE, et la bonne est celle de l'operateur.
+             1. la mienne parlait de 2,6 mm et du millier de cases : elle repondait a
+                « est-ce assez dur ? », que personne ne demande ;
+             2. j'ai corrige en « ou ca finit » (encadre au mur, le puzzle, le diamond
+                painting) — juste sur le fond, mais ce n'etait toujours pas son angle ;
+             3. le sien retourne l'objection par LA MOTRICITE : ce ne sont pas les enfants
+                qui font ca, ce sont les adultes, parce qu'un enfant n'a physiquement pas
+                la main pour poser un bead de cette taille. L'argument est plus fort que
+                les deux miens : il ne plaide pas, il constate.
+             ⚠️ SON TEXTE DONNAIT DEUX TAILLES (2 mm puis 2,5 mm) ET UN AGE (10 ans).
+             La taille retenue est le 2,6 mm deja affiche partout ailleurs sur la page, et
+             l'age n'est PAS repris ici tant qu'il n'a pas tranche : la §4 et la FAQ
+             annoncent « 6 ans et plus », qui contredit « uniquement a partir de 10 ans »,
+             et c'est une mention de securite. Voir le commentaire en tete de section. -->
+        <h3>« C'est un truc pour enfants. »</h3>
+        <p>Non. Ce sont les adultes qui font les projets les plus dingues. Les beads font 2,6 mm : il faut une Pince de précision. <strong>Un enfant n'a pas la motricité pour ça.</strong></p>
+      </div>
+      <div class="ways__c" data-onglet="Jamais fini">
+        <i class="ico ico--obj-reprendre" aria-hidden="true"></i>
+        <!-- ⚠️ « Rien ne bouge tant que tu ne passes pas le fer » est l'argument le plus
+             fort de la carte, et il tient parce que la §3 a deja pose que c'est LA CHALEUR
+             qui soude. La comparaison a la peinture qui seche et a la colle qui durcit
+             fait le travail en une ligne : elle nomme l'urgence des autres loisirs
+             creatifs pour dire qu'ici il n'y en a pas. -->
+        <h3>« Je ne vais jamais le finir. »</h3>
+        <p><strong>Rien ne bouge tant que tu ne passes pas le fer.</strong> Les beads peuvent rester là des semaines. Tu peux en poser 10 par jour et finir en un mois.</p>
+      </div>
+      <figure class="ways__ph"><img src="{{ 'os-scenes-boite-tri.webp' | asset_url }}" alt="La Sort Box ouverte, les beads triés par couleur dans leurs compartiments" loading="lazy" decoding="async" width="1400" height="1045"></figure>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===== 13 · FAQ =====
+     ⚠️ `detecte-redondance` signale ~50 % de recouvrement entre la §11 et cette FAQ.
+     C'EST VOULU : la FAQ est une surface de CONSULTATION, elle doit redire ce qui est dit
+     ailleurs. Quelqu'un qui vient y chercher une reponse n'a pas lu la page en entier. -->
+<section class="sec t-white">
+  <div class="wrap">
+    <div class="hd">
+      <h2 class="h-lg rv">Le reste de tes questions, <span class="pop">répondu sans détour</span>.</h2>
+    </div>
+    <div class="faq" data-faq>
+      <div class="faq__tabs" role="tablist" aria-label="Catégories de questions">
+        <button class="faq__t" type="button" role="tab" id="fq-t1" aria-controls="fq-p1" aria-selected="true" tabindex="0">Le kit</button>
+        <button class="faq__t" type="button" role="tab" id="fq-t2" aria-controls="fq-p2" aria-selected="false" tabindex="-1">Se lancer</button>
+        <button class="faq__t" type="button" role="tab" id="fq-t3" aria-controls="fq-p3" aria-selected="false" tabindex="-1">Pratique</button>
+      </div>
+      <!-- ⛔ REPONSES DEVELOPPEES LE 2026-08-15, DEMANDE DE L'OPERATEUR : « les reponses
+           sont trop courtes et manquent de contexte ».
+           ⚠️ CE N'EST PAS UNE CONTRADICTION AVEC LA SOUSTRACTION appliquee au reste de la
+           page. Une FAQ est une surface de CONSULTATION : on y arrive avec UNE question et
+           on veut la reponse entiere, pas un resume qui renvoie a une autre section. Le
+           corps de page, lui, se lit d'affilee et doit rester serre. Les deux regles
+           tiennent ensemble parce qu'elles ne visent pas la meme surface.
+           ⚠️ Registre inchange : ca s'ecrit comme ca se dit. Developper, c'est ajouter du
+           CONTEXTE (le quand, le pourquoi, ce qui se passe apres), jamais du remplissage.
+           ⚠️ Aucun fait invente : les `.todo` restent la ou la donnee n'existe pas. -->
+      <div class="faq__p acc" role="tabpanel" id="fq-p1" aria-labelledby="fq-t1">
+        <details><summary>Un bead, c'est quoi ?</summary><p>Un petit cylindre de couleur de 2,6 mm, à peine plus gros qu'une tête d'épingle. C'est ton pixel. Tu le poses sur un picot du Bead Board, et de proche en proche les beads forment ton dessin. À la fin, un passage de fer les soude entre eux et l'ensemble devient une pièce d'un seul tenant.</p></details>
+        <details><summary>Combien de designs sont inclus ?</summary><p>5, 10 ou 15 selon le pack que tu choisis. Tu ne les subis pas, tu les sélectionnes toi-même dans le catalogue, filtrable par univers et par niveau. Et chaque design arrive avec le compte exact de beads qu'il demande, trié couleur par couleur.</p></details>
+        <details><summary>Je peux ajouter des designs après coup ?</summary><p>Oui, autant que tu veux. Une fois les designs compris dans ton pack choisis, chaque design en plus est à 6,90 €, beads compris. Tu peux les ajouter tout de suite, dans la même commande, ou repasser plus tard quand tu auras fini les premiers.</p></details>
+        <details><summary>Le modèle, il est en papier ?</summary><p>Les deux, au choix. Chaque design existe en version papier, à poser à côté de ton Bead Board, et en version numérique si tu préfères zoomer sur ton écran. Dans les deux cas chaque case porte déjà sa couleur, donc tu n'as rien à décider en cours de route.</p></details>
+        <details><summary>Il faut tout racheter à chaque fois ?</summary><p>Non, et c'est tout l'intérêt d'un Starter Kit. Les 8 outils sont à toi une fois pour toutes : le Bead Board, la Pince de précision, le BeadPen, la Sort Box, la Sorting Tray, le Ruban de masquage, le Perforator et l'Ironing Paper. Ensuite tu ne reprends qu'un design et ses beads.</p></details>
+      </div>
+      <div class="faq__p acc" role="tabpanel" id="fq-p2" aria-labelledby="fq-t2" hidden>
+        <details><summary>Je ne sais pas dessiner du tout.</summary><p>Personne ne dessine ici, et c'est le principe. Le modèle indique la couleur de chaque case, tu poses le bead correspondant sur son picot. Un bead sur le bon picot donne le même résultat chez toi que chez n'importe qui.</p></details>
+        <details><summary>Je commence par quel niveau ?</summary><p>Par un Facile. Tu prends le pli en une session, tu le termines, et tu vois concrètement ce qu'est une case, un picot et une rangée. Ensuite tu montes en détail quand tu en as envie. Rien ne t'oblige à les faire dans l'ordre.</p></details>
+        <details><summary>Et si je me trompe ?</summary><p>Tu retires le bead avec la Pince de précision et tu le remets au bon endroit. Rien n'est fixé tant que tu n'as pas passé le fer : jusque-là tout se corrige, autant de fois que tu veux. C'est seulement la chaleur qui rend le dessin définitif.</p></details>
+        <!-- ⚠️ MEME CORRECTION QUE LA CARTE DU DAMIER, et elle devait suivre : les deux
+             surfaces portaient le meme raisonnement fautif. Les faits (2,6 mm, le millier
+             de cases) ne DISPARAISSENT pas, ils passent APRES le retournement : ils
+             deviennent de la texture au lieu d'etre l'argument. -->
+        <details><summary>C'est un truc pour enfants ?</summary><p>Regarde où ça finit : encadré au mur, pas au fond d'un tiroir. C'est comme un puzzle de 2 000 pièces ou du diamond painting, sauf qu'au bout tu as une pièce à accrocher. Une soirée entière, écran éteint, des beads de 2,6 mm et un design qui dépasse le millier de cases. (Petites pièces : à garder hors de portée des jeunes enfants, âge conseillé 6 ans et plus.)</p></details>
+        <!-- ⛔⛔ CETTE REPONSE DECRIVAIT LA METHODE DIRECTE, QUE LA §3 INTERDIT NOMMEMENT.
+             Elle disait « Papier de repassage sur le dessin, quelques secondes de fer, cinq
+             minutes de repos » : trois erreurs d'un coup. L'Ironing Paper va sur le RUBAN
+             PERFORE de la piece RETOURNEE, hors du Bead Board ; la duree est de 10 a 20
+             secondes ; et le « sans vapeur » manquait completement.
+             Quelqu'un qui ne lit que la FAQ repassait sur les picots et les faisait gondoler.
+             ⚠️ « L'etape la plus simple » est devenu « la plus courte, et la seule ou tu dois
+             etre attentif » : c'est l'etape ou une premiere creation se rate. -->
+        <details><summary>Le passage du fer, c'est risqué ?</summary><p>C'est l'étape la plus courte, et la seule où tu dois être attentif. Tu poses l'Ironing Paper sur le ruban perforé, tu passes le fer en cercles pendant 10 à 20 secondes, <strong>impérativement sans vapeur</strong> : la vapeur déforme les beads et rate la fusion. Tu laisses tiédir avant de décoller le ruban. Tu protèges la surface et tu restes à côté.</p></details>
+      </div>
+      <div class="faq__p acc" role="tabpanel" id="fq-p3" aria-labelledby="fq-t3" hidden>
+        <details><summary>Ça prend combien de temps ?</summary><p>Plusieurs heures par design, en une ou plusieurs sessions. Ça dépend surtout du nombre de beads : les plus petits designs tournent autour de 800, les plus détaillés dépassent 3 500. Tu n'es pas obligé de tout faire d'un coup, personne ne le fait. <span class="todo">temps par niveau à confirmer</span></p></details>
+        <details><summary>Je peux m'arrêter en plein milieu ?</summary><p>Oui, sans rien perdre. La Sort Box referme tes couleurs chacune dans son compartiment, et le Ruban de masquage garde en place les beads déjà posés sur le Bead Board. Tu rouvres le lendemain, tu reprends ta rangée là où tu l'avais laissée.</p></details>
+        <details><summary>Je peux regarder une série en même temps ?</summary><p>C'est même le meilleur moment pour ça. Les mains sur le Bead Board, le son en fond, tu lèves les yeux de temps en temps. Poser ne demande pas de réfléchir, juste de suivre le modèle, donc ton attention reste libre pour autre chose.</p></details>
+        <details><summary>Livraison et retours</summary><p><span class="todo">délai à compléter</span>. Tu as 14 jours après réception pour changer d'avis, sans justification à donner et sans formulaire à remplir. Tu nous renvoies le kit, on te rembourse.</p></details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 14 · LA GARANTIE + CTA FINAL =====
+     Le CTA final est descendu ici, apres la garantie, a sa place : on leve le dernier
+     risque, PUIS on demande l'achat. -->
+<section class="sec sec--tight tr--millim t-dark">
+  <div class="wrap">
+    <div class="guar tp rv">
+      <div>
+        <p class="ask">Et si finalement ça ne me plaît pas ?</p>
+        <h2 class="h-md">Tu l'ouvres, tu l'essaies, <span class="pop">et tu as 14 jours pour changer d'avis</span>.</h2>
+        <p class="p" style="margin-top:14px;max-width:56ch">Pas de justification à donner, pas de formulaire à remplir. Tu nous renvoies le kit, on te rembourse.</p>
+      </div>
+      <div class="guar__list">
+        <div><i class="ico ico--undo" aria-hidden="true"></i>14 jours</div>
+        <div><i class="ico ico--lock" aria-hidden="true"></i>Paiement sécurisé</div>
+        <div><i class="ico ico--truck" aria-hidden="true"></i>Livraison <span class="todo">à confirmer</span></div>
+      </div>
+    </div>
+    <div class="ctarow ctarow--end">
+      <a class="cta rv" href="#top"><i class="cta__tick cta__tick--a"></i><i class="cta__tick cta__tick--b"></i>Je compose mon Starter Kit</a>
+    </div>
+    <p class="mention mention--mid rv">Livraison estimée entre le <span class="todo">date</span> et le <span class="todo">date</span> · 14 jours pour changer d'avis · Paiement sécurisé</p>
+  </div>
+</section>
+
+<!-- AVIS : section codee, masquee jusqu'aux premiers avis reels.
+     `reviews/curated-reviews.md` : aucun avis reel, marque en ideation, pas de ventes. -->
+
+<!-- ===== PIED DE PAGE (remplace le CTA final, 2026-08-12) ===== -->
+<footer class="ft t-dark" data-closing>
+  <div class="wrap">
+    <div class="ft__top">
+      <div class="ft__brand">
+        <span class="ft__logo">Bead<span>beads</span></span>
+        <p class="ft__tag">Le pixel art en beads. Choisis ton design, suis le modèle case par case, et repars avec un truc fait par toi.</p>
+        <div class="ft__social">
+          <a href="#" aria-label="Instagram"><i class="ico ico--instagram" aria-hidden="true"></i></a>
+          <a href="#" aria-label="TikTok"><i class="ico ico--tiktok" aria-hidden="true"></i></a>
+          <a href="#" aria-label="Pinterest"><i class="ico ico--pinterest" aria-hidden="true"></i></a>
+        </div>
+      </div>
+      <div class="ft__col">
+        <h3>Boutique</h3>
+        <ul>
+          <li><a href="#top">Starter Kit</a></li>
+          <li><a href="#">Tous les designs</a></li>
+          <li><a href="#">Les univers</a></li>
+          <li><a href="#">Les niveaux</a></li>
+        </ul>
+      </div>
+      <div class="ft__col">
+        <h3>Aide</h3>
+        <ul>
+          <li><a href="#">Comment ça marche</a></li>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Livraison et retours</a></li>
+          <li><a href="#">Nous contacter</a></li>
+        </ul>
+      </div>
+      <div class="ft__col">
+        <h3>La marque</h3>
+        <ul>
+          <li><a href="#">Notre histoire</a></li>
+          <li><a href="#">Le journal</a></li>
+          <li><a href="#">Nous suivre</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="ft__bottom">
+      <span class="ft__copy">© 2026 BeadPops. Fait avec des beads.</span>
+      <div class="ft__legal">
+        <a href="#">Mentions légales</a>
+        <a href="#">CGV</a>
+        <a href="#">Confidentialité</a>
+      </div>
+    </div>
+  </div>
+</footer>
+</div>
+
+<script src="{{ 'os-starter-kit.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Fiche Starter Kit",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Source des donnees" },
+    { "type": "paragraph", "content": "Les packs viennent des variantes du produit. Les designs viennent des produits dont le type est « Design », classes par leurs tags univers-* et niveau-*." },
+    { "type": "text", "id": "titre_h1", "label": "Titre principal", "default": "Starter Kit BeadPops : ton pixel art, sans savoir dessiner" },
+    { "type": "textarea", "id": "sous_titre", "label": "Sous-titre", "default": "Des heures de calme, loin des ecrans. Au bout, un pixel art que personne d'autre n'a." },
+    { "type": "header", "content": "Livraison" },
+    { "type": "text", "id": "livraison_de", "label": "Livraison estimee, debut" },
+    { "type": "text", "id": "livraison_a", "label": "Livraison estimee, fin" },
+    { "type": "text", "id": "delai", "label": "Delai de livraison" }
+  ],
+  "presets": [{ "name": "Fiche Starter Kit" }]
+}
+{% endschema %}
