@@ -59,7 +59,10 @@
   {%- if d.tags contains 'univers-kawaii' -%}{%- assign univers = 'kawaii' -%}
   {%- elsif d.tags contains 'univers-fantasy' -%}{%- assign univers = 'fantasy' -%}
   {%- elsif d.tags contains 'univers-anime' -%}{%- assign univers = 'anime' -%}
-  {%- elsif d.tags contains 'univers-cartoons' -%}{%- assign univers = 'cartoons' -%}{%- endif -%}
+  {%- elsif d.tags contains 'univers-cartoons' -%}{%- assign univers = 'cartoons' -%}
+  {%- elsif d.tags contains 'univers-animaux' -%}{%- assign univers = 'animaux' -%}
+  {%- elsif d.tags contains 'univers-paysages' -%}{%- assign univers = 'paysages' -%}
+  {%- elsif d.tags contains 'univers-icones' -%}{%- assign univers = 'icones' -%}{%- endif -%}
   {%- assign niveau = 'medium' -%}
   {%- if d.tags contains 'niveau-facile' -%}{%- assign niveau = 'facile' -%}
   {%- elsif d.tags contains 'niveau-boss' -%}{%- assign niveau = 'boss' -%}{%- endif -%}

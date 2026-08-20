@@ -198,9 +198,14 @@
     var grille = document.querySelector('[data-dgrid]');
     if (!grille || typeof DESIGNS === 'undefined') return;
     var PRIX_OPTION = 6.90;
-    var UNIVERS = { kawaii:'Kawaii', fantasy:'Fantasy', anime:'Anime', cartoons:'Cartoons' };
+    /* ⚠️ Les univers du lot MARKETPLACE (2026-08-21) s'ajoutent aux 4 historiques : le
+       filtre et les groupes n'affichent que les univers PRESENTS dans les donnees, donc
+       le tableau local de demo (4 univers) rend comme avant, et le catalogue Shopify
+       (animaux/paysages/icones + kawaii/fantasy) prend les siens tout seul. */
+    var UNIVERS = { kawaii:'Kawaii', fantasy:'Fantasy', anime:'Anime', cartoons:'Cartoons',
+                    animaux:'Animaux', paysages:'Paysages', icones:'Icônes' };
     var NIVEAUX = { facile:'Facile', medium:'Medium', boss:'Boss' };
-    var ORDRE_UNIVERS = ['kawaii', 'fantasy', 'anime', 'cartoons'];
+    var ORDRE_UNIVERS = ['kawaii', 'fantasy', 'animaux', 'paysages', 'icones', 'anime', 'cartoons'];
     var vide = document.querySelector('[data-dnone]');
     var compteur = document.querySelector('[data-dcount]');
     var ordre = [], filtre = { u:'', n:'' };
@@ -623,7 +628,13 @@
            sur deux lignes des qu'il y avait des options, ce qui ecrasait « CHOISIR ».
            L'etat est porte une seule fois, par le recapitulatif juste dessous. Ici on
            dit ce qu'il y a derriere le bouton, ce qui ne change jamais de longueur. */
-        if (ts) ts.textContent = DESIGNS.length + ' designs, 4 univers.';
+        /* le compte d'univers se MESURE dans les donnees : sur Shopify le catalogue est
+           celui des produits, pas du tableau local, et son nombre d'univers bouge avec. */
+        if (ts) {
+          var nbU = 0, vus = {};
+          DESIGNS.forEach(function(d){ if (d.u && !vus[d.u]) { vus[d.u] = 1; nbU++; } });
+          ts.textContent = DESIGNS.length + ' designs, ' + nbU + ' univers.';
+        }
       }
 
       rendrePlateau(qt, extras);
