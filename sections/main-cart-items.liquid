@@ -59,6 +59,38 @@
     font-size: 1.3rem;
   }
 
+  .bp-cart-group-header__toggle {
+    background: none;
+    border: 0;
+    cursor: pointer;
+    padding: 0.4rem;
+    margin: -0.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: inherit;
+    flex-shrink: 0;
+  }
+
+  .bp-cart-group-header__chevron {
+    display: inline-block;
+    font-size: 1.2rem;
+    transition: transform var(--duration-short) ease;
+  }
+
+  .bp-cart-group-header__toggle[aria-expanded='true'] .bp-cart-group-header__chevron {
+    transform: rotate(90deg);
+  }
+
+  /* `.cart-item { display: table-row / grid }` du thème (component-cart-items.css) a la même
+     spécificité qu'une règle `[hidden]` de la feuille de style navigateur par défaut — les styles
+     d'auteur gagnant toujours face à ceux du navigateur à spécificité égale, l'attribut `hidden`
+     posé par bp-cart-item-row.liquid (repli initial) n'aurait sinon aucun effet. `tr.cart-item`
+     ajoute la spécificité qui manque pour que ce masquage l'emporte, à toute largeur d'écran. */
+  tr.cart-item[hidden] {
+    display: none;
+  }
+
   /* Miniature du design dans l'en-tête de groupe (voir bp_image plus bas, posée en propriété de
      ligne _bp_design_image par shopifyCart.js/gridThumbnail.js à l'ajout) — un canvas pixel-art
      donc image-rendering: pixelated pour rester nette une fois agrandie depuis sa taille source
@@ -181,6 +213,20 @@
         btn.textContent = originalLabel
       })
   })
+
+  // Bouton replier/déplier d'un groupe de design (voir bp-cart-group-header__toggle) : bascule
+  // l'attribut `hidden` (posé par défaut par bp-cart-item-row.liquid) sur les lignes qui partagent
+  // le même data-bp-group, purement côté client — aucune requête réseau, contrairement au retrait.
+  document.addEventListener('click', function (event) {
+    var toggle = event.target.closest('.bp-cart-group-header__toggle')
+    if (!toggle) return
+    var groupId = toggle.dataset.bpToggle
+    var expanded = toggle.getAttribute('aria-expanded') === 'true'
+    toggle.setAttribute('aria-expanded', String(!expanded))
+    document.querySelectorAll('[data-bp-group="' + groupId + '"]').forEach(function (row) {
+      row.hidden = expanded
+    })
+  })
 </script>
 
 <cart-items
@@ -270,6 +316,7 @@
                 {%- for bp_name in bp_group_list -%}
                   {%- unless bp_name == blank -%}
                     {%- liquid
+                      assign bp_group_id = forloop.index
                       assign bp_keys = ''
                       assign bp_line_count = 0
                       assign bp_qty_total = 0
@@ -288,6 +335,21 @@
                     <tr class="bp-cart-group-header">
                       <td colspan="5">
                         <div class="bp-cart-group-header__row">
+                          {%- comment -%}
+                            Replié par défaut (voir le script plus haut) : avec plusieurs designs au
+                            panier, la liste complète de toutes les couleurs de tous les designs
+                            devenait très longue à parcourir — replier ne garde que l'essentiel visible
+                            (miniature, nom, total) et un clic rouvre le détail d'un design à la fois.
+                          {%- endcomment -%}
+                          <button
+                            type="button"
+                            class="bp-cart-group-header__toggle"
+                            data-bp-toggle="{{ bp_group_id }}"
+                            aria-expanded="false"
+                            aria-label="Afficher le détail des couleurs"
+                          >
+                            <span class="bp-cart-group-header__chevron" aria-hidden="true">▸</span>
+                          </button>
                           {%- if bp_image != blank -%}
                             <img class="bp-cart-group-header__thumb" src="{{ bp_image }}" alt="" width="36" height="36">
                           {%- endif -%}
@@ -307,7 +369,7 @@
                     </tr>
                     {%- for item in cart.items -%}
                       {%- if item.properties['_bp_design'] == bp_name -%}
-                        {%- render 'bp-cart-item-row', item: item -%}
+                        {%- render 'bp-cart-item-row', item: item, bp_group_id: bp_group_id -%}
                       {%- endif -%}
                     {%- endfor -%}
                   {%- endunless -%}

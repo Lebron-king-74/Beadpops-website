@@ -1,7 +1,10 @@
 {%- comment -%}
   Une ligne de panier — extrait de main-cart-items.liquid pour être rendu à la fois dans le
   groupement par design (voir bp_group_list) et pour les articles hors design (perles ajoutées
-  manuellement, ou tout futur produit non-BeadPops). `item` est le seul paramètre attendu.
+  manuellement, ou tout futur produit non-BeadPops). `item` est requis ; `bp_group_id` optionnel
+  (numéro du groupe de design, voir bp_group_id dans la boucle appelante) — quand il est fourni, la
+  ligne démarre repliée (`hidden`) et porte `data-bp-group` pour que le bouton replier/déplier de
+  l'en-tête (voir bp-cart-group-header__toggle) puisse la retrouver.
   `_bp_design` (propriété de ligne posée par shopifyCart.js à l'ajout) marque une ligne "perles
   BeadPops" : elle reçoit une classe supplémentaire pour la mise en page compacte (voir le bloc
   {%- style -%} de main-cart-items.liquid).
@@ -28,6 +31,10 @@
 <tr
   class="cart-item {% if item.parent_relationship.parent != null %}cart-item__nested-line{% endif %}{% if bp_is_bead %} bp-cart-item--bead{% endif %}"
   id="CartItem-{{ item.index | plus: 1 }}"
+  {% if bp_group_id %}
+    data-bp-group="{{ bp_group_id }}"
+    hidden
+  {% endif %}
   {% if item.parent_relationship.parent != null %}
     aria-label="{{- 'products.product.nested_label' | t: title: item.product.title, parent_title: item.parent_relationship.parent.title | escape -}}"
   {% endif %}
