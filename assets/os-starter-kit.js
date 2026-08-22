@@ -359,7 +359,15 @@
         var piste = g.querySelector('.dgroup__g'), pts = g.querySelector('[data-dots]');
         if (!piste || !pts) return;
         var large = piste.clientWidth || 1;
-        var pages = Math.max(1, Math.round(piste.scrollWidth / large));
+        /* ⚠️ La suite se decide AVANT toute sortie anticipee (2026-08-22) : avec
+           `Math.round`, une etagere qui debordait d'un tiers comptait pour UNE page, la
+           fonction sortait, et ni le fondu, ni les points, ni « glisse → » n'apparaissaient
+           — exactement le cas releve par l'operateur. Une page et un tiers, c'est DEUX
+           pages : `Math.ceil`. */
+        var suite = piste.scrollLeft + piste.clientWidth < piste.scrollWidth - 4;
+        piste.classList.toggle('has-suite', suite);
+        g.classList.toggle('has-suite', suite); /* l'en-tete dit « glisse → » */
+        var pages = Math.max(1, Math.ceil((piste.scrollWidth - 4) / large));
         pts.hidden = pages < 2;
         if (pts.hidden){ pts.innerHTML = ''; return; }
         if (pts.children.length !== pages){
@@ -372,8 +380,6 @@
         [].slice.call(pts.children).forEach(function(b, k){
           b.setAttribute('aria-current', String(k === actif));
         });
-        piste.classList.toggle('has-suite',
-          piste.scrollLeft + piste.clientWidth < piste.scrollWidth - 4);
       });
     }
     /* ---- l'amorce : prouver que ca glisse ----
@@ -390,7 +396,9 @@
         if (piste.scrollWidth <= piste.clientWidth + 4) return;
         var o = { x: 0 };
         gsap.to(o, {
-          x: 30, duration:.44, ease:'power2.out', yoyo:true, repeat:1,
+          /* 30 → 56 px (2026-08-22) : a 30 px l'amorce passait inapercue ; a 56 px la
+             troisieme carte entre franchement, on voit qu'il y a une suite */
+          x: 56, duration:.5, ease:'power2.out', yoyo:true, repeat:1,
           delay:.4 + k * .12,
           onUpdate: function(){ piste.scrollLeft = o.x; },
           onComplete: function(){ piste.scrollLeft = 0; majDots(); },
@@ -796,8 +804,28 @@
       if (!dlg) return;
       var d = DESIGNS[i]; courant = i;
       var im = dlg.querySelector('[data-dimg]');
-      im.src = d.f;
+      /* `F` = la plaque en pleine resolution (2048 px) quand la section la fournit, `f` la
+         vignette sinon : le viewer doit rendre les codes lisibles, pas une vignette floue
+         (releve par l'operateur le 2026-08-22). */
+      im.src = (d.F || d.f);
       im.alt = 'Le design ' + d.t + ', grille de pixels colorés';
+      /* ---- zoom : toucher l'image la passe a sa taille native (1 bead = N px, codes
+         lisibles), le cadre defile pour se deplacer, toucher a nouveau revient a l'apercu.
+         Etat remis a zero a chaque ouverture. Clavier : Entree / Espace. ---- */
+      var fig = im.closest('.dview__f');
+      if (fig){ fig.classList.remove('is-zoom'); im.style.width = ''; }
+      if (!im.dataset.zoomPret){
+        im.dataset.zoomPret = '1';
+        var basculer = function(){
+          var f = im.closest('.dview__f'); if (!f) return;
+          var on = f.classList.toggle('is-zoom');
+          im.style.width = on ? Math.max(im.naturalWidth, f.clientWidth) + 'px' : '';
+          im.setAttribute('aria-pressed', String(on));
+          if (on){ f.scrollLeft = (f.scrollWidth - f.clientWidth) / 2; f.scrollTop = (f.scrollHeight - f.clientHeight) / 2; }
+        };
+        im.addEventListener('click', basculer);
+        im.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); basculer(); } });
+      }
       dlg.querySelector('[data-dtitle]').textContent = d.t;
       /* la meta ne porte plus que l'univers : le niveau a sa colonne dans la fiche
          technique juste dessous, et le redire a trois centimetres n'ajoute rien */

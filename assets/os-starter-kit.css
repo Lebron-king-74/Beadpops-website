@@ -887,12 +887,16 @@
    balayant, et c'est ce que fait n'importe quel rayon d'application.
    La largeur de colonne est calculee pour qu'il en tienne exactement DEUX a l'ecran :
    les vignettes ne sont jamais coupees en deux au repos, et la troisieme qui depasse
-   dit qu'il y a une suite. */
-   .os-sk ⚠️ La largeur de colonne est en `cqw`,.os-sk PAS en `%`. Dans une grille qui defile en x,.os-sk la
+   dit qu'il y a une suite.
+   ⚠️ (2026-08-22) Ce commentaire se FERMAIT ici, et le paragraphe suivant trainait hors
+   commentaire : le parseur CSS l'avalait avec la regle `.dpick .dgroup{container-type}`
+   qui suit — `container-type` restait `normal`, `cqw` retombait sur le viewport, et la
+   « troisieme qui depasse » ne depassait jamais. Releve a la mesure, pas a l'oeil.
+   ⚠️ La largeur de colonne est en `cqw`, PAS en `%`. Dans une grille qui defile en x, la
    taille interne du conteneur est indefinie : un pourcentage de piste n'a plus de
    reference et retombe sur le contenu minimal — les apercus sortaient a 79 px au lieu de
    173. `container-type:inline-size` sur le groupe donne une largeur definie a mesurer. */
-.dpick .dgroup{container-type:inline-size}
+.os-sk .dpick .dgroup{container-type:inline-size}
 .os-sk .dpick .dgroup__g{
   /* ⚠️ `grid-template-columns:none` d'abord : la regle de base de `.dgroup__g` declare
      encore des colonnes EXPLICITES en `auto-fill minmax(78px,1fr)`. Elles ne disparaissent
@@ -901,7 +905,12 @@
      79 px. `grid-auto-columns` ne dimensionne que les pistes IMPLICITES. */
   grid-template-columns:none;
   display:grid;grid-auto-flow:column;grid-template-rows:repeat(2,auto);
-  grid-auto-columns:calc((100cqw - 13px)/2);gap:13px;
+  /* ⚠️ 2,3 colonnes visibles, PAS 2 (2026-08-22). A deux colonnes pile, la troisieme ne
+     depassait JAMAIS : le fondu n'avait rien a fondre, et un premier visiteur lisait une
+     liste verticale (releve par l'operateur sur iPhone). Un tiers de carte coupee au bord
+     droit est le signal universel « ca continue a droite » ; le fondu et les points le
+     confirment, l'amorce le prouve. Toujours DEUX rangees par univers. */
+  grid-auto-columns:calc((100cqw - 26px)/2.3);gap:13px;
   overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;
   scrollbar-width:none;padding-bottom:3px;
 }
@@ -916,6 +925,13 @@
 .os-sk .dpick .dgroup__g.has-suite{
   -webkit-mask-image:linear-gradient(to right,#000 calc(100% - 38px),transparent 100%);
   mask-image:linear-gradient(to right,#000 calc(100% - 38px),transparent 100%);
+}
+/* le mot, en plus du signe : tant qu'il reste une suite a droite, l'en-tete de l'etagere
+   le DIT (« glisse → »), pose par `majDots` sur le groupe. Disparait au bout. */
+.os-sk .dpick .dgroup.has-suite .dgroup__h::after{
+  content:"glisse \2192";margin-left:8px;flex:none;
+  font-family:var(--label);font-weight:700;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--pop);
 }
 /* Le nombre de colonnes visibles est une variable : a 4 colonnes sur 1 388 px, une carte
    sortait a 450 px de haut — une etagere de deux rangees prenait alors tout l'ecran, ce
@@ -1121,7 +1137,9 @@
      l'apercu du design — qui est ce qu'on vient regarder — double de surface.
      `minmax(150px,1fr)` et pas `repeat(2,...)` : la grille repasse d'elle-meme a trois
      puis quatre colonnes en montant vers 719 px, sans palier supplementaire a maintenir. */
-  .os-sk .dpick .dgroup__g{grid-auto-columns:calc((100cqw - 11px)/2);gap:11px}
+  /* 2,3 colonnes visibles sur telephone aussi (voir la regle de base) : la troisieme
+     depasse d'un tiers, c'est elle qui dit « ca glisse ». Toujours 2 rangees. */
+  .os-sk .dpick .dgroup__g{grid-auto-columns:calc((100cqw - 22px)/2.3);gap:11px}
   .os-sk .dpick .dgroup__h{padding:8px 0;font-size:12px}
   .os-sk .dpick .dcard__i{font-size:calc(.78 * var(--os-rem));padding:6px 7px}
   .os-sk .dpack button b{font-size:calc(.95 * var(--os-rem));padding:5px 11px 1px}
@@ -1504,7 +1522,12 @@
 .os-sk .dview__f{margin:0;background:var(--panel);border-bottom:1px solid var(--rule)}
 /* le modele est une grille tres haute : on la borne pour que le titre et le bouton
    restent visibles sans defiler */
-.os-sk .dview__f img{width:100%;height:auto;max-height:56vh;object-fit:contain;display:block}
+.os-sk .dview__f img{width:100%;height:auto;max-height:56vh;object-fit:contain;display:block;cursor:zoom-in}
+/* ---- zoom (2026-08-22) : le cadre devient une fenetre qui defile sur la plaque a sa
+   taille native ; la largeur de l'image est posee en ligne par le JS (naturalWidth). ---- */
+.os-sk .dview__f.is-zoom{overflow:auto;max-height:72vh;overscroll-behavior:contain;cursor:zoom-out}
+.os-sk .dview__f.is-zoom img{max-height:none;max-width:none;object-fit:unset;cursor:zoom-out}
+.os-sk .dview__f img:focus-visible{outline:2px solid var(--pop);outline-offset:-2px}
 .os-sk .dview__b{padding:var(--s3)}
 /* ⚠️ `--pop` sur fond clair ne vaut que 2,9:1 : sous le seuil de 4,5. L'orange reste
    la couleur des commandes, mais il ne porte pas de texte sur du blanc. La meta passe

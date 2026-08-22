@@ -88,7 +88,7 @@
   {%- if d.tags contains 'niveau-facile' -%}{%- assign niveau = 'facile' -%}
   {%- elsif d.tags contains 'niveau-boss' -%}{%- assign niveau = 'boss' -%}{%- endif -%}
   {%- assign beads = d.metafields.beadpops.beads.value | default: 0 -%}
-  {"t":{{ d.title | json }},"f":{{ d.featured_image | image_url: width: 640 | json }},"u":{{ univers | json }},"n":{{ niveau | json }},"v":{{ v.id | json }},"p":{{ v.price | json }},"b":{{ beads | json }}}{%- unless forloop.last -%},{%- endunless -%}
+  {"t":{{ d.title | json }},"f":{{ d.featured_image | image_url: width: 640 | json }},"F":{{ d.featured_image | image_url: width: 2048 | json }},"u":{{ univers | json }},"n":{{ niveau | json }},"v":{{ v.id | json }},"p":{{ v.price | json }},"b":{{ beads | json }}}{%- unless forloop.last -%},{%- endunless -%}
 {%- endfor -%}
 ]
 </script>
@@ -1265,7 +1265,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
        width/height : indice de ratio requis par Theme Check (ImgWidthAndHeight), inerte a
        l'ecran — le CSS force width:100% / height:auto et le vrai ratio reprend la main au
        chargement. Le dialog est ferme par defaut, impact visuel mesure : zero. -->
-  <figure class="dview__f"><img data-dimg alt="" width="1080" height="1080"></figure>
+  <figure class="dview__f"><img data-dimg alt="" width="1080" height="1080" tabindex="0" role="button" aria-pressed="false" aria-label="Zoomer sur le design : touche l’image, touche à nouveau pour revenir"></figure>
   <div class="dview__b">
     <p class="dview__meta"><span data-dmeta></span></p>
     <h3 data-dtitle></h3>
