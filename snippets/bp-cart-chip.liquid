@@ -40,8 +40,8 @@
       <a href="{{ item.url }}" class="bp-chip__name cart-item__name">
         {{- bp_color_label | default: item.product.title | escape -}}
       </a>
-      <span class="bp-chip__price">{{ item.original_price | money }}</span>
     </div>
+    <div class="bp-chip__price">{{ item.original_price | money }}</div>
 
     <div class="bp-chip__row2">
       <div class="cart-item__quantity-wrapper">
@@ -62,6 +62,13 @@
             </span>
             <span class="svg-wrapper">{{- 'icon-minus.svg' | inline_asset_content -}}</span>
           </button>
+          {%- comment -%}
+            step/data-min requis même sans règle de quantité réelle : CartItems.validateQuantity
+            (cart.js) calcule `inputValue % parseInt(event.target.step)` à chaque changement — sans
+            l'attribut step, `.step` vaut "" et parseInt("") vaut NaN, et un modulo par NaN n'est
+            jamais égal à 0. Ça déclenchait le message d'erreur "incrément" du thème sur CHAQUE
+            changement de quantité, même valide.
+          {%- endcomment -%}
           <input
             class="quantity__input"
             data-quantity-variant-id="{{ item.variant.id }}"
@@ -72,6 +79,8 @@
             {% # theme-check-disable %}
             data-cart-quantity="{{ cart | item_count_for_variant: item.variant.id }}"
             min="0"
+            data-min="0"
+            step="1"
             {% # theme-check-enable %}
             aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
             id="Quantity-{{ item.index | plus: 1 }}"

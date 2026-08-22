@@ -142,14 +142,11 @@
     min-width: 0;
   }
 
-  .bp-chip__row1 {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 0.6rem;
-  }
-
+  /* Le prix repasse sur sa propre ligne sous le nom (plutôt qu'à côté, sur la même ligne) : lui
+     laisser toute la largeur de la carte pour lui seul évite de rogner le nom en ellipse dès qu'un
+     prix prenait de la place à côté. */
   .bp-chip__name {
+    display: block;
     font-weight: 600;
     font-size: 1.3rem;
     text-decoration: none;
@@ -162,8 +159,7 @@
   .bp-chip__price {
     font-size: 1.15rem;
     opacity: 0.6;
-    white-space: nowrap;
-    flex-shrink: 0;
+    margin-top: 0.1rem;
   }
 
   .bp-chip__row2 {
@@ -252,18 +248,42 @@
   })
 
   // Bouton replier/déplier d'un groupe de design (voir bp-cart-group-header__toggle) : bascule
-  // l'attribut `hidden` de la grille de pastilles (data-bp-group, posé replié par défaut plus
-  // bas), purement côté client — aucune requête réseau, contrairement au retrait.
+  // l'attribut `hidden` de la grille de pastilles (data-bp-group, posé replié par défaut côté
+  // Liquid), purement côté client — aucune requête réseau, contrairement au retrait groupé.
+  //
+  // Changer la quantité ou retirer UNE couleur (bouton ✕ d'une pastille) passe par le custom
+  // element CartItems du thème, qui remplace tout le contenu de #main-cart-items par du HTML
+  // fraîchement rendu par Liquid après chaque appel réussi à /cart/change.js — et ce HTML rend
+  // toujours chaque groupe replié par défaut. Sans ce qui suit, déplier un design puis changer une
+  // quantité ou retirer une couleur à l'intérieur le refermait aussitôt. bpExpandedGroups retient
+  // quels groupes (identifiés par le nom du design, stable d'un ré-rendu à l'autre — voir
+  // bp_group_id) étaient dépliés, et un MutationObserver sur #main-cart-items les rouvre après
+  // chaque remplacement.
+  var bpExpandedGroups = {}
+
+  function bpApplyExpandedGroups() {
+    document.querySelectorAll('.bp-cart-group-header__toggle').forEach(function (toggle) {
+      var expanded = !!bpExpandedGroups[toggle.dataset.bpToggle]
+      toggle.setAttribute('aria-expanded', String(expanded))
+    })
+    document.querySelectorAll('.bp-chip-grid').forEach(function (grid) {
+      grid.hidden = !bpExpandedGroups[grid.dataset.bpGroup]
+    })
+  }
+
   document.addEventListener('click', function (event) {
     var toggle = event.target.closest('.bp-cart-group-header__toggle')
     if (!toggle) return
     var groupId = toggle.dataset.bpToggle
-    var expanded = toggle.getAttribute('aria-expanded') === 'true'
-    toggle.setAttribute('aria-expanded', String(!expanded))
-    document.querySelectorAll('[data-bp-group="' + groupId + '"]').forEach(function (row) {
-      row.hidden = expanded
-    })
+    bpExpandedGroups[groupId] = !bpExpandedGroups[groupId]
+    bpApplyExpandedGroups()
   })
+
+  var bpMainCartItems = document.getElementById('main-cart-items')
+  var bpJsContents = bpMainCartItems && bpMainCartItems.querySelector('.js-contents')
+  if (bpJsContents) {
+    new MutationObserver(bpApplyExpandedGroups).observe(bpJsContents, { childList: true })
+  }
 </script>
 
 <cart-items
@@ -334,7 +354,13 @@
               {%- for bp_name in bp_group_list -%}
                 {%- unless bp_name == blank -%}
                   {%- liquid
-                    assign bp_group_id = forloop.index
+                    # Le nom du design sert d'identifiant de groupe (plutôt que forloop.index) :
+                    # stable d'un ré-rendu à l'autre après un changement de quantité ou un retrait
+                    # (cart.js remplace toute la section par du HTML fraîchement rendu), alors qu'un
+                    # index de position se décale dès qu'un groupe disparaît ou change de place —
+                    # voir le script plus bas qui s'appuie dessus pour restaurer les groupes dépliés
+                    # après ce ré-rendu.
+                    assign bp_group_id = bp_name | escape
                     assign bp_keys = ''
                     assign bp_line_count = 0
                     assign bp_qty_total = 0
@@ -370,7 +396,7 @@
                       {%- if bp_image != blank -%}
                         <img class="bp-cart-group-header__thumb" src="{{ bp_image }}" alt="" width="36" height="36">
                       {%- endif -%}
-                      <span class="bp-cart-group-header__title">{{ bp_name }}</span>
+                      <span class="bp-cart-group-header__title">{{ bp_name | escape }}</span>
                       <span class="bp-cart-group-header__meta">
                         {{ bp_line_count }} couleur{% if bp_line_count > 1 %}s{% endif %} · {{ bp_qty_total }} sachet{% if bp_qty_total > 1 %}s{% endif %}
                       </span>
