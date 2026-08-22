@@ -110,7 +110,11 @@
           class="button button--tertiary bp-chip__remove"
           aria-label="{{ 'sections.cart.remove_title' | t: title: item.title | escape }}"
         >
-          <span class="svg-wrapper">{{- 'icon-remove.svg' | inline_asset_content -}}</span>
+          {%- comment -%}
+            icon-close-small.svg (une croix) plutôt que l'icône poubelle par défaut du thème pour
+            ce bouton — voir le CSS de main-cart-items.liquid pour le contexte.
+          {%- endcomment -%}
+          <span class="svg-wrapper">{{- 'icon-close-small.svg' | inline_asset_content -}}</span>
         </a>
       </cart-remove-button>
     </div>

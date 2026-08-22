@@ -101,10 +101,14 @@
 
   /* Grille de pastilles d'un design déplié (voir bp-cart-chip.liquid) : une carte compacte par
      couleur plutôt qu'une ligne de tableau pleine largeur — se réorganise en colonnes selon la
-     largeur d'écran, et se scanne visuellement par la couleur plutôt que par le texte. */
+     largeur d'écran, et se scanne visuellement par la couleur plutôt que par le texte. Le max()
+     dans minmax() plafonne à 5 colonnes sur un écran large (chaque colonne ne dépasse jamais
+     100%/5 de la largeur) tout en repassant sur un plancher de 200px pour se réorganiser en moins
+     de colonnes sur un écran étroit — sans lui, auto-fill seul aurait pu aligner plus de 5
+     pastilles sur une très large fenêtre. */
   .bp-chip-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(max(200px, calc(20% - 0.8rem)), 1fr));
     gap: 1rem;
     padding-top: 1.8rem;
   }
@@ -117,7 +121,7 @@
 
   .bp-chip {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 0.9rem;
     padding: 0.9rem;
     border: 0.1rem solid rgba(var(--color-foreground), 0.12);
@@ -169,19 +173,23 @@
     margin-top: 0.7rem;
   }
 
+  /* Réduite au maximum de ce que permet <quantity-input> sans le réécrire : le composant du thème
+     (voir global.js) garde son ombre/bordure décorative (pseudo-éléments :before/:after de
+     .quantity, posés par base.css) — non retirée ici pour rester cohérente avec le reste du site,
+     seules les dimensions sont resserrées. */
   .bp-chip .quantity {
-    min-height: 3rem;
-    width: 9rem;
+    min-height: 2.6rem;
+    width: 7.6rem;
   }
 
   .bp-chip .quantity__button {
-    width: 2.6rem;
-    font-size: 1.3rem;
+    width: 2.2rem;
+    font-size: 1.1rem;
   }
 
   .bp-chip .quantity__input {
-    font-size: 1.3rem;
-    padding: 0 0.2rem;
+    font-size: 1.2rem;
+    padding: 0 0.1rem;
   }
 
   .bp-chip__total {
@@ -190,8 +198,15 @@
     margin-left: auto;
   }
 
+  /* icon-close-small.svg (une croix) plutôt que l'icône poubelle par défaut de cart-remove-button
+     (voir bp-cart-chip.liquid) — bouton plus discret, cohérent avec la maquette validée. */
   .bp-chip__remove {
     padding: 0.4rem;
+  }
+
+  .bp-chip__remove .icon {
+    width: 1rem;
+    height: 1rem;
   }
 {%- endstyle -%}
 
