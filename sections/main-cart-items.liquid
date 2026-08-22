@@ -25,16 +25,17 @@
     flex-wrap: wrap;
   }
 
-  /* Séparateur entre les groupes de perles par design (voir bp_group_list plus bas) — assez
-     marqué pour repérer un design d'un coup d'œil dans un panier qui en contient plusieurs. */
-  .bp-cart-group-header td {
-    padding-top: 3rem;
-    padding-bottom: 1rem;
-    border-bottom: 0.1rem solid rgba(var(--color-foreground), 0.15);
+  .bp-cart-groups {
+    display: flex;
+    flex-direction: column;
   }
 
-  .bp-cart-group-header:first-child td {
-    padding-top: 0;
+  /* Séparateur entre les groupes de perles par design (voir bp_group_list plus bas) — assez
+     marqué pour repérer un design d'un coup d'œil dans un panier qui en contient plusieurs. */
+  .bp-cart-group + .bp-cart-group {
+    margin-top: 2.8rem;
+    padding-top: 2rem;
+    border-top: 0.1rem solid rgba(var(--color-foreground), 0.15);
   }
 
   .bp-cart-group-header__row {
@@ -82,15 +83,6 @@
     transform: rotate(90deg);
   }
 
-  /* `.cart-item { display: table-row / grid }` du thème (component-cart-items.css) a la même
-     spécificité qu'une règle `[hidden]` de la feuille de style navigateur par défaut — les styles
-     d'auteur gagnant toujours face à ceux du navigateur à spécificité égale, l'attribut `hidden`
-     posé par bp-cart-item-row.liquid (repli initial) n'aurait sinon aucun effet. `tr.cart-item`
-     ajoute la spécificité qui manque pour que ce masquage l'emporte, à toute largeur d'écran. */
-  tr.cart-item[hidden] {
-    display: none;
-  }
-
   /* Miniature du design dans l'en-tête de groupe (voir bp_image plus bas, posée en propriété de
      ligne _bp_design_image par shopifyCart.js/gridThumbnail.js à l'ajout) — un canvas pixel-art
      donc image-rendering: pixelated pour rester nette une fois agrandie depuis sa taille source
@@ -107,69 +99,99 @@
     box-shadow: 0 0 0 0.1rem rgba(var(--color-foreground), 0.1);
   }
 
-  /* Lignes "perles BeadPops" (voir bp-cart-item-row.liquid, propriété de ligne _bp_design posée
-     à l'ajout par shopifyCart.js) : une ligne = une seule couleur, donc pas besoin de l'espace
-     généreux prévu par le thème pour un vrai produit (options, vignette 10rem, 4rem de padding,
-     stepper de quantité à 4.5rem de haut pensé pour un vrai gros bouton tactile...) — cet espace
-     rendait la liste illisible dès qu'un design comptait plusieurs couleurs, même après un
-     premier passage de compactage qui ne touchait que la vignette couleur. Réduit uniquement pour
-     ces lignes ; le reste du panier (produits hors configurateur) garde la mise en page standard
-     du thème. */
-  @media screen and (max-width: 749px) {
-    .bp-cart-item--bead {
-      margin-bottom: 0.8rem;
-      gap: 0.5rem;
-    }
+  /* Grille de pastilles d'un design déplié (voir bp-cart-chip.liquid) : une carte compacte par
+     couleur plutôt qu'une ligne de tableau pleine largeur — se réorganise en colonnes selon la
+     largeur d'écran, et se scanne visuellement par la couleur plutôt que par le texte. */
+  .bp-chip-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    padding-top: 1.8rem;
   }
 
-  @media screen and (min-width: 750px) {
-    .bp-cart-item--bead > td {
-      padding-top: 0.7rem;
-      padding-bottom: 0.7rem;
-    }
-
-    .bp-cart-item--bead .cart-item__media {
-      width: 3.6rem;
-    }
-
-    .bp-cart-item--bead .cart-item__details {
-      width: auto;
-    }
+  /* Même gotcha que documenté plus haut pour .bp-cart-group-header__toggle : `[hidden]` seul seul
+     n'a pas la spécificité nécessaire face à `display: grid` posé juste au-dessus. */
+  .bp-chip-grid[hidden] {
+    display: none;
   }
 
-  .bp-cart-item--bead .cart-item__image {
-    max-width: 3.6rem;
+  .bp-chip {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+    padding: 0.9rem;
+    border: 0.1rem solid rgba(var(--color-foreground), 0.12);
+    border-radius: 0.7rem;
   }
 
-  .bp-cart-item--bead .cart-item__title {
-    font-size: calc(var(--font-heading-scale) * 1.05rem);
+  .bp-chip__swatch {
+    display: block;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 0.5rem;
+    object-fit: cover;
+    box-shadow: 0 0 0 0.1rem rgba(var(--color-foreground), 0.1);
   }
 
-  .bp-cart-item--bead .cart-item__details > * + * {
-    margin-top: 0.1rem;
+  .bp-chip__body {
+    flex: 1;
+    min-width: 0;
   }
 
-  .bp-cart-item--bead .product-option {
-    font-size: 1.2rem;
+  .bp-chip__row1 {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.6rem;
   }
 
-  .bp-cart-item--bead .quantity {
+  .bp-chip__name {
+    font-weight: 600;
+    font-size: 1.3rem;
+    text-decoration: none;
+    color: inherit;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .bp-chip__price {
+    font-size: 1.15rem;
+    opacity: 0.6;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .bp-chip__row2 {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.7rem;
+  }
+
+  .bp-chip .quantity {
     min-height: 3rem;
     width: 9rem;
   }
 
-  .bp-cart-item--bead .quantity__button {
+  .bp-chip .quantity__button {
     width: 2.6rem;
     font-size: 1.3rem;
   }
 
-  .bp-cart-item--bead .quantity__input {
+  .bp-chip .quantity__input {
     font-size: 1.3rem;
     padding: 0 0.2rem;
   }
 
-  .bp-cart-item--bead .price {
-    font-size: 1.3rem;
+  .bp-chip__total {
+    font-size: 1.2rem;
+    font-variant-numeric: tabular-nums;
+    margin-left: auto;
+  }
+
+  .bp-chip__remove {
+    padding: 0.4rem;
   }
 {%- endstyle -%}
 
@@ -215,8 +237,8 @@
   })
 
   // Bouton replier/déplier d'un groupe de design (voir bp-cart-group-header__toggle) : bascule
-  // l'attribut `hidden` (posé par défaut par bp-cart-item-row.liquid) sur les lignes qui partagent
-  // le même data-bp-group, purement côté client — aucune requête réseau, contrairement au retrait.
+  // l'attribut `hidden` de la grille de pastilles (data-bp-group, posé replié par défaut plus
+  // bas), purement côté client — aucune requête réseau, contrairement au retrait.
   document.addEventListener('click', function (event) {
     var toggle = event.target.closest('.bp-cart-group-header__toggle')
     if (!toggle) return
@@ -264,129 +286,138 @@
       <div class="cart__items" id="main-cart-items" data-id="{{ section.id }}">
         <div class="js-contents">
           {%- if cart != empty -%}
-            <table class="cart-items">
-              <caption class="visually-hidden">
-                {{ 'sections.cart.title' | t }}
-              </caption>
-              <thead>
-                <tr>
-                  <th class="caption-with-letter-spacing" colspan="2" scope="col">
-                    {{ 'sections.cart.headings.product' | t }}
-                  </th>
-                  <th class="medium-hide large-up-hide right caption-with-letter-spacing" colspan="1" scope="col">
-                    {{ 'sections.cart.headings.total' | t }}
-                  </th>
-                  <th
-                    class="cart-items__heading--wide cart-items__heading--quantity small-hide caption-with-letter-spacing"
-                    colspan="1"
-                    scope="col"
-                  >
-                    {{ 'sections.cart.headings.quantity' | t }}
-                  </th>
-                  <th class="small-hide right caption-with-letter-spacing" colspan="1" scope="col">
-                    {{ 'sections.cart.headings.total' | t }}
-                  </th>
-                </tr>
-              </thead>
+            {%- comment -%}
+              Regroupe les lignes du panier par design (propriété de ligne _bp_design posée à
+              l'ajout, voir shopifyCart.js) : quand plusieurs designs sont commandés d'affilée,
+              chacun a son en-tête + son bouton "Retirer ces perles" plutôt que de tout mélanger
+              dans une liste plate où on ne sait plus quelles perles vont avec quel design.
+              bp_group_list garde l'ordre de première apparition ; '||BP-SEP||' comme séparateur
+              pour que `contains` ne matche jamais un nom de design partiellement (ex. "Chat" dans
+              "Chat Noir") lors de la détection des doublons. Chaque groupe est une grille de
+              pastilles (voir bp-cart-chip.liquid) plutôt qu'un tableau : les articles ajoutés hors
+              configurateur (sans design associé) gardent eux la mise en page tableau standard du
+              thème, dans un second temps plus bas — seulement s'il y en a.
+            {%- endcomment -%}
+            {%- liquid
+              assign bp_group_keys = '||BP-SEP||'
+              assign bp_has_orphans = false
+              for item in cart.items
+                assign bp_name = item.properties['_bp_design']
+                if bp_name != blank
+                  assign bp_needle = '||BP-SEP||' | append: bp_name | append: '||BP-SEP||'
+                  unless bp_group_keys contains bp_needle
+                    assign bp_group_keys = bp_group_keys | append: bp_name | append: '||BP-SEP||'
+                  endunless
+                else
+                  assign bp_has_orphans = true
+                endif
+              endfor
+              assign bp_group_list = bp_group_keys | split: '||BP-SEP||'
+            -%}
 
-              <tbody>
-                {%- comment -%}
-                  Regroupe les lignes du panier par design (propriété de ligne _bp_design posée à
-                  l'ajout, voir shopifyCart.js) : quand plusieurs designs sont commandés d'affilée,
-                  chacun a son en-tête + son bouton "Retirer ces perles" plutôt que de tout mélanger
-                  dans une liste plate où on ne sait plus quelles perles vont avec quel design.
-                  bp_group_list garde l'ordre de première apparition ; '||BP-SEP||' comme séparateur
-                  pour que `contains` ne matche jamais un nom de design partiellement (ex. "Chat"
-                  dans "Chat Noir") lors de la détection des doublons.
-                {%- endcomment -%}
-                {%- liquid
-                  assign bp_group_keys = '||BP-SEP||'
-                  for item in cart.items
-                    assign bp_name = item.properties['_bp_design']
-                    if bp_name != blank
-                      assign bp_needle = '||BP-SEP||' | append: bp_name | append: '||BP-SEP||'
-                      unless bp_group_keys contains bp_needle
-                        assign bp_group_keys = bp_group_keys | append: bp_name | append: '||BP-SEP||'
-                      endunless
-                    endif
-                  endfor
-                  assign bp_group_list = bp_group_keys | split: '||BP-SEP||'
-                -%}
-
-                {%- for bp_name in bp_group_list -%}
-                  {%- unless bp_name == blank -%}
-                    {%- liquid
-                      assign bp_group_id = forloop.index
-                      assign bp_keys = ''
-                      assign bp_line_count = 0
-                      assign bp_qty_total = 0
-                      assign bp_image = ''
-                      for item in cart.items
-                        if item.properties['_bp_design'] == bp_name
-                          assign bp_keys = bp_keys | append: item.key | append: ','
-                          assign bp_line_count = bp_line_count | plus: 1
-                          assign bp_qty_total = bp_qty_total | plus: item.quantity
-                          if bp_image == '' and item.properties['_bp_design_image'] != blank
-                            assign bp_image = item.properties['_bp_design_image']
-                          endif
+            <div class="bp-cart-groups">
+              {%- for bp_name in bp_group_list -%}
+                {%- unless bp_name == blank -%}
+                  {%- liquid
+                    assign bp_group_id = forloop.index
+                    assign bp_keys = ''
+                    assign bp_line_count = 0
+                    assign bp_qty_total = 0
+                    assign bp_image = ''
+                    for item in cart.items
+                      if item.properties['_bp_design'] == bp_name
+                        assign bp_keys = bp_keys | append: item.key | append: ','
+                        assign bp_line_count = bp_line_count | plus: 1
+                        assign bp_qty_total = bp_qty_total | plus: item.quantity
+                        if bp_image == '' and item.properties['_bp_design_image'] != blank
+                          assign bp_image = item.properties['_bp_design_image']
                         endif
-                      endfor
-                    -%}
-                    <tr class="bp-cart-group-header">
-                      <td colspan="5">
-                        <div class="bp-cart-group-header__row">
-                          {%- comment -%}
-                            Replié par défaut (voir le script plus haut) : avec plusieurs designs au
-                            panier, la liste complète de toutes les couleurs de tous les designs
-                            devenait très longue à parcourir — replier ne garde que l'essentiel visible
-                            (miniature, nom, total) et un clic rouvre le détail d'un design à la fois.
-                          {%- endcomment -%}
-                          <button
-                            type="button"
-                            class="bp-cart-group-header__toggle"
-                            data-bp-toggle="{{ bp_group_id }}"
-                            aria-expanded="false"
-                            aria-label="Afficher le détail des couleurs"
-                          >
-                            <span class="bp-cart-group-header__chevron" aria-hidden="true">▸</span>
-                          </button>
-                          {%- if bp_image != blank -%}
-                            <img class="bp-cart-group-header__thumb" src="{{ bp_image }}" alt="" width="36" height="36">
-                          {%- endif -%}
-                          <span class="bp-cart-group-header__title">{{ bp_name }}</span>
-                          <span class="bp-cart-group-header__meta">
-                            {{ bp_line_count }} couleur{% if bp_line_count > 1 %}s{% endif %} · {{ bp_qty_total }} sachet{% if bp_qty_total > 1 %}s{% endif %}
-                          </span>
-                          <button
-                            type="button"
-                            class="bp-cart-group-header__remove link"
-                            data-bp-remove-keys="{{ bp_keys | strip_newlines }}"
-                          >
-                            Retirer ces perles
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                    {%- for item in cart.items -%}
-                      {%- if item.properties['_bp_design'] == bp_name -%}
-                        {%- render 'bp-cart-item-row', item: item, bp_group_id: bp_group_id -%}
+                      endif
+                    endfor
+                  -%}
+                  <div class="bp-cart-group">
+                    <div class="bp-cart-group-header__row">
+                      {%- comment -%}
+                        Replié par défaut (voir le script plus haut) : avec plusieurs designs au
+                        panier, la liste complète de toutes les couleurs de tous les designs
+                        devenait très longue à parcourir — replier ne garde que l'essentiel visible
+                        (miniature, nom, total) et un clic rouvre le détail d'un design à la fois.
+                      {%- endcomment -%}
+                      <button
+                        type="button"
+                        class="bp-cart-group-header__toggle"
+                        data-bp-toggle="{{ bp_group_id }}"
+                        aria-expanded="false"
+                        aria-label="Afficher le détail des couleurs"
+                      >
+                        <span class="bp-cart-group-header__chevron" aria-hidden="true">▸</span>
+                      </button>
+                      {%- if bp_image != blank -%}
+                        <img class="bp-cart-group-header__thumb" src="{{ bp_image }}" alt="" width="36" height="36">
                       {%- endif -%}
-                    {%- endfor -%}
-                  {%- endunless -%}
-                {%- endfor -%}
+                      <span class="bp-cart-group-header__title">{{ bp_name }}</span>
+                      <span class="bp-cart-group-header__meta">
+                        {{ bp_line_count }} couleur{% if bp_line_count > 1 %}s{% endif %} · {{ bp_qty_total }} sachet{% if bp_qty_total > 1 %}s{% endif %}
+                      </span>
+                      <button
+                        type="button"
+                        class="bp-cart-group-header__remove link"
+                        data-bp-remove-keys="{{ bp_keys | strip_newlines }}"
+                      >
+                        Retirer ces perles
+                      </button>
+                    </div>
+                    <div class="bp-chip-grid" data-bp-group="{{ bp_group_id }}" hidden>
+                      {%- for item in cart.items -%}
+                        {%- if item.properties['_bp_design'] == bp_name -%}
+                          {%- render 'bp-cart-chip', item: item -%}
+                        {%- endif -%}
+                      {%- endfor -%}
+                    </div>
+                  </div>
+                {%- endunless -%}
+              {%- endfor -%}
+            </div>
 
-                {%- comment -%}
-                  Articles sans design associé (produits ajoutés hors configurateur, ou anciennes
-                  lignes de panier créées avant ce regroupement) : rendus tels quels, à la suite des
-                  groupes, sans en-tête puisqu'ils ne se rattachent à aucun design.
-                {%- endcomment -%}
-                {%- for item in cart.items -%}
-                  {%- if item.properties['_bp_design'] == blank -%}
-                    {%- render 'bp-cart-item-row', item: item -%}
-                  {%- endif -%}
-                {%- endfor -%}
-              </tbody>
-            </table>
+            {%- comment -%}
+              Articles sans design associé (produits ajoutés hors configurateur, ou anciennes
+              lignes de panier créées avant ce regroupement) : mise en page tableau standard du
+              thème, inchangée, à la suite des groupes — seulement si le panier en contient.
+            {%- endcomment -%}
+            {%- if bp_has_orphans -%}
+              <table class="cart-items">
+                <caption class="visually-hidden">
+                  {{ 'sections.cart.title' | t }}
+                </caption>
+                <thead>
+                  <tr>
+                    <th class="caption-with-letter-spacing" colspan="2" scope="col">
+                      {{ 'sections.cart.headings.product' | t }}
+                    </th>
+                    <th class="medium-hide large-up-hide right caption-with-letter-spacing" colspan="1" scope="col">
+                      {{ 'sections.cart.headings.total' | t }}
+                    </th>
+                    <th
+                      class="cart-items__heading--wide cart-items__heading--quantity small-hide caption-with-letter-spacing"
+                      colspan="1"
+                      scope="col"
+                    >
+                      {{ 'sections.cart.headings.quantity' | t }}
+                    </th>
+                    <th class="small-hide right caption-with-letter-spacing" colspan="1" scope="col">
+                      {{ 'sections.cart.headings.total' | t }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {%- for item in cart.items -%}
+                    {%- if item.properties['_bp_design'] == blank -%}
+                      {%- render 'bp-cart-item-row', item: item -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                </tbody>
+              </table>
+            {%- endif -%}
           {%- endif -%}
         </div>
       </div>
