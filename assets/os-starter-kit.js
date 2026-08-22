@@ -864,16 +864,20 @@
         /* ⚠️ Au-dela de VISIBLES univers, les suivants portent `ufil--plus` : la colonne
            desktop les replie sous un bouton « + N autres univers » (voir le CSS de
            `.dpick__f`), le mobile les montre tous. L'ordre reste l'ordre editorial. */
-        var VISIBLES = 5;
+        /* 4 : avec Tous, la difficulte et les 3 packs, c'est ce qui tient dans 800 px de
+           colonne sans defiler. Et on ne replie que s'il y a AU MOINS 2 univers a cacher :
+           un bouton pour en montrer un seul couterait plus qu'il ne rend. */
+        var VISIBLES = 4;
+        var caches = dispo.length - VISIBLES;
+        var replier = caches >= 2;
         dispo.forEach(function(u, i){
           var n = DESIGNS.filter(function(d){ return d.u === u; }).length;
-          html += '<button class="filter ufil' + (i >= VISIBLES ? ' ufil--plus' : '') + '" type="button" data-f="u" data-v="' + u + '" aria-pressed="false">' +
+          html += '<button class="filter ufil' + (replier && i >= VISIBLES ? ' ufil--plus' : '') + '" type="button" data-f="u" data-v="' + u + '" aria-pressed="false">' +
             '<span class="ufil__m" aria-hidden="true">' + vignette(u) + '</span>' +
             '<span class="ufil__n">' + esc(UNIVERS[u] || u) + '</span>' +
             '<span class="ufil__c" data-cu="' + u + '">' + n + ' dispo</span></button>';
         });
-        var caches = dispo.length - VISIBLES;
-        if (caches > 0){
+        if (replier){
           html += '<button class="ufil-more" type="button" aria-expanded="false" data-fmore>' +
             '<span data-fmore-plus>+ ' + caches + ' autre' + (caches > 1 ? 's' : '') + ' univers</span>' +
             '<span data-fmore-moins hidden>Voir moins d’univers</span></button>';
