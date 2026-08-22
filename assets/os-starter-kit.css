@@ -1235,6 +1235,8 @@
    pour Facile, deux pour Medium, trois pour Boss. On lit la difficulte sans lire un mot.
    Les vignettes et les comptes sont construits depuis DESIGNS, donc ca tient a 200. */
 .os-sk .picker--u,.os-sk .picker--n{display:flex;gap:9px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+/* le bouton « + N autres univers » n'existe que dans la colonne desktop (voir `.dpick__f`) */
+.os-sk .ufil-more{display:none}
 .os-sk .picker--u::-webkit-scrollbar,.os-sk .picker--n::-webkit-scrollbar{display:none}
 
 .os-sk .ufil{
@@ -1342,9 +1344,13 @@
 .os-sk .dtray__xs{display:flex;gap:9px;min-width:0;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
 .os-sk .dtray__xs::-webkit-scrollbar{display:none}
 
+/* emplacement VIDE : filet en pointilles + leger fond, pour qu'on voie les cases a remplir
+   sans relire le compte — releve par l'operateur le 2026-08-22, le `--rule` a .14 etait
+   presque invisible sur le plateau clair. `--rule-hi` reste sous le solide des cases
+   remplies (qui portent une image), la hierarchie vide/plein tient. */
 .os-sk .dslot{
   position:relative;width:52px;height:52px;flex:none;
-  border:1px dashed var(--rule);background:transparent;
+  border:1px dashed var(--rule-hi);background:var(--panel);
 }
 .os-sk .dslot--on{border-style:solid;border-color:var(--rule-hi)}
 .os-sk .dslot--x{border-color:var(--pop)}
@@ -2436,6 +2442,25 @@
   .os-sk .dpick__f .ufil{padding:4px 9px 4px 4px}
   .os-sk .dpick__f .ufil__m{width:28px;height:28px}
   .os-sk .dpick__f .nfil{padding:5px 10px}
+
+  /* ---- au-dela de 5 univers, le reste se replie sous « + N autres univers » ----
+     Releve par l'operateur le 2026-08-22 : le catalogue est fait pour gagner des univers,
+     et chacun coute ~46 px de colonne. La laisser defiler cache des choix ; ouvrir un
+     popover ajoute une couche a un dialogue qui a deja son plateau. On montre les 5
+     premiers de l'ordre editorial et on replie le reste derriere un bouton texte — le
+     motif des facettes e-commerce : zero defilement par defaut, tout a un clic. Un
+     univers ACTIF reste visible meme replie. Sur mobile le panneau en grille montre tout,
+     le bouton n'y existe pas (masque a la base, affiche ici seulement). */
+  .os-sk .dpick__f .ufil--plus{display:none}
+  .os-sk .dpick__f [data-fu].is-more .ufil--plus,.os-sk .dpick__f .ufil--plus[aria-pressed="true"]{display:grid}
+  .os-sk .dpick__f .ufil-more{
+    display:block;flex:1 1 100%;margin-top:2px;padding:7px 9px;cursor:pointer;
+    border:1px dashed var(--rule-hi);background:transparent;color:var(--dim);
+    font-family:var(--label);font-weight:700;font-size:10.5px;letter-spacing:.08em;
+    text-transform:uppercase;text-align:left;
+    transition:border-color .18s ease,color .18s ease;
+  }
+  .os-sk .dpick__f .ufil-more:hover,.os-sk .dpick__f .ufil-more:focus-visible{border-color:var(--pop);color:var(--fg)}
 
   /* ---- la carte de pack en RANGEE ----
      Etiree sur 288 px, elle empilait un bandeau pleine largeur, une image et deux lignes

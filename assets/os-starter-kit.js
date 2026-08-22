@@ -861,14 +861,31 @@
         var html = '<button class="filter ufil" type="button" data-f="u" data-v="" aria-pressed="true">' +
           '<span class="ufil__m ufil__m--all" aria-hidden="true">' + dispo.slice(0, 4).map(vignette).join('') + '</span>' +
           '<span class="ufil__n">Tous</span><span class="ufil__c" data-cu="">' + DESIGNS.length + ' dispo</span></button>';
-        dispo.forEach(function(u){
+        /* ⚠️ Au-dela de VISIBLES univers, les suivants portent `ufil--plus` : la colonne
+           desktop les replie sous un bouton « + N autres univers » (voir le CSS de
+           `.dpick__f`), le mobile les montre tous. L'ordre reste l'ordre editorial. */
+        var VISIBLES = 5;
+        dispo.forEach(function(u, i){
           var n = DESIGNS.filter(function(d){ return d.u === u; }).length;
-          html += '<button class="filter ufil" type="button" data-f="u" data-v="' + u + '" aria-pressed="false">' +
+          html += '<button class="filter ufil' + (i >= VISIBLES ? ' ufil--plus' : '') + '" type="button" data-f="u" data-v="' + u + '" aria-pressed="false">' +
             '<span class="ufil__m" aria-hidden="true">' + vignette(u) + '</span>' +
             '<span class="ufil__n">' + esc(UNIVERS[u] || u) + '</span>' +
             '<span class="ufil__c" data-cu="' + u + '">' + n + ' dispo</span></button>';
         });
+        var caches = dispo.length - VISIBLES;
+        if (caches > 0){
+          html += '<button class="ufil-more" type="button" aria-expanded="false" data-fmore>' +
+            '<span data-fmore-plus>+ ' + caches + ' autre' + (caches > 1 ? 's' : '') + ' univers</span>' +
+            '<span data-fmore-moins hidden>Voir moins d’univers</span></button>';
+        }
         fu.innerHTML = html;
+        var more = fu.querySelector('[data-fmore]');
+        if (more) more.addEventListener('click', function(){
+          var ouvert = fu.classList.toggle('is-more');
+          more.setAttribute('aria-expanded', String(ouvert));
+          more.querySelector('[data-fmore-plus]').hidden = ouvert;
+          more.querySelector('[data-fmore-moins]').hidden = !ouvert;
+        });
       }
       if (fn){
         /* la jauge dit la difficulte sans mot : 1 bloc, 2 blocs, 3 blocs */
@@ -1154,6 +1171,8 @@
         var deja = b.getAttribute('aria-pressed') === 'true' && b.dataset.v;
         var cible = deja ? '' : (b.dataset.v || '');
         [].slice.call(g.children).forEach(function(x){
+          /* le bouton « + N autres univers » vit dans le meme groupe sans etre un filtre */
+          if (!x.classList.contains('filter')) return;
           x.setAttribute('aria-pressed', String((x.dataset.v || '') === cible));
         });
         if (b.dataset.f) filtre[b.dataset.f] = cible;
