@@ -521,7 +521,15 @@
    main et l'apercu sortait a 164 px de haut pour 158 de large sur certaines vignettes,
    donc plus carre — sur un catalogue de pixel art, c'est le motif lui-meme qu'on
    deforme. Cale au depart, la hauteur vaut exactement la largeur. */
-.os-sk .dcard img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block;align-self:start;min-width:0;min-height:0}
+/* ⚠️ `contain`, plus `cover` (2026-08-22) : l'image produit est desormais la PLAQUE
+   complete (grille codee + legende des beads), et un apercu qui la rogne ampute la
+   legende — releve par l'operateur sur les anciennes plaques en portrait. Le cadre reste
+   carre (les plaques le sont), le fond blanc prolonge celui de la plaque.
+   ⚠️ `.dcard > img`, enfant DIRECT : la carte contient aussi l'image du bead dans la
+   pastille `.bead`. En `.dcard img`, le fond blanc et l'`align-self:start` l'attrapaient
+   aussi — bead sur un carre blanc, cale en haut de sa pastille (releve par l'operateur
+   le 2026-08-22). Le selecteur dit exactement de quelle image on parle. */
+.os-sk .dcard > img{width:100%;aspect-ratio:1/1;object-fit:contain;background:#fff;display:block;align-self:start;min-width:0;min-height:0}
 /* Cible par CLASSE et plus par element : le pied de vignette contient maintenant
    plusieurs <span> (la ligne du bas, la jauge), et `.dcard span` les habillait tous avec
    le padding du bloc. La chaine de `:not()` qui corrigeait ca grossissait a chaque ajout. */
@@ -615,6 +623,15 @@
    devinette. Meme traitement sur les deux etages, donc la vignette se lit comme une
    petite fiche technique et pas comme une accumulation de valeurs. */
 .os-sk .dcard__s u,.os-sk .dcard__m u{text-decoration:none;opacity:.6;font-weight:600;font-size:.82em;margin-right:.15em}
+/* ⚠️ LA LIGNE DU NOMBRE NE DEBORDE JAMAIS DE SA CARTE (2026-08-22). Mesure a 1440 px :
+   « Contient : 1 200 BEADS + bead » fait 187-199 px dans une carte de 204 px dont 184
+   utiles ; centree, elle debordait des deux cotes et la pastille bead sortait de 5-7 px
+   sous le bord rogne par `overflow:hidden` — releve par l'operateur. La carte devient son
+   propre conteneur et, quand elle est etroite, l'intitule « Contient : » s'efface : le
+   nombre, BEADS et le bead tiennent, et ils disent deja de quoi on parle. Les hauteurs
+   fixes des etages ne bougent pas, donc l'empreinte non plus. */
+.os-sk .dcard{container-type:inline-size}
+@container (max-width:215px){.os-sk .dcard__m u{display:none}}
 /* La jauge : trois barres croissantes, remplies jusqu'au niveau. Elle se compare d'une
    vignette a l'autre sans etre lue, et elle tient en 12 px.
    Les barres pleines sont en `--fg` et pas en `--pop` : sur le fond clair du catalogue
