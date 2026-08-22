@@ -269,6 +269,9 @@
       var g = document.createElement('section');
       g.className = 'dgroup'; g.dataset.g = u;
       g.innerHTML = '<h4 class="dgroup__h">' + esc(UNIVERS[u] || u) + ' <span data-gn></span>' +
+                    '<span class="dgroup__nav" data-nav hidden>' +
+                      '<button type="button" data-prev aria-label="Designs précédents" disabled>‹</button>' +
+                      '<button type="button" data-next aria-label="Designs suivants">›</button></span>' +
                     '<span class="dgroup__dots" data-dots hidden></span></h4><div class="dgroup__g"></div>';
       grille.appendChild(g);
       groupes[u] = g.querySelector('.dgroup__g');
@@ -368,6 +371,12 @@
         piste.classList.toggle('has-suite', suite);
         g.classList.toggle('has-suite', suite); /* l'en-tete dit « glisse → » */
         var pages = Math.max(1, Math.ceil((piste.scrollWidth - 4) / large));
+        var nav = g.querySelector('[data-nav]');
+        if (nav){
+          nav.hidden = pages < 2;
+          nav.querySelector('[data-prev]').disabled = piste.scrollLeft < 4;
+          nav.querySelector('[data-next]').disabled = !suite;
+        }
         pts.hidden = pages < 2;
         if (pts.hidden){ pts.innerHTML = ''; return; }
         if (pts.children.length !== pages){
@@ -410,6 +419,12 @@
       if (e.target.classList && e.target.classList.contains('dgroup__g')) majDots();
     }, true);
     grille.addEventListener('click', function(e){
+      var fl = e.target.closest('[data-prev],[data-next]');
+      if (fl){
+        var pf = fl.closest('.dgroup').querySelector('.dgroup__g');
+        pf.scrollBy({ left: (fl.hasAttribute('data-prev') ? -1 : 1) * pf.clientWidth, behavior: animOk ? 'smooth' : 'auto' });
+        return;
+      }
       var b = e.target.closest('[data-page]'); if (!b) return;
       var piste = b.closest('.dgroup').querySelector('.dgroup__g');
       piste.scrollTo({ left: +b.dataset.page * piste.clientWidth, behavior: animOk ? 'smooth' : 'auto' });
@@ -809,23 +824,76 @@
          (releve par l'operateur le 2026-08-22). */
       im.src = (d.F || d.f);
       im.alt = 'Le design ' + d.t + ', grille de pixels colorés';
-      /* ---- zoom : toucher l'image la passe a sa taille native (1 bead = N px, codes
-         lisibles), le cadre defile pour se deplacer, toucher a nouveau revient a l'apercu.
-         Etat remis a zero a chaque ouverture. Clavier : Entree / Espace. ---- */
+      /* ---- zoom LIBRE (2026-08-22, « zoomer a sa guise ») ----
+         Un facteur continu de 1 (la plaque tient dans le cadre) a ZMAX (au-dela du natif,
+         pour lire les codes). Quatre gestes, un seul etat :
+           · toucher / Entree : va au palier « natif », re-toucher revient a 1 ;
+           · − / + (barre collante) et touches − / + : paliers de ×1.35 ;
+           · molette sur le cadre : zoom continu, centre sous le pointeur ;
+           · pincement a deux doigts : zoom continu, centre entre les doigts
+             (`touch-action:pan-x pan-y` sur le cadre : un doigt = deplacer, deux = zoomer).
+         Le point sous le pointeur reste fixe (on recale scrollLeft/Top). Remis a 1 a chaque
+         ouverture. Tout l'etat vit sur le cadre (`fig._zoom`), les gestionnaires sont poses
+         une seule fois. */
       var fig = im.closest('.dview__f');
-      if (fig){ fig.classList.remove('is-zoom'); im.style.width = ''; }
-      if (!im.dataset.zoomPret){
-        im.dataset.zoomPret = '1';
-        var basculer = function(){
-          var f = im.closest('.dview__f'); if (!f) return;
-          var on = f.classList.toggle('is-zoom');
-          im.style.width = on ? Math.max(im.naturalWidth, f.clientWidth) + 'px' : '';
-          im.setAttribute('aria-pressed', String(on));
-          if (on){ f.scrollLeft = (f.scrollWidth - f.clientWidth) / 2; f.scrollTop = (f.scrollHeight - f.clientHeight) / 2; }
+      if (fig && !fig._zoom){
+        var zt = fig.querySelector('[data-zt]');
+        var Z = fig._zoom = { z: 1, max: 2.5 };
+        var ajuster = function(){ return fig.clientWidth || 1; };
+        Z.majMax = function(){ Z.max = Math.max(2.5, (im.naturalWidth || 0) / ajuster() * 1.5); };
+        Z.aller = function(z, ox, oy){
+          var avant = Z.z;
+          Z.z = Math.min(Z.max, Math.max(1, z));
+          if (ox == null){ ox = fig.clientWidth / 2; oy = fig.clientHeight / 2; }
+          var sx = fig.scrollLeft, sy = fig.scrollTop, r = Z.z / avant;
+          fig.classList.toggle('is-zoom', Z.z > 1.001);
+          im.style.width = Z.z > 1.001 ? Math.round(ajuster() * Z.z) + 'px' : '';
+          fig.scrollLeft = (sx + ox) * r - ox;
+          fig.scrollTop  = (sy + oy) * r - oy;
+          im.setAttribute('aria-pressed', String(Z.z > 1.001));
+          if (zt){
+            zt.querySelector('[data-zval]').textContent = (Math.round(Z.z * 10) / 10) + '×';
+            zt.querySelector('[data-zmoins]').disabled = Z.z <= 1.001;
+            zt.querySelector('[data-zplus]').disabled = Z.z >= Z.max - 0.001;
+          }
         };
-        im.addEventListener('click', basculer);
-        im.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); basculer(); } });
+        Z.reset = function(){ Z.z = 1; fig.classList.remove('is-zoom'); im.style.width = ''; im.setAttribute('aria-pressed', 'false'); fig.scrollLeft = 0; fig.scrollTop = 0; if (zt){ zt.querySelector('[data-zval]').textContent = '1×'; zt.querySelector('[data-zmoins]').disabled = true; zt.querySelector('[data-zplus]').disabled = false; } };
+        var natif = function(){ return Math.min(Z.max, Math.max(2, (im.naturalWidth || 0) / ajuster())); };
+        var basculer = function(ox, oy){ Z.aller(Z.z > 1.001 ? 1 : natif(), ox, oy); };
+        im.addEventListener('load', Z.majMax);
+        im.addEventListener('click', function(e){
+          var b = fig.getBoundingClientRect(); basculer(e.clientX - b.left, e.clientY - b.top);
+        });
+        im.addEventListener('keydown', function(e){
+          if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); basculer(); }
+          else if (e.key === '+' || e.key === '='){ e.preventDefault(); Z.aller(Z.z * 1.35); }
+          else if (e.key === '-'){ e.preventDefault(); Z.aller(Z.z / 1.35); }
+        });
+        if (zt){
+          zt.querySelector('[data-zplus]').addEventListener('click', function(){ Z.aller(Z.z * 1.35); });
+          zt.querySelector('[data-zmoins]').addEventListener('click', function(){ Z.aller(Z.z / 1.35); });
+        }
+        fig.addEventListener('wheel', function(e){
+          e.preventDefault();
+          var b = fig.getBoundingClientRect();
+          Z.aller(Z.z * (e.deltaY < 0 ? 1.12 : 1 / 1.12), e.clientX - b.left, e.clientY - b.top);
+        }, { passive: false });
+        var pince = null;
+        fig.addEventListener('touchstart', function(e){
+          if (e.touches.length !== 2) { pince = null; return; }
+          var a = e.touches[0], c = e.touches[1];
+          pince = { d: Math.hypot(a.clientX - c.clientX, a.clientY - c.clientY), z: Z.z };
+        }, { passive: true });
+        fig.addEventListener('touchmove', function(e){
+          if (!pince || e.touches.length !== 2) return;
+          e.preventDefault();
+          var a = e.touches[0], c = e.touches[1], b = fig.getBoundingClientRect();
+          var d = Math.hypot(a.clientX - c.clientX, a.clientY - c.clientY);
+          Z.aller(pince.z * (d / pince.d), (a.clientX + c.clientX) / 2 - b.left, (a.clientY + c.clientY) / 2 - b.top);
+        }, { passive: false });
+        fig.addEventListener('touchend', function(){ pince = null; });
       }
+      if (fig) fig._zoom.reset();
       dlg.querySelector('[data-dtitle]').textContent = d.t;
       /* la meta ne porte plus que l'univers : le niveau a sa colonne dans la fiche
          technique juste dessous, et le redire a trois centimetres n'ajoute rien */

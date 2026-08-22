@@ -1265,7 +1265,16 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
        width/height : indice de ratio requis par Theme Check (ImgWidthAndHeight), inerte a
        l'ecran — le CSS force width:100% / height:auto et le vrai ratio reprend la main au
        chargement. Le dialog est ferme par defaut, impact visuel mesure : zero. -->
-  <figure class="dview__f"><img data-dimg alt="" width="1080" height="1080" tabindex="0" role="button" aria-pressed="false" aria-label="Zoomer sur le design : touche l’image, touche à nouveau pour revenir"></figure>
+  <figure class="dview__f" data-zfig>
+    <img data-dimg alt="" width="1080" height="1080" tabindex="0" role="button" aria-pressed="false" aria-label="Zoomer sur le design : touche l’image, pince, ou utilise − et +">
+    <!-- la barre de zoom : collante en bas a droite du cadre, elle reste visible pendant
+         le defilement (2026-08-22, « zoomer a sa guise ») -->
+    <span class="dview__zt" data-zt>
+      <button type="button" data-zmoins aria-label="Réduire" disabled>−</button>
+      <b data-zval aria-live="polite">1×</b>
+      <button type="button" data-zplus aria-label="Agrandir">+</button>
+    </span>
+  </figure>
   <div class="dview__b">
     <p class="dview__meta"><span data-dmeta></span></p>
     <h3 data-dtitle></h3>

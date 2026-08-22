@@ -486,6 +486,23 @@
 .os-sk .dgroup__h{display:flex;align-items:center}
 .os-sk .dgroup__h .dgroup__dots{display:flex;gap:5px;align-items:center;margin-left:auto;color:inherit}
 .os-sk .dgroup__h .dgroup__dots[hidden]{display:none}
+/* ---- les fleches ‹ › de l'etagere (desktop, 2026-08-22) ----
+   Sur ordinateur, defiler lateralement a la souris est penible et le geste n'est pas
+   devine : deux fleches dans l'en-tete, a gauche des points, avancent/reculent d'une page.
+   Masquees a la base, affichees par la regle @media(min-width:900px). */
+.os-sk .dgroup__h .dgroup__nav{display:none;gap:4px;align-items:center;margin-left:auto;margin-right:10px}
+/* ⚠️ (0,4,0) : la regle desktop `.dpick .dgroup__h .dgroup__nav{display:flex}` est a
+   (0,3,0) et ecrite plus bas — a egalite elle gagnerait sur [hidden], et les fleches
+   s'afficheraient grisees meme sans rien a faire defiler (vu a la capture). */
+.os-sk .dpick .dgroup__h .dgroup__nav[hidden]{display:none}
+.os-sk .dgroup__nav button{
+  width:26px;height:26px;padding:0;border:1px solid var(--rule);background:transparent;
+  color:var(--fg);font-family:var(--display);font-size:17px;line-height:1;cursor:pointer;
+  transition:border-color .15s ease,color .15s ease,opacity .15s ease;
+}
+.os-sk .dgroup__nav button:hover,.os-sk .dgroup__nav button:focus-visible{border-color:var(--pop);color:var(--pop)}
+.os-sk .dgroup__nav button:disabled{opacity:.3;cursor:default;border-color:var(--rule);color:var(--fg)}
+.os-sk .dgroup__h .dgroup__nav + .dgroup__dots{margin-left:0}
 .os-sk .dgroup__dots button{
   position:relative;width:7px;height:7px;padding:0;border:0;cursor:pointer;
   background:var(--rule-hi);transition:width .22s ease,background .22s ease;
@@ -937,7 +954,11 @@
    sortait a 450 px de haut — une etagere de deux rangees prenait alors tout l'ecran, ce
    qui annule le gain de place recherche. */
 @media(min-width:900px){
-  .os-sk .dpick .dgroup__g{--cols:5;grid-auto-columns:calc((100cqw - (var(--cols) - 1)*16px)/var(--cols));gap:16px}
+  /* N colonnes pleines + un tiers de la suivante (2026-08-22), meme signal qu'en mobile */
+  .os-sk .dpick .dgroup__g{--cols:5;grid-auto-columns:calc((100cqw - var(--cols)*16px)/(var(--cols) + .3));gap:16px}
+  /* en desktop, les fleches remplacent le mot « glisse → » : l'en-tete reste sobre */
+  .os-sk .dpick .dgroup.has-suite .dgroup__h::after{display:none}
+  .os-sk .dpick .dgroup__h .dgroup__nav{display:flex}
 }
 @media(min-width:1280px){ .os-sk .dpick .dgroup__g{--cols:6} }
 /* L'en-tete collant recouvrait la rangee du dessus : un bandeau opaque qui coupait les
@@ -1525,9 +1546,26 @@
 .os-sk .dview__f img{width:100%;height:auto;max-height:56vh;object-fit:contain;display:block;cursor:zoom-in}
 /* ---- zoom (2026-08-22) : le cadre devient une fenetre qui defile sur la plaque a sa
    taille native ; la largeur de l'image est posee en ligne par le JS (naturalWidth). ---- */
+.os-sk .dview__f{touch-action:pan-x pan-y} /* un doigt deplace, deux doigts zooment (voir le JS) */
 .os-sk .dview__f.is-zoom{overflow:auto;max-height:72vh;overscroll-behavior:contain;cursor:zoom-out}
 .os-sk .dview__f.is-zoom img{max-height:none;max-width:none;object-fit:unset;cursor:zoom-out}
 .os-sk .dview__f img:focus-visible{outline:2px solid var(--pop);outline-offset:-2px}
+/* la barre − / + : collante en bas a droite, visible meme quand le cadre defile */
+.os-sk .dview__zt{
+  position:sticky;bottom:8px;display:flex;align-items:center;gap:2px;width:max-content;
+  margin:-40px 8px 8px auto;padding:3px;background:rgba(12,11,11,.82);color:var(--pearl);
+  z-index:1;
+}
+.os-sk .dview__zt button{
+  width:28px;height:28px;padding:0;border:0;background:transparent;color:inherit;
+  font-family:var(--display);font-size:18px;line-height:1;cursor:pointer;
+}
+.os-sk .dview__zt button:hover,.os-sk .dview__zt button:focus-visible{color:var(--pop)}
+.os-sk .dview__zt button:disabled{opacity:.35;cursor:default;color:inherit}
+/* le facteur (« 1× ») n'est PAS affiche — consigne operateur 2026-08-22 : seuls − et +
+   comptent. Il reste dans le DOM, invisible, pour les lecteurs d'ecran (aria-live). */
+.os-sk .dview__zt b{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media(pointer:coarse){.os-sk .dview__zt button{width:36px;height:36px}}
 .os-sk .dview__b{padding:var(--s3)}
 /* ⚠️ `--pop` sur fond clair ne vaut que 2,9:1 : sous le seuil de 4,5. L'orange reste
    la couleur des commandes, mais il ne porte pas de texte sur du blanc. La meta passe
@@ -2420,12 +2458,12 @@
      lateralement a la souris est l'interaction la plus penible qu'on puisse demander.
      Les points de position disparaissent d'eux-memes : `majDots` les masque des qu'il
      n'y a plus qu'une page. */
-  .os-sk .dpick .dgroup__g{
-    grid-auto-flow:row;grid-template-rows:none;
-    grid-template-columns:repeat(auto-fill,minmax(178px,1fr));
-    overflow:visible;scroll-snap-type:none;padding-bottom:0;
-  }
-  .os-sk .dpick .dgroup__g.has-suite{-webkit-mask-image:none;mask-image:none}
+  /* ⚠️ (2026-08-22) L'ETAGERE RESTE UNE ETAGERE SUR DESKTOP AUSSI — consigne de
+     l'operateur : « deux rangees maximum par univers, au-dela ca glisse a droite, comme
+     sur mobile ». La grille verticale ci-dessus (supprimee) mettait Animaux (13) sur
+     trois rangees. Le defilement a la souris reste penible : il est remplace par les
+     fleches ‹ › de l'en-tete (et les points), la molette n'est pas necessaire.
+     Les colonnes visibles et le tiers de carte viennent de la regle @media(min-width:900px). */
 
   /* ---- les trois groupes de filtres deviennent des listes verticales ----
      Ils etaient dessines pour une barre LARGE : une rangee qui defile lateralement, des
