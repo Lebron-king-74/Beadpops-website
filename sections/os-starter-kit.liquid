@@ -41,7 +41,19 @@
   accents des titres produits une fois pour toutes.
   ⚠️ «variant« est indispensable — c'est lui qui part au panier pour les designs en plus.
 {%- endcomment -%}
-{%- assign designs = collections.all.products | where: 'type', 'Design' -%}
+{%- comment -%}
+  ⛔ PLAFOND LIQUID : «collection.products« ne rend que 50 produits. Le 2026-08-22, avec 68
+  produits en boutique (34 designs marketplace + 20 anciens + recharges…), «collections.all«
+  ne laissait passer que 37 designs sur 54 — sans la moindre erreur. On lit donc EN PRIORITE
+  une collection dediee «designs« (automatisee : type = Design) si l'operateur l'a creee,
+  sinon «all«. Le plafond de 50 DESIGNS reste : au-dela, il faudra paginer ou scinder.
+{%- endcomment -%}
+{%- assign source = collections['designs'] -%}
+{%- if source.products_count > 0 -%}
+  {%- assign designs = source.products | where: 'type', 'Design' -%}
+{%- else -%}
+  {%- assign designs = collections.all.products | where: 'type', 'Design' -%}
+{%- endif -%}
 {%- comment -%}
   ⛔ LA BASE D'ASSETS EST INDISPENSABLE AU JS. Le catalogue, les outils, les photos de la
   galerie et le bead du plateau sont composes en JavaScript, or «asset_url« n'existe pas
