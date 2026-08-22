@@ -48,12 +48,21 @@
   une collection dediee «designs« (automatisee : type = Design) si l'operateur l'a creee,
   sinon «all«. Le plafond de 50 DESIGNS reste : au-dela, il faudra paginer ou scinder.
 {%- endcomment -%}
-{%- assign source = collections['designs'] -%}
-{%- if source.products_count > 0 -%}
-  {%- assign designs = source.products | where: 'type', 'Design' -%}
-{%- else -%}
-  {%- assign designs = collections.all.products | where: 'type', 'Design' -%}
-{%- endif -%}
+{%- comment -%}
+  ⛔ LA VALEUR PAR DEFAUT S'ASSIGNE D'ABORD, LA SURCHARGE VIENT APRES. Premier jet :
+  «if source.products_count > 0 … else … endif«. Quand la collection n'existe pas,
+  «collections['designs']« est un EmptyDrop dont «products_count« vaut nil ; comparer nil
+  a 0 leve une erreur Liquid qui SAUTE TOUT LE BLOC if/else — «designs« n'etait jamais
+  assigne, le JSON rendait «[]« et le catalogue etait vide en prod (2026-08-22, attrape
+  a la sonde juste apres le push). Ici, meme si la surcharge echoue, le repli tient.
+{%- endcomment -%}
+{%- assign designs = collections.all.products | where: 'type', 'Design' -%}
+{%- assign coll = collections['designs'] -%}
+{%- unless coll == empty -%}
+  {%- if coll.products_count > 0 -%}
+    {%- assign designs = coll.products | where: 'type', 'Design' -%}
+  {%- endif -%}
+{%- endunless -%}
 {%- comment -%}
   ⛔ LA BASE D'ASSETS EST INDISPENSABLE AU JS. Le catalogue, les outils, les photos de la
   galerie et le bead du plateau sont composes en JavaScript, or «asset_url« n'existe pas
