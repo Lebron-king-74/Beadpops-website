@@ -221,6 +221,10 @@
        et supprimer ce bloc. */
     var BEADS_DEMO = { facile:[900,1600], medium:[1900,3100], boss:[3600,4800] };
     function beadsDe(d, i){
+      /* le VRAI compte d'abord : sur Shopify, `b` vient du metachamp `beadpops.beads` pose
+         sur chaque produit depuis sa grille (2026-08-22). Le chiffre de demonstration ne
+         sert plus qu'au tableau local, qui n'a pas de `b`. */
+      if (d.b > 0) return d.b;
       var r = BEADS_DEMO[d.n] || BEADS_DEMO.medium;
       return Math.round((r[0] + (r[1] - r[0]) * (((i * 37) % 100) / 100)) / 50) * 50;
     }

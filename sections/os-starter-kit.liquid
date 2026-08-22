@@ -87,7 +87,8 @@
   {%- assign niveau = 'medium' -%}
   {%- if d.tags contains 'niveau-facile' -%}{%- assign niveau = 'facile' -%}
   {%- elsif d.tags contains 'niveau-boss' -%}{%- assign niveau = 'boss' -%}{%- endif -%}
-  {"t":{{ d.title | json }},"f":{{ d.featured_image | image_url: width: 640 | json }},"u":{{ univers | json }},"n":{{ niveau | json }},"v":{{ v.id | json }},"p":{{ v.price | json }}}{%- unless forloop.last -%},{%- endunless -%}
+  {%- assign beads = d.metafields.beadpops.beads.value | default: 0 -%}
+  {"t":{{ d.title | json }},"f":{{ d.featured_image | image_url: width: 640 | json }},"u":{{ univers | json }},"n":{{ niveau | json }},"v":{{ v.id | json }},"p":{{ v.price | json }},"b":{{ beads | json }}}{%- unless forloop.last -%},{%- endunless -%}
 {%- endfor -%}
 ]
 </script>
