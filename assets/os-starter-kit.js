@@ -361,6 +361,13 @@
       [].slice.call(grille.querySelectorAll('.dgroup')).forEach(function(g){
         var piste = g.querySelector('.dgroup__g'), pts = g.querySelector('[data-dots]');
         if (!piste || !pts) return;
+        /* desktop : K colonnes pour remplir la premiere rangee d'abord (voir le CSS ≥ 900).
+           `--cols` n'existe qu'en desktop ; sans lui on ne pose rien et le mobile garde son
+           flux par colonnes. Recalcule a chaque passage (resize, filtre, scroll). */
+        var cols = parseInt(getComputedStyle(piste).getPropertyValue('--cols'), 10);
+        var visiblesN = [].slice.call(piste.children).filter(function(c){ return !c.hidden; }).length;
+        if (cols > 0) piste.style.setProperty('--k', String(Math.max(cols, Math.ceil(visiblesN / 2))));
+        else piste.style.removeProperty('--k');
         var large = piste.clientWidth || 1;
         /* ⚠️ La suite se decide AVANT toute sortie anticipee (2026-08-22) : avec
            `Math.round`, une etagere qui debordait d'un tiers comptait pour UNE page, la

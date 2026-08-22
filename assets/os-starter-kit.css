@@ -960,8 +960,18 @@
    sortait a 450 px de haut — une etagere de deux rangees prenait alors tout l'ecran, ce
    qui annule le gain de place recherche. */
 @media(min-width:900px){
-  /* N colonnes pleines + un tiers de la suivante (2026-08-22), meme signal qu'en mobile */
-  .os-sk .dpick .dgroup__g{--cols:5;grid-auto-columns:calc((100cqw - var(--cols)*16px)/(var(--cols) + .3));gap:16px}
+  /* ---- desktop : on remplit la PREMIERE rangee d'abord (2026-08-22, consigne operateur) ----
+     Le flux par colonnes du mobile (1 en haut, 2 dessous) laissait Kawaii 4 sur deux rangees
+     de deux et tout le reste de la largeur vide. Ici : flux par RANGEES sur K colonnes,
+     K = max(colonnes visibles, ⌈n/2⌉) pose par `majDots` en `--k`. Donc n ≤ C : une seule
+     rangee ; C < n ≤ 2C : la premiere pleine puis la seconde ; n > 2C : deux rangees
+     pleines et la suite a droite (le tiers de carte + les fleches disent qu'il y en a). */
+  .os-sk .dpick .dgroup__g{
+    --cols:5;
+    grid-auto-flow:row;grid-template-rows:none;grid-auto-rows:auto;
+    grid-template-columns:repeat(var(--k,var(--cols)),calc((100cqw - var(--cols)*16px)/(var(--cols) + .3)));
+    gap:16px;
+  }
   /* en desktop, les fleches remplacent le mot « glisse → » : l'en-tete reste sobre */
   .os-sk .dpick .dgroup.has-suite .dgroup__h::after{display:none}
   .os-sk .dpick .dgroup__h .dgroup__nav{display:flex}
