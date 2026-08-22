@@ -422,7 +422,12 @@
       var fl = e.target.closest('[data-prev],[data-next]');
       if (fl){
         var pf = fl.closest('.dgroup').querySelector('.dgroup__g');
-        pf.scrollBy({ left: (fl.hasAttribute('data-prev') ? -1 : 1) * pf.clientWidth, behavior: animOk ? 'smooth' : 'auto' });
+        /* le pas est BORNE au reste disponible : demander une page entiere quand il ne
+           reste que 109 px fait durer le defilement lisse ~2 s (Chrome etale l'animation
+           sur la distance demandee) — on croyait la fleche morte. */
+        var reste = fl.hasAttribute('data-prev') ? -Math.min(pf.clientWidth, pf.scrollLeft)
+                                                  : Math.min(pf.clientWidth, pf.scrollWidth - pf.clientWidth - pf.scrollLeft);
+        pf.scrollBy({ left: reste, behavior: animOk ? 'smooth' : 'auto' });
         return;
       }
       var b = e.target.closest('[data-page]'); if (!b) return;
