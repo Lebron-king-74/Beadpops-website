@@ -933,6 +933,12 @@
 }
 .os-sk .dpick .dgroup__g::-webkit-scrollbar{display:none}
 .os-sk .dpick .dcell{scroll-snap-align:start}
+/* ⚠️ (2026-08-22) La derniere carte s'accroche par sa FIN. Quand le debord est plus petit
+   qu'une colonne (Animaux 13 sur desktop : 109 px de debord pour 173 px de colonne), le
+   seul point d'accroche « start » atteignable est 0 : toute tentative de defilement, au
+   doigt, a la fleche ou par scrollLeft, revenait a 0 — l'etagere paraissait bloquee.
+   Avec « end » sur la derniere carte, la butee devient un point d'accroche. */
+.os-sk .dpick .dcell:last-child{scroll-snap-align:end}
 /* ---- dire qu'il y a une suite ----
    Deux vignettes visibles et rien d'autre, on croit que l'univers en compte deux. Le
    masque de fondu coupe la troisieme au lieu de la laisser finir net : une image tranchee
@@ -959,6 +965,10 @@
   /* en desktop, les fleches remplacent le mot « glisse → » : l'en-tete reste sobre */
   .os-sk .dpick .dgroup.has-suite .dgroup__h::after{display:none}
   .os-sk .dpick .dgroup__h .dgroup__nav{display:flex}
+  /* pas d'accroche a la souris : les fleches avancent d'une page, le reste est libre.
+     L'accroche (snap) etait pensee pour le doigt ; a la souris elle rendait la butee
+     inatteignable quand le debord est plus court qu'une colonne (Animaux 13). */
+  .os-sk .dpick .dgroup__g{scroll-snap-type:none}
 }
 @media(min-width:1280px){ .os-sk .dpick .dgroup__g{--cols:6} }
 /* L'en-tete collant recouvrait la rangee du dessus : un bandeau opaque qui coupait les
